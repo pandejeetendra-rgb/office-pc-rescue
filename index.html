@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Office PC Rescue — Windows Security GBL</title>
+<style>
+  :root{
+    --bg:#0b1220;
+    --panel:#0f1b33;
+    --panel2:#0c172c;
+    --ink:#eaf0ff;
+    --muted:#a9b6d6;
+    --line:rgba(255,255,255,.10);
+
+    --blue:#4aa3ff;
+    --green:#3ddc97;
+    --amber:#ffcc66;
+    --red:#ff5c6c;
+
+    --shadow: 0 14px 40px rgba(0,0,0,.35);
+    --r:18px;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    background: radial-gradient(1200px 700px at 20% 10%, rgba(74,163,255,.18), transparent 55%),
+                radial-gradient(900px 600px at 85% 20%, rgba(61,220,151,.12), transparent 60%),
+                radial-gradient(900px 600px at 75% 85%, rgba(255,92,108,.10), transparent 60%),
+                var(--bg);
+    color:var(--ink);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    overflow-x:hidden;
+  }
+
+  .wrap{max-width:1100px;margin:0 auto;padding:18px}
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:14px 14px;
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    border:1px solid var(--line);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(8px);
+  }
+  .brand{display:flex;align-items:center;gap:10px;min-width:220px}
+  .logo{
+    width:38px;height:38px;border-radius:12px;
+    background: radial-gradient(circle at 30% 30%, rgba(74,163,255,.9), rgba(74,163,255,.15) 60%, rgba(0,0,0,0));
+    border:1px solid rgba(74,163,255,.35);
+    box-shadow: 0 0 0 6px rgba(74,163,255,.08);
+  }
+  .title{line-height:1.1}
+  .title h1{margin:0;font-size:15px;font-weight:750;letter-spacing:.2px}
+  .title p{margin:2px 0 0;color:var(--muted);font-size:12px}
+
+  .meters{display:flex;align-items:center;gap:14px}
+  .meterCard{
+    display:flex;align-items:center;gap:10px;
+    padding:8px 10px;border-radius:14px;
+    background: rgba(0,0,0,.20);
+    border:1px solid var(--line);
+  }
+  .meterLabel{font-size:12px;color:var(--muted)}
+  .meterValue{font-size:13px;font-weight:700}
+
+  /* Gauge */
+  .gauge{
+    width:48px;height:48px;display:grid;place-items:center;position:relative;
+  }
+  .gauge svg{transform: rotate(-90deg)}
+  .gauge .pct{
+    position:absolute;inset:0;display:grid;place-items:center;
+    font-weight:800;font-size:12px;
+  }
+
+  .riskPills{display:flex;gap:6px;align-items:center}
+  .pill{
+    width:10px;height:10px;border-radius:999px;background: rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.10);
+  }
+  .pill.on{background: rgba(255,92,108,.95);border-color: rgba(255,92,108,.35); box-shadow:0 0 0 5px rgba(255,92,108,.12)}
+  .subinfo{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:12px}
+  .chip{
+    padding:6px 10px;border-radius:999px;background: rgba(255,255,255,.05);
+    border:1px solid var(--line);
+  }
+
+  /* Stage */
+  .stage{margin-top:16px;display:grid;grid-template-columns: 1.2fr .8fr;gap:14px}
+  @media (max-width: 920px){ .stage{grid-template-columns:1fr} }
+
+  /* Desktop panel */
+  .desktop{
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    border:1px solid var(--line);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+    position:relative;
+    min-height: 440px;
+  }
+  .deskTop{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 14px;border-bottom:1px solid var(--line);
+    background: rgba(0,0,0,.20);
+  }
+  .deskTop .left{display:flex;align-items:center;gap:10px}
+  .clock{font-variant-numeric: tabular-nums; font-weight:800}
+  .wifi{color:var(--muted);font-size:12px}
+  .glow{
+    position:absolute;inset:-60px;
+    background: radial-gradient(500px 260px at 45% 25%, rgba(255,204,102,.12), transparent 60%);
+    pointer-events:none;
+    transition: opacity .6s ease, filter .6s ease;
+  }
+  .glow.safe{background: radial-gradient(520px 280px at 45% 25%, rgba(61,220,151,.12), transparent 60%)}
+  .glow.danger{background: radial-gradient(520px 280px at 45% 25%, rgba(255,92,108,.12), transparent 60%)}
+
+  /* Tiles */
+  .tiles{
+    display:grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap:10px;
+    padding:14px;
+  }
+  @media (max-width: 560px){
+    .tiles{grid-template-columns: repeat(2, minmax(0,1fr))}
+  }
+  .tile{
+    position:relative;
+    border-radius:16px;
+    padding:12px 12px 10px;
+    border:1px solid var(--line);
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    min-height: 98px;
+    overflow:hidden;
+    transition: transform .15s ease, border-color .35s ease, background .35s ease;
+    will-change: transform;
+  }
+  .tile:hover{transform: translateY(-1px)}
+  .tile .row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+  .tile .name{font-weight:800;font-size:13px}
+  .tile .desc{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.3}
+  .badge{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:11px;color:var(--muted);
+    padding:6px 8px;border-radius:999px;
+    background: rgba(0,0,0,.25);
+    border:1px solid var(--line);
+    white-space:nowrap;
+  }
+  .dot{width:8px;height:8px;border-radius:999px;background: rgba(255,255,255,.15)}
+  .tile[data-state="red"] .dot{background: rgba(255,92,108,.95)}
+  .tile[data-state="amber"] .dot{background: rgba(255,204,102,.95)}
+  .tile[data-state="green"] .dot{background: rgba(61,220,151,.95)}
+  .tile.active{
+    outline: 2px solid rgba(74,163,255,.55);
+    box-shadow: 0 0 0 8px rgba(74,163,255,.10);
+  }
+  .tile .shine{
+    position:absolute;inset:-40px -50px auto auto;
+    width:120px;height:120px;border-radius:999px;
+    background: radial-gradient(circle at 30% 30%, rgba(74,163,255,.20), transparent 65%);
+    pointer-events:none;
+  }
+
+  /* Side panel */
+  .side{
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    border:1px solid var(--line);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+    min-height: 440px;
+    display:flex;flex-direction:column;
+  }
+  .sideHeader{
+    padding:12px 14px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;
+    background: rgba(0,0,0,.20);
+  }
+  .sideHeader .h{font-weight:900;font-size:13px}
+  .sideHeader .mini{color:var(--muted);font-size:12px}
+
+  /* Overlay-like card area */
+  .card{
+    padding:14px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    flex:1;
+  }
+  .alert{
+    border-radius:16px;
+    border:1px solid rgba(255,204,102,.25);
+    background: linear-gradient(180deg, rgba(255,204,102,.14), rgba(0,0,0,.18));
+    padding:12px;
+  }
+  .alert .t{display:flex;align-items:center;gap:8px;font-weight:900}
+  .alert .p{margin-top:6px;color:var(--ink);opacity:.95;font-size:12.5px;line-height:1.35}
+
+  .qbox{
+    border-radius:16px;
+    border:1px solid var(--line);
+    background: rgba(0,0,0,.20);
+    padding:12px;
+  }
+  .qbox .q{font-weight:850;font-size:13px;line-height:1.35}
+  .actions{display:grid;grid-template-columns:1fr;gap:9px;margin-top:10px}
+  .btn{
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.04);
+    color:var(--ink);
+    border-radius:14px;
+    padding:10px 12px;
+    font-size:13px;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    cursor:pointer;
+    transition: transform .12s ease, border-color .25s ease, background .25s ease, opacity .25s ease;
+    text-align:left;
+  }
+  .btn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.22)}
+  .btn:active{transform: translateY(0)}
+  .btn .left{display:flex;align-items:center;gap:10px}
+  .icon{
+    width:28px;height:28px;border-radius:10px;display:grid;place-items:center;
+    background: rgba(74,163,255,.12); border:1px solid rgba(74,163,255,.20);
+    flex:0 0 auto;
+  }
+  .btn.safe .icon{background: rgba(61,220,151,.14); border-color: rgba(61,220,151,.25)}
+  .btn.risky .icon{background: rgba(255,92,108,.14); border-color: rgba(255,92,108,.25)}
+  .btn.neutral .icon{background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.14)}
+  .hint{color:var(--muted);font-size:12px}
+  .kbd{
+    font-size:11px;color:var(--muted);
+    padding:4px 8px;border-radius:999px;border:1px solid var(--line);
+    background: rgba(0,0,0,.25);
+    white-space:nowrap;
+  }
+
+  .feedback{
+    border-radius:16px;
+    padding:12px;
+    border:1px solid var(--line);
+    background: rgba(0,0,0,.20);
+    display:none;
+  }
+  .feedback.show{display:block}
+  .feedback.good{border-color: rgba(61,220,151,.25); background: linear-gradient(180deg, rgba(61,220,151,.10), rgba(0,0,0,.20))}
+  .feedback.bad{border-color: rgba(255,92,108,.25); background: linear-gradient(180deg, rgba(255,92,108,.10), rgba(0,0,0,.20))}
+  .feedback .f1{font-weight:900}
+  .feedback .f2{margin-top:6px;color:var(--muted);font-size:12.5px;line-height:1.35}
+
+  .footerRow{
+    margin-top:auto;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding-top:6px;
+  }
+  .small{font-size:12px;color:var(--muted)}
+  .primary, .ghost{
+    border-radius:14px;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    background: rgba(74,163,255,.14);
+    color:var(--ink);
+    font-weight:850;
+    cursor:pointer;
+  }
+  .ghost{background: rgba(255,255,255,.04); color:var(--ink)}
+  .primary:hover{border-color: rgba(74,163,255,.40)}
+  .ghost:hover{border-color: rgba(255,255,255,.22)}
+
+  /* Modal screens (landing, end) */
+  .modalWrap{
+    position:fixed;inset:0;display:none;place-items:center;
+    padding:18px;
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(6px);
+    z-index:50;
+  }
+  .modalWrap.show{display:grid}
+  .modal{
+    width:min(720px, 100%);
+    border-radius: 22px;
+    border:1px solid var(--line);
+    background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+  .modalHead{
+    padding:14px 16px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;
+    background: rgba(0,0,0,.20);
+  }
+  .modalHead .mh{font-weight:950}
+  .modalBody{padding:16px}
+  .hero{
+    display:grid;grid-template-columns: 1fr 1fr;gap:14px;align-items:center;
+  }
+  @media (max-width: 700px){ .hero{grid-template-columns:1fr} }
+  .monitor{
+    border-radius:20px;
+    border:1px solid var(--line);
+    background: linear-gradient(180deg, rgba(74,163,255,.10), rgba(0,0,0,.25));
+    padding:14px;
+    position:relative;
+    min-height: 220px;
+    overflow:hidden;
+  }
+  .monitor .screen{
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.12);
+    background: radial-gradient(520px 240px at 30% 20%, rgba(255,204,102,.18), transparent 60%),
+                radial-gradient(520px 240px at 75% 80%, rgba(74,163,255,.12), transparent 60%),
+                rgba(0,0,0,.30);
+    min-height: 150px;
+    padding:12px;
+  }
+  .monitor .toast{
+    margin-top:10px;
+    border-radius:14px;
+    border:1px solid rgba(255,204,102,.25);
+    background: rgba(255,204,102,.12);
+    padding:10px 12px;
+    color: rgba(234,240,255,.95);
+    font-size:12.5px;
+  }
+  .list{
+    margin:0;padding-left:16px;color:var(--muted);font-size:13px;line-height:1.45;
+  }
+  .btnRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important; animation:none !important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div class="title">
+        <h1>Office PC Rescue</h1>
+        <p>Windows Security module — scenario-based GBL</p>
+      </div>
+    </div>
+
+    <div class="meters">
+      <div class="meterCard" title="PC Health">
+        <div class="gauge" aria-label="PC Health gauge">
+          <svg width="48" height="48" viewBox="0 0 48 48">
+            <circle cx="24" cy="24" r="18" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="6"></circle>
+            <circle id="gaugeArc" cx="24" cy="24" r="18" fill="none" stroke="rgba(61,220,151,.90)" stroke-width="6"
+                    stroke-linecap="round" stroke-dasharray="113.1" stroke-dashoffset="56.55"></circle>
+          </svg>
+          <div class="pct" id="healthPct">50%</div>
+        </div>
+        <div>
+          <div class="meterLabel">PC Health</div>
+          <div class="meterValue" id="healthText">50 / 100</div>
+        </div>
+      </div>
+
+      <div class="meterCard" title="Risk strikes">
+        <div>
+          <div class="meterLabel">Risk</div>
+          <div class="riskPills" aria-label="Risk strikes">
+            <div class="pill" id="pill1"></div>
+            <div class="pill" id="pill2"></div>
+            <div class="pill" id="pill3"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subinfo">
+        <div class="chip" id="episodeChip">Episode 1/6</div>
+        <div class="chip">Wi-Fi: <span class="wifi" id="wifiName">Office_Guest</span></div>
+        <div class="chip">Time: <span class="clock" id="clock">--:--</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN STAGE -->
+  <div class="stage">
+
+    <!-- DESKTOP -->
+    <div class="desktop" aria-label="Office desktop">
+      <div class="glow" id="glow"></div>
+      <div class="deskTop">
+        <div class="left">
+          <div class="chip">User: <b id="userTag">Staff-PC</b></div>
+          <div class="chip">Mode: <b id="modeTag">Rescue</b></div>
+        </div>
+        <div class="chip">Status: <b id="statusTag">Needs attention</b></div>
+      </div>
+
+      <div class="tiles" id="tiles">
+        <!-- tiles injected by JS -->
+      </div>
+    </div>
+
+    <!-- SIDE PANEL -->
+    <div class="side">
+      <div class="sideHeader">
+        <div>
+          <div class="h">Helpdesk Console</div>
+          <div class="mini" id="miniLine">Fix one issue at a time. Keep the PC stable.</div>
+        </div>
+        <div class="chip" id="progressChip">0 fixed</div>
+      </div>
+
+      <div class="card">
+        <div class="alert" id="alertBox">
+          <div class="t">⚠ Security issue detected</div>
+          <div class="p" id="problemText">Click “Start” to begin.</div>
+        </div>
+
+        <div class="qbox" id="qBox">
+          <div class="q" id="questionText">Ready?</div>
+          <div class="actions" id="actions">
+            <!-- action buttons injected -->
+          </div>
+        </div>
+
+        <div class="feedback" id="feedback">
+          <div class="f1" id="fbTitle">—</div>
+          <div class="f2" id="fbBody">—</div>
+        </div>
+
+        <div class="footerRow">
+          <div class="small" id="footNote">Tip: answers apply to real Windows settings.</div>
+          <div style="display:flex;gap:10px">
+            <button class="ghost" id="resetBtn" type="button">Reset</button>
+            <button class="primary" id="startBtn" type="button">Start</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- LANDING MODAL -->
+<div class="modalWrap show" id="landing">
+  <div class="modal">
+    <div class="modalHead">
+      <div class="mh">Office PC Rescue</div>
+      <div class="chip">Windows Security GBL</div>
+    </div>
+    <div class="modalBody">
+      <div class="hero">
+        <div class="monitor">
+          <div class="screen">
+            <div style="font-weight:950;font-size:14px">Today’s situation</div>
+            <div style="margin-top:6px;color:var(--muted);font-size:13px;line-height:1.45">
+              An office PC is showing risky behavior. You are the IT support.
+              Fix security settings step-by-step before the workday ends.
+            </div>
+          </div>
+          <div class="toast">⚠ Multiple protections are OFF or misconfigured.</div>
+        </div>
+
+        <div>
+          <div style="font-weight:950;font-size:14px;margin-bottom:8px">How to play</div>
+          <ul class="list">
+            <li>Read the problem card.</li>
+            <li>Choose the best <b>first action</b>.</li>
+            <li>Correct actions turn tiles green and improve PC Health.</li>
+            <li>3 mistakes = PC compromised.</li>
+          </ul>
+          <div class="btnRow">
+            <button class="primary" id="beginBtn" type="button">Begin Rescue</button>
+            <button class="ghost" id="skipBtn" type="button">Close</button>
+          </div>
+          <div style="margin-top:10px;color:var(--muted);font-size:12px">
+            Instructor can replace the question bank in <code>QUESTION_BANK</code> in the code.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- END MODAL -->
+<div class="modalWrap" id="endModal">
+  <div class="modal">
+    <div class="modalHead">
+      <div class="mh" id="endTitle">Summary</div>
+      <div class="chip" id="endChip">—</div>
+    </div>
+    <div class="modalBody" id="endBody">
+      <!-- injected -->
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   OFFICE PC RESCUE — Single-file HTML/JS
+   - No canvas, no heavy animation
+   - Smooth transitions, no flicker
+   - Replace QUESTION_BANK with your own items
+========================================================= */
+
+const TILE_DEFS = [
+  { key:"accounts",  name:"Accounts",        icon:"👤", hint:"Passwords & separate users" },
+  { key:"lock",      name:"Screen Lock",     icon:"🔒", hint:"Auto-lock & safe habits" },
+  { key:"updates",   name:"Updates",         icon:"🔄", hint:"Automatic updates & patches" },
+  { key:"firewall",  name:"Firewall",        icon:"🛡️", hint:"Private + public networks" },
+  { key:"defender",  name:"Defender",        icon:"🦠", hint:"Scan & real-time protection" },
+  { key:"privacy",   name:"Privacy & Apps",  icon:"👁️", hint:"App permissions & telemetry" }
+];
+
+/* ---- Question bank (sample) ----
+   Format:
+   {
+     id, tileKey,
+     problem: "short scenario",
+     question: "What should you do first?",
+     choices: [{t, icon, style, kbd}, ...],
+     correct: index,
+     feedback: { okTitle, okBody, badTitle, badBody }
+   }
+
+   NOTE: These are written as original scenario items aligned to common Windows security practice.
+   Replace with your chapter-derived MCQs as needed.
+---------------------------------- */
+const QUESTION_BANK = [
+  {
+    id:"ACC-01", tileKey:"accounts",
+    problem:"A staff member logs in with a shared office account used by everyone.",
+    question:"What is the best first step to reduce this risk?",
+    choices:[
+      {t:"Create separate user accounts for each person", icon:"👤", style:"safe", kbd:"1"},
+      {t:"Keep one account but change wallpaper daily", icon:"🖼️", style:"neutral", kbd:"2"},
+      {t:"Disable sign-in to make access faster", icon:"⚡", style:"risky", kbd:"3"},
+      {t:"Write the password on a sticky note near the monitor", icon:"📝", style:"risky", kbd:"4"},
+    ],
+    correct:0,
+    feedback:{
+      okTitle:"Accounts separated",
+      okBody:"Separate user accounts reduce accidental sharing and make access control meaningful.",
+      badTitle:"Risk increased",
+      badBody:"Shared accounts remove accountability and make it easy for anyone to access sensitive data."
+    }
+  },
+  {
+    id:"ACC-02", tileKey:"accounts",
+    problem:"The PC wakes up from sleep and shows the desktop without asking for a password.",
+    question:"What should you do first?",
+    choices:[
+      {t:"Require sign-in when waking up (password on resume)", icon:"🔒", style:"safe", kbd:"1"},
+      {t:"Turn off sleep entirely", icon:"💡", style:"neutral", kbd:"2"},
+      {t:"Disable the lock screen permanently", icon:"🚫", style:"risky", kbd:"3"},
+      {t:"Ignore it because it saves time", icon:"⏳", style:"risky", kbd:"4"},
+    ],
+    correct:0,
+    feedback:{
+      okTitle:"Sign-in on wake enabled",
+      okBody:"This prevents anyone nearby from gaining access when the PC is unattended.",
+      badTitle:"Unattended access remains",
+      badBody:"If the desktop appears without authentication, anyone can use the system during breaks."
+    }
+  },
+  {
+    id:"LOCK-01", tileKey:"lock",
+    problem:"Employees often leave for tea and forget to lock the screen.",
+    question:"Which change best supports safe behavior?",
+    choices:[
+      {t:"Set a short inactivity timeout + lock on resume", icon:"⏲️", style:"safe", kbd:"1"},
+      {t:"Increase timeout so it never locks", icon:"🕰️", style:"risky", kbd:"2"},
+      {t:"Disable the screen saver feature", icon:"🧩", style:"neutral", kbd:"3"},
+      {t:"Only lock the PC on Mondays", icon:"📅", style:"risky", kbd:"4"},
+    ],
+    correct:0,
+    feedback:{
+      okTitle:"Auto-lock strengthened",
+      okBody:"Automatic lock reduces risk from human forgetfulness in shared spaces.",
+      badTitle:"Exposure stays high",
+      badBody:"Long/no timeouts keep sessions open and increase the chance of misuse."
+    }
+  },
+  {
+    id:"UPD-01", tileKey:"updates",
+    problem:"Updates were turned off because they interrupt work.",
+    question:"What is the best first action?",
+    choices:[
+      {t:"Enable automatic updates and set active hours", icon:"🔄", style:"safe", kbd:"1"},
+      {t:"Update only once a year", icon:"📆", style:"risky", kbd:"2"},
+      {t:"Ignore updates if antivirus is installed", icon:"🦠", style:"risky", kbd:"3"},
+      {t:"Disable update notifications permanently", icon:"🔕", style:"neutral", kbd:"4"},
+    ],
+    correct:0,
+    feedback:{
+      okTitle:"Updates restored",
+      okBody:"Security patches reduce exposure. Active hours minimize disruption while staying protected.",
+      badTitle:"Vulnerability grows",
+      badBody:"Delaying updates increases the window where known issues can be exploited."
+    }
+  },
+  {
+    id:"FW-01", tileKey:"firewall",
+    problem:"A user connects the office laptop to public Wi-Fi during travel.",
+    question:"What should you verify first on Windows?",
+    choices:[
+      {t:"Firewall is ON for both private and public networks", icon:"🛡️", style:"safe", kbd:"1"},
+      {t:"Firewall is OFF to improve speed", icon:"⚡", style:"risky", kbd:"2"},
+      {t:"Only change desktop theme", icon:"🎨", style:"neutral", kbd:"3"},
+      {t:"Share folders openly for convenience", icon:"📂", style:"risky", kbd:"4"},
+    ],
+    correct:0,
+    feedback:{
+      okTitle:"Firewall protection confirmed",
+      okBody:"Public networks are higher risk. Firewall reduces unwanted inbound connections.",
+      badTitle:"Network risk increased",
+      badBody:"Disabling firewall or opening sharing on public Wi-Fi can expose the system."
+    }
+  },
+  {
+    id:"DEF-01", tileKey:"defender",
+    problem:"The PC shows frequent pop-ups and feels slower than usual.",
+    question:"What is the best first step?",
+    choices:[
+      {t:"Run a Windows security scan (quick/full as needed)", icon:"🦠", style:"safe", kbd:"1"},
+      {t:"Ignore pop-ups if work must continue", icon:"⏳", style:"risky", kbd:"2"},
+      {t:"Download random ‘PC booster’ software", icon:"⬇️", style:"risky", kbd:"3"},
+      {t:"Disable real-time protection permanently", icon:"🚫", style:"risky", kbd:"4"},
+    ],
+    correct:0,
+    feedback:{
+      okTitle:"Scan initiated",
+      okBody:"Scanning helps detect and contain threats. Keep protection updated.",
+      badTitle:"Threat likely persists",
+      badBody:"Ignoring symptoms or installing unknown tools can worsen the infection."
+    }
+  },
+  {
+    id:"PRV-01", tileKey:"privacy",
+    problem:"Many apps have access to the microphone and camera without clear need.",
+    question:"What should you do first?",
+    choices:[
+      {t:"Review app permissions and disable unnecessary access", icon:"👁️", style:"safe", kbd:"1"},
+      {t:"Allow all permissions to avoid errors", icon:"✅", style:"neutral", kbd:"2"},
+      {t:"Share admin password with all users", icon:"🔑", style:"risky", kbd:"3"},
+      {t:"Turn off the screen lock instead", icon:"🔓", style:"risky", kbd:"4"},
+    ],
+    correct:0,
+    feedback:{
+      okTitle:"Permissions tightened",
+      okBody:"Limiting permissions reduces privacy leakage and lowers attack surface.",
+      badTitle:"Privacy exposure remains",
+      badBody:"Over-permissioned apps can access sensitive inputs without a strong reason."
+    }
+  },
+  {
+    id:"PRV-02", tileKey:"privacy",
+    problem:"Personalized ads appear across apps and the browser on a shared PC.",
+    question:"What is a sensible first change?",
+    choices:[
+      {t:"Reduce ad/personalization settings in Privacy controls", icon:"⚙️", style:"safe", kbd:"1"},
+      {t:"Disable updates to reduce ads", icon:"🔄", style:"risky", kbd:"2"},
+      {t:"Turn off firewall so ads load faster", icon:"🛡️", style:"risky", kbd:"3"},
+      {t:"Ignore because ads are harmless", icon:"😐", style:"neutral", kbd:"4"},
+    ],
+    correct:0,
+    feedback:{
+      okTitle:"Personalization reduced",
+      okBody:"Privacy controls can limit tracking and reduce unwanted personalization on shared systems.",
+      badTitle:"Tracking likely continues",
+      badBody:"Changing unrelated protections does not address privacy configuration."
+    }
+  },
+];
+
+/* Episodes: order of tiles to focus */
+const EPISODE_ORDER = ["accounts","lock","updates","firewall","defender","privacy"];
+
+/* Game state */
+let game = {
+  started:false,
+  episodeIndex:0,
+  health:50,
+  risk:0,
+  fixed: new Set(),
+  tileState: {}, // key -> "red|amber|green"
+  queue: [],     // shuffled questions for each tile
+  current: null,
+  locked:false
+};
+
+/* DOM */
+const tilesEl = document.getElementById("tiles");
+const problemText = document.getElementById("problemText");
+const questionText = document.getElementById("questionText");
+const actionsEl = document.getElementById("actions");
+const feedbackEl = document.getElementById("feedback");
+const fbTitle = document.getElementById("fbTitle");
+const fbBody = document.getElementById("fbBody");
+
+const healthText = document.getElementById("healthText");
+const healthPct = document.getElementById("healthPct");
+const gaugeArc = document.getElementById("gaugeArc");
+const pill1 = document.getElementById("pill1");
+const pill2 = document.getElementById("pill2");
+const pill3 = document.getElementById("pill3");
+
+const episodeChip = document.getElementById("episodeChip");
+const progressChip = document.getElementById("progressChip");
+const statusTag = document.getElementById("statusTag");
+const glow = document.getElementById("glow");
+
+const startBtn = document.getElementById("startBtn");
+const resetBtn = document.getElementById("resetBtn");
+const beginBtn = document.getElementById("beginBtn");
+const skipBtn = document.getElementById("skipBtn");
+
+const landing = document.getElementById("landing");
+const endModal = document.getElementById("endModal");
+const endTitle = document.getElementById("endTitle");
+const endChip = document.getElementById("endChip");
+const endBody = document.getElementById("endBody");
+
+function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function setClock(){
+  const el = document.getElementById("clock");
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,"0");
+  const mm = String(now.getMinutes()).padStart(2,"0");
+  el.textContent = `${hh}:${mm}`;
+}
+setClock();
+setInterval(setClock, 15000);
+
+/* Build tiles */
+function renderTiles(){
+  tilesEl.innerHTML = "";
+  TILE_DEFS.forEach(td=>{
+    const div = document.createElement("div");
+    div.className = "tile";
+    div.dataset.key = td.key;
+    div.dataset.state = game.tileState[td.key] || "red";
+    div.innerHTML = `
+      <div class="shine" aria-hidden="true"></div>
+      <div class="row">
+        <div>
+          <div class="name">${td.icon} ${td.name}</div>
+          <div class="desc">${td.hint}</div>
+        </div>
+        <div class="badge"><span class="dot"></span><span class="st">${labelState(div.dataset.state)}</span></div>
+      </div>
+    `;
+    tilesEl.appendChild(div);
+  });
+}
+
+function labelState(s){
+  if(s==="green") return "Secure";
+  if(s==="amber") return "Needs review";
+  return "Vulnerable";
+}
+
+function highlightTile(key){
+  document.querySelectorAll(".tile").forEach(t=>{
+    t.classList.toggle("active", t.dataset.key === key);
+  });
+}
+
+function updateTileState(key, state){
+  game.tileState[key] = state;
+  const t = document.querySelector(`.tile[data-key="${key}"]`);
+  if(t){
+    t.dataset.state = state;
+    const st = t.querySelector(".st");
+    if(st) st.textContent = labelState(state);
+  }
+}
+
+function updateMeters(){
+  game.health = clamp(game.health, 0, 100);
+  healthText.textContent = `${game.health} / 100`;
+  healthPct.textContent = `${game.health}%`;
+
+  // arc math: circumference = 2πr; r=18 => ~113.097
+  const C = 113.1;
+  const progress = game.health / 100;
+  const offset = C * (1 - progress);
+  gaugeArc.style.strokeDasharray = `${C}`;
+  gaugeArc.style.strokeDashoffset = `${offset}`;
+
+  // color mapping
+  let col = "rgba(255,92,108,.90)";
+  if(game.health >= 75) col = "rgba(61,220,151,.90)";
+  else if(game.health >= 50) col = "rgba(255,204,102,.90)";
+  gaugeArc.setAttribute("stroke", col);
+
+  // risk pills
+  [pill1,pill2,pill3].forEach((p,i)=> p.classList.toggle("on", i < game.risk));
+
+  // glow/status
+  if(game.risk >= 2 || game.health < 35){
+    glow.classList.remove("safe");
+    glow.classList.add("danger");
+    statusTag.textContent = "High risk";
+  }else if(game.health >= 75){
+    glow.classList.remove("danger");
+    glow.classList.add("safe");
+    statusTag.textContent = "Stabilizing";
+  }else{
+    glow.classList.remove("safe","danger");
+    statusTag.textContent = "Needs attention";
+  }
+
+  // chips
+  episodeChip.textContent = `Episode ${game.episodeIndex+1}/${EPISODE_ORDER.length}`;
+  progressChip.textContent = `${game.fixed.size} fixed`;
+}
+
+/* Pick next question for current tile */
+function nextQuestionFor(tileKey){
+  const pool = QUESTION_BANK.filter(q => q.tileKey === tileKey);
+  if(!pool.length) return null;
+  // keep order stable but randomize the pool per run
+  if(!game.queue[tileKey]) game.queue[tileKey] = shuffle(pool);
+  return game.queue[tileKey].shift() || null;
+}
+
+function setFeedback(kind, title, body){
+  feedbackEl.className = "feedback show " + (kind==="good" ? "good" : "bad");
+  fbTitle.textContent = title;
+  fbBody.textContent = body;
+}
+function clearFeedback(){
+  feedbackEl.className = "feedback";
+  fbTitle.textContent = "";
+  fbBody.textContent = "";
+}
+
+function renderActions(q){
+  actionsEl.innerHTML = "";
+  q.choices.forEach((c, idx)=>{
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = `btn ${c.style || "neutral"}`;
+    btn.innerHTML = `
+      <div class="left">
+        <div class="icon" aria-hidden="true">${c.icon || "⚙️"}</div>
+        <div>
+          <div style="font-weight:850">${c.t}</div>
+          <div class="hint">Action</div>
+        </div>
+      </div>
+      <div class="kbd">${c.kbd || (idx+1)}</div>
+    `;
+    btn.addEventListener("click", ()=> answer(idx));
+    actionsEl.appendChild(btn);
+  });
+}
+
+function showQuestion(q){
+  game.current = q;
+  highlightTile(q.tileKey);
+  problemText.textContent = q.problem;
+  questionText.textContent = q.question;
+  clearFeedback();
+  renderActions(q);
+}
+
+/* Answer handler */
+function answer(choiceIndex){
+  if(game.locked || !game.current) return;
+  game.locked = true;
+
+  const q = game.current;
+  const correct = (choiceIndex === q.correct);
+
+  // lock buttons
+  [...actionsEl.querySelectorAll("button")].forEach(b=> b.disabled = true);
+
+  if(correct){
+    // improve
+    game.health += 8;
+    game.fixed.add(q.tileKey);
+
+    // tile transitions: red/amber -> green
+    updateTileState(q.tileKey, "green");
+
+    setFeedback("good", q.feedback.okTitle, q.feedback.okBody);
+  }else{
+    // penalize
+    game.health -= 10;
+    game.risk += 1;
+    setFeedback("bad", q.feedback.badTitle, q.feedback.badBody);
+
+    // tile stays red (or amber), but pulse state by setting amber if not green
+    if(game.tileState[q.tileKey] !== "green"){
+      updateTileState(q.tileKey, "amber");
+    }
+  }
+
+  updateMeters();
+
+  // end conditions
+  if(game.risk >= 3){
+    setTimeout(()=> endGame(false), 900);
+    return;
+  }
+
+  // proceed after a short pause
+  setTimeout(()=>{
+    game.locked = false;
+    advance();
+  }, 1200);
+}
+
+/* Advance flow */
+function advance(){
+  // If current tile is fixed, move to next episode.
+  // If not fixed, keep asking another question from same tile (if available).
+  const tileKey = EPISODE_ORDER[game.episodeIndex];
+
+  // If current tile not fixed and there exists another question, keep on same
+  if(!game.fixed.has(tileKey)){
+    const nq = nextQuestionFor(tileKey);
+    if(nq){
+      showQuestion(nq);
+      return;
+    }
+    // fallback: if no more questions, allow moving on
+    game.fixed.add(tileKey);
+    updateTileState(tileKey, "amber");
+    updateMeters();
+  }
+
+  // move to next episode
+  game.episodeIndex += 1;
+
+  if(game.episodeIndex >= EPISODE_ORDER.length){
+    endGame(true);
+    return;
+  }
+
+  const nextKey = EPISODE_ORDER[game.episodeIndex];
+  const q = nextQuestionFor(nextKey);
+  if(!q){
+    // If missing questions for the tile, mark as amber and continue
+    game.fixed.add(nextKey);
+    updateTileState(nextKey, "amber");
+    updateMeters();
+    advance();
+    return;
+  }
+
+  showQuestion(q);
+}
+
+function startGame(){
+  if(game.started) return;
+  game.started = true;
+  startBtn.textContent = "Running";
+  startBtn.disabled = true;
+
+  // initialize tile states
+  game.tileState = {};
+  TILE_DEFS.forEach(t => game.tileState[t.key] = "red");
+  renderTiles();
+  updateMeters();
+
+  // first question
+  game.episodeIndex = 0;
+  const firstKey = EPISODE_ORDER[0];
+  const q = nextQuestionFor(firstKey);
+  if(q) showQuestion(q);
+  else{
+    problemText.textContent = "No questions found. Please update QUESTION_BANK.";
+    questionText.textContent = "—";
+    actionsEl.innerHTML = "";
+  }
+}
+
+function resetGame(){
+  game = {
+    started:false,
+    episodeIndex:0,
+    health:50,
+    risk:0,
+    fixed: new Set(),
+    tileState:{},
+    queue: [],
+    current:null,
+    locked:false
+  };
+  startBtn.textContent = "Start";
+  startBtn.disabled = false;
+  clearFeedback();
+  problemText.textContent = "Click “Start” to begin.";
+  questionText.textContent = "Ready?";
+  actionsEl.innerHTML = "";
+  glow.classList.remove("safe","danger");
+  statusTag.textContent = "Needs attention";
+  TILE_DEFS.forEach(t => game.tileState[t.key] = "red");
+  renderTiles();
+  updateMeters();
+}
+
+function endGame(success){
+  // build summary
+  endModal.classList.add("show");
+  const fixedCount = game.fixed.size;
+
+  if(success){
+    endTitle.textContent = "PC Secured";
+    endChip.textContent = `Health ${game.health}% · Risk ${game.risk}/3`;
+    endBody.innerHTML = `
+      <div style="font-weight:950;font-size:14px">Summary</div>
+      <div style="margin-top:6px;color:var(--muted);line-height:1.45;font-size:13px">
+        You stabilized the office PC. The tiles show what is secured (green) and what may need review (amber).
+      </div>
+      <div style="margin-top:12px;display:grid;gap:10px">
+        ${TILE_DEFS.map(t=>{
+          const st = game.tileState[t.key] || "red";
+          const icon = st==="green" ? "✔" : (st==="amber" ? "⚠" : "✖");
+          const color = st==="green" ? "rgba(61,220,151,.95)" : (st==="amber" ? "rgba(255,204,102,.95)" : "rgba(255,92,108,.95)");
+          return `<div style="border:1px solid var(--line);background:rgba(0,0,0,.20);border-radius:16px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between">
+            <div><b>${t.icon} ${t.name}</b><div style="color:var(--muted);font-size:12px;margin-top:2px">${t.hint}</div></div>
+            <div style="font-weight:950;color:${color}">${icon}</div>
+          </div>`;
+        }).join("")}
+      </div>
+      <div class="btnRow" style="margin-top:14px">
+        <button class="primary" type="button" onclick="location.reload()">Play Again</button>
+        <button class="ghost" type="button" onclick="document.getElementById('endModal').classList.remove('show')">Close</button>
+      </div>
+    `;
+  }else{
+    endTitle.textContent = "PC Compromised";
+    endChip.textContent = `Health ${game.health}% · Risk 3/3`;
+    endBody.innerHTML = `
+      <div style="font-weight:950;font-size:14px">What happened</div>
+      <div style="margin-top:6px;color:var(--muted);line-height:1.45;font-size:13px">
+        Too many risky choices increased exposure. Review the feedback and retry.
+      </div>
+      <div style="margin-top:12px;border:1px solid rgba(255,92,108,.25);background:rgba(255,92,108,.08);border-radius:16px;padding:12px">
+        <b>Tip</b>
+        <div style="margin-top:6px;color:var(--muted);font-size:13px;line-height:1.45">
+          In real Windows environments, begin with authentication and baseline protections (updates, firewall, Defender),
+          then tighten privacy and app permissions.
+        </div>
+      </div>
+      <div class="btnRow" style="margin-top:14px">
+        <button class="primary" type="button" onclick="location.reload()">Retry</button>
+        <button class="ghost" type="button" onclick="document.getElementById('endModal').classList.remove('show')">Close</button>
+      </div>
+    `;
+  }
+}
+
+/* Events */
+beginBtn.addEventListener("click", ()=>{
+  landing.classList.remove("show");
+  startGame();
+});
+skipBtn.addEventListener("click", ()=>{
+  landing.classList.remove("show");
+});
+startBtn.addEventListener("click", startGame);
+resetBtn.addEventListener("click", resetGame);
+
+/* Keyboard shortcuts (1–4 for options) */
+document.addEventListener("keydown", (e)=>{
+  if(!game.started || game.locked) return;
+  const n = parseInt(e.key, 10);
+  if(n>=1 && n<=4){
+    const btn = actionsEl.querySelectorAll("button")[n-1];
+    if(btn && !btn.disabled) btn.click();
+  }
+});
+
+/* Init */
+(function init(){
+  TILE_DEFS.forEach(t => game.tileState[t.key] = "red");
+  renderTiles();
+  updateMeters();
+})();
+</script>
+</body>
+</html>
