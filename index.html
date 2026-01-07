@@ -3,14 +3,16 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Office PC Rescue — Escape Room (Option B)</title>
+<title>Office PC Rescue — Escape Room v3 (Game Style)</title>
 <style>
   :root{
-    --bg0:#070b16;
-    --bg1:#0b1430;
-    --panel: rgba(255,255,255,.07);
-    --panel2: rgba(0,0,0,.25);
+    --bg0:#050812;
+    --bg1:#0a1230;
+
+    --panel: rgba(255,255,255,.08);
+    --panel2: rgba(0,0,0,.28);
     --line: rgba(255,255,255,.12);
+
     --ink:#eaf0ff;
     --muted:#a9b6d6;
 
@@ -19,7 +21,7 @@
     --amber:#ffcc66;
     --red:#ff5c6c;
 
-    --shadow: 0 18px 48px rgba(0,0,0,.45);
+    --shadow: 0 18px 52px rgba(0,0,0,.48);
     --r:18px;
   }
   *{box-sizing:border-box}
@@ -29,35 +31,36 @@
     color:var(--ink);
     font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     background:
-      radial-gradient(1100px 700px at 15% 10%, rgba(74,163,255,.18), transparent 55%),
-      radial-gradient(900px 600px at 80% 18%, rgba(61,220,151,.12), transparent 60%),
-      radial-gradient(900px 600px at 75% 88%, rgba(255,92,108,.10), transparent 60%),
+      radial-gradient(1200px 760px at 16% 12%, rgba(74,163,255,.18), transparent 55%),
+      radial-gradient(900px 620px at 80% 18%, rgba(61,220,151,.12), transparent 60%),
+      radial-gradient(900px 600px at 72% 88%, rgba(255,92,108,.10), transparent 60%),
       linear-gradient(180deg, var(--bg0), var(--bg1));
     overflow-x:hidden;
   }
 
-  /* ---------- Top bar ---------- */
-  .wrap{max-width:1180px;margin:0 auto;padding:18px}
+  .wrap{max-width:1220px;margin:0 auto;padding:18px}
+
+  /* Topbar */
   .topbar{
     display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
-    padding:14px 14px;
+    padding:14px;
     border:1px solid var(--line);
     border-radius: var(--r);
-    background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+    background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
     box-shadow: var(--shadow);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
   }
   .brand{display:flex;align-items:center;gap:10px}
   .logo{
-    width:38px;height:38px;border-radius:12px;
+    width:40px;height:40px;border-radius:14px;
     background:
-      radial-gradient(circle at 30% 30%, rgba(74,163,255,.9), rgba(74,163,255,.20) 60%, rgba(0,0,0,0)),
-      radial-gradient(circle at 70% 80%, rgba(61,220,151,.45), transparent 55%);
+      radial-gradient(circle at 30% 30%, rgba(74,163,255,.95), rgba(74,163,255,.20) 60%, rgba(0,0,0,0)),
+      radial-gradient(circle at 75% 80%, rgba(61,220,151,.55), transparent 55%);
     border:1px solid rgba(74,163,255,.35);
-    box-shadow: 0 0 0 6px rgba(74,163,255,.08);
+    box-shadow: 0 0 0 7px rgba(74,163,255,.08);
   }
-  .title{line-height:1.15}
-  .title h1{margin:0;font-size:15px;font-weight:900;letter-spacing:.2px}
+  .title{line-height:1.12}
+  .title h1{margin:0;font-size:15px;font-weight:950;letter-spacing:.2px}
   .title p{margin:2px 0 0;font-size:12px;color:var(--muted)}
   .chips{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
   .chip{
@@ -70,31 +73,38 @@
     white-space:nowrap;
   }
   .chip b{color:var(--ink)}
-  .dots{display:flex;gap:6px}
-  .dot{width:10px;height:10px;border-radius:999px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.10)}
-  .dot.on{background: rgba(61,220,151,.95); border-color: rgba(61,220,151,.35); box-shadow:0 0 0 5px rgba(61,220,151,.10)}
-  .clock{font-variant-numeric: tabular-nums; font-weight:900; color:var(--ink)}
   .btnTop{
     padding:8px 12px;border-radius:14px;border:1px solid var(--line);
     background: rgba(74,163,255,.14);
     color:var(--ink);
-    font-weight:900;
+    font-weight:950;
     cursor:pointer;
   }
   .btnTop:hover{border-color: rgba(74,163,255,.40)}
 
-  /* ---------- Main stage ---------- */
+  /* Meters */
+  .meter{
+    width:160px;height:10px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.08);
+    overflow:hidden;
+  }
+  .meter > i{display:block;height:100%;width:40%;background: rgba(61,220,151,.85);transition: width .5s ease, background .5s ease;}
+  .meter.red > i{background: rgba(255,92,108,.85)}
+  .meter.amber > i{background: rgba(255,204,102,.85)}
+
+  /* Layout */
   .stage{margin-top:16px;display:grid;grid-template-columns: 1.35fr .65fr;gap:14px}
   @media (max-width: 980px){ .stage{grid-template-columns:1fr} }
 
   .panel{
     border:1px solid var(--line);
     border-radius: var(--r);
-    background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+    background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
     box-shadow: var(--shadow);
     overflow:hidden;
     position:relative;
-    min-height: 560px;
+    min-height: 580px;
   }
   .head{
     padding:12px 14px;border-bottom:1px solid var(--line);
@@ -104,19 +114,19 @@
   .head .h{font-weight:950;font-size:13px}
   .head .s{color:var(--muted);font-size:12px}
 
-  /* ---------- Desktop Map ---------- */
+  /* Desktop */
   .desktop{
     position:relative;
-    min-height: 520px;
+    min-height: 540px;
     padding:14px;
     overflow:hidden;
   }
   .wallpaper{
     position:absolute;inset:0;
     background:
-      radial-gradient(700px 520px at 30% 25%, rgba(74,163,255,.14), transparent 60%),
+      radial-gradient(760px 560px at 30% 22%, rgba(74,163,255,.14), transparent 60%),
       radial-gradient(620px 520px at 78% 75%, rgba(61,220,151,.10), transparent 60%),
-      radial-gradient(520px 420px at 80% 20%, rgba(255,204,102,.09), transparent 60%),
+      radial-gradient(520px 420px at 80% 18%, rgba(255,204,102,.09), transparent 60%),
       linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.18));
     pointer-events:none;
   }
@@ -126,20 +136,22 @@
       linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
     background-size: 34px 34px;
-    opacity:.35;
+    opacity:.34;
     pointer-events:none;
-    mask-image: radial-gradient(600px 420px at 45% 35%, black 35%, transparent 70%);
+    mask-image: radial-gradient(700px 480px at 45% 35%, black 35%, transparent 72%);
   }
 
+  /* Taskbar */
   .taskbar{
     position:absolute;left:14px;right:14px;bottom:14px;
-    height:54px;
+    height:56px;
     border-radius:18px;
     border:1px solid var(--line);
-    background: rgba(0,0,0,.28);
+    background: rgba(0,0,0,.30);
     display:flex;align-items:center;justify-content:space-between;
     padding:10px 12px;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
+    z-index: 2;
   }
   .tbLeft{display:flex;gap:10px;align-items:center}
   .tbIcon{
@@ -150,52 +162,60 @@
     color:var(--muted);
   }
   .tbRight{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:12px}
-  .wifiPill{padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+  .pill{
+    padding:6px 10px;border-radius:999px;border:1px solid var(--line);
+    background:rgba(255,255,255,.04);
+    display:inline-flex;gap:8px;align-items:center;
+    white-space:nowrap;
+  }
+  .pill b{color:var(--ink)}
+  .badgeDot{
+    width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.12)
+  }
+  .badgeDot.red{background:rgba(255,92,108,.95)}
+  .badgeDot.amber{background:rgba(255,204,102,.95)}
+  .badgeDot.green{background:rgba(61,220,151,.95)}
 
-  /* Lock overlay */
-  .lockOverlay{
-    position:absolute;inset:0;
-    display:none;
-    place-items:center;
-    background: radial-gradient(900px 560px at 40% 20%, rgba(255,92,108,.13), transparent 60%),
-                rgba(0,0,0,.60);
+  /* Toast notifications */
+  .toasts{
+    position:absolute;right:16px;top:16px;
+    display:grid;gap:10px;
+    z-index: 3;
+    width:min(360px, 92%);
+  }
+  .toast{
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(0,0,0,.28);
+    padding:10px 12px;
+    box-shadow: 0 12px 34px rgba(0,0,0,.35);
     backdrop-filter: blur(10px);
-    z-index: 5;
+    transform: translateY(-6px);
+    opacity:0;
+    animation: toastIn .45s ease forwards;
   }
-  .lockOverlay.show{display:grid}
-  .lockCard{
-    width:min(520px, 92%);
-    border-radius:24px;
-    border:1px solid rgba(255,92,108,.25);
-    background: linear-gradient(180deg, rgba(255,92,108,.10), rgba(0,0,0,.35));
-    box-shadow: var(--shadow);
-    padding:16px;
-    position:relative;
-    overflow:hidden;
+  @keyframes toastIn{
+    to{transform: translateY(0); opacity:1}
   }
-  .lockCard .big{
-    font-weight:950;font-size:16px;
-    display:flex;align-items:center;gap:10px;
-  }
-  .lockCard p{margin:10px 0 0;color:var(--muted);font-size:13px;line-height:1.45}
-  .lockRing{
-    position:absolute;inset:auto -70px -70px auto;
-    width:220px;height:220px;border-radius:999px;
-    background: radial-gradient(circle at 35% 35%, rgba(255,92,108,.25), transparent 62%);
-    pointer-events:none;
-  }
+  .toast .t{font-weight:950;font-size:12.5px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .toast .p{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.35}
+  .toast small{color:var(--muted)}
+  .toast.red{border-color: rgba(255,92,108,.25)}
+  .toast.amber{border-color: rgba(255,204,102,.25)}
+  .toast.green{border-color: rgba(61,220,151,.25)}
 
   /* Nodes */
   .node{
     position:absolute;
-    width:160px;
+    width:170px;
     border-radius:18px;
     border:1px solid var(--line);
-    background: rgba(0,0,0,.22);
+    background: rgba(0,0,0,.24);
     padding:12px;
     cursor:pointer;
     transition: transform .15s ease, border-color .25s ease, box-shadow .25s ease, opacity .25s ease;
     user-select:none;
+    z-index: 1;
   }
   .node:hover{transform: translateY(-2px); border-color: rgba(255,255,255,.22)}
   .node.locked{opacity:.55; cursor:not-allowed}
@@ -206,7 +226,7 @@
   .node .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
   .node .nm{font-weight:950;font-size:13px}
   .node .ds{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.3}
-  .pill{
+  .statePill{
     padding:6px 10px;border-radius:999px;border:1px solid var(--line);
     background: rgba(255,255,255,.04);
     color:var(--muted);
@@ -218,21 +238,24 @@
   .node[data-state="amber"] .led{background: rgba(255,204,102,.95)}
   .node[data-state="green"] .led{background: rgba(61,220,151,.95)}
   .glowNode{
-    position:absolute;inset:-30px -30px auto auto;
-    width:120px;height:120px;border-radius:999px;
+    position:absolute;inset:-34px -34px auto auto;
+    width:130px;height:130px;border-radius:999px;
     background: radial-gradient(circle at 30% 30%, rgba(74,163,255,.16), transparent 68%);
     pointer-events:none;
   }
 
   /* Connectors */
   .wire{
-    position:absolute;
-    height:3px;
-    background: linear-gradient(90deg, rgba(74,163,255,.18), rgba(255,255,255,.06));
-    border-radius:999px;
-    opacity:.7;
+    position:absolute;height:3px;border-radius:999px;
+    background: linear-gradient(90deg, rgba(74,163,255,.22), rgba(255,255,255,.06));
+    opacity:.65;
     transform-origin:left center;
     pointer-events:none;
+    z-index: 0;
+  }
+  .wire.on{
+    background: linear-gradient(90deg, rgba(61,220,151,.35), rgba(255,255,255,.06));
+    opacity:.85;
   }
   .spark{
     position:absolute;
@@ -241,37 +264,32 @@
     box-shadow: 0 0 0 8px rgba(74,163,255,.10);
     opacity:0;
     pointer-events:none;
+    z-index: 0;
   }
   .spark.go{
-    animation: sparkMove 1.2s ease forwards;
+    animation: sparkMove 1.15s ease forwards;
     opacity:1;
   }
   @keyframes sparkMove{
     0%{transform: translate(0,0) scale(.9); opacity:0}
-    12%{opacity:1}
+    10%{opacity:1}
     100%{transform: translate(var(--dx), var(--dy)) scale(1); opacity:0}
   }
 
-  /* ---------- Sidebar ---------- */
-  .side{
-    display:flex;
-    flex-direction:column;
-    min-height: 560px;
-  }
-  .sideBody{padding:14px;display:flex;flex-direction:column;gap:12px;min-height: 520px}
+  /* Sidebar */
+  .side{display:flex;flex-direction:column;min-height: 580px}
+  .sideBody{padding:14px;display:flex;flex-direction:column;gap:12px;min-height: 540px}
   .card{
     border-radius:18px;
     border:1px solid var(--line);
-    background: rgba(0,0,0,.22);
+    background: rgba(0,0,0,.24);
     padding:12px;
   }
   .card .t{font-weight:950;font-size:13px;display:flex;align-items:center;gap:8px}
   .card .p{margin-top:6px;color:var(--muted);font-size:12.5px;line-height:1.45}
-  .keyring{
-    display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;
-  }
+  .keyring{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
   .keyFrag{
-    width:46px;height:46px;border-radius:16px;
+    width:44px;height:44px;border-radius:16px;
     border:1px solid var(--line);
     background: rgba(255,255,255,.04);
     display:grid;place-items:center;
@@ -291,8 +309,7 @@
     width:80px;height:80px;border-radius:999px;
     background: radial-gradient(circle at 30% 30%, rgba(61,220,151,.20), transparent 65%);
   }
-
-  .btnRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .btnRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
   .btn{
     border-radius:14px;
     padding:10px 12px;
@@ -305,30 +322,109 @@
   .btn:hover{border-color: rgba(74,163,255,.40)}
   .btn.ghost{background: rgba(255,255,255,.04)}
   .btn:disabled{opacity:.55;cursor:not-allowed}
-  .hint{color:var(--muted);font-size:12px}
 
-  /* ---------- Modal: Station ---------- */
+  /* Lock screen */
+  .lockWrap{
+    position:fixed;inset:0;
+    display:grid;place-items:center;
+    background:
+      radial-gradient(900px 560px at 45% 22%, rgba(255,92,108,.13), transparent 60%),
+      rgba(0,0,0,.72);
+    backdrop-filter: blur(12px);
+    z-index: 60;
+  }
+  .lockCard{
+    width:min(640px, 94%);
+    border-radius:26px;
+    border:1px solid rgba(255,255,255,.14);
+    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.34));
+    box-shadow: var(--shadow);
+    overflow:hidden;
+    position:relative;
+  }
+  .lockTop{
+    padding:14px 16px;
+    border-bottom:1px solid rgba(255,255,255,.12);
+    background: rgba(0,0,0,.22);
+    display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  }
+  .lockTop b{font-weight:950}
+  .lockBody{padding:16px}
+  .pinRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .pinDigit{
+    width:44px;height:44px;border-radius:16px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(0,0,0,.22);
+    display:grid;place-items:center;
+    font-weight:950;
+    color:rgba(255,255,255,.35);
+    position:relative;
+    overflow:hidden;
+  }
+  .pinDigit.revealed{color:var(--ink); background: rgba(255,255,255,.05)}
+  .pinDigit.revealed::after{
+    content:"";
+    position:absolute;inset:-30px -30px auto auto;
+    width:80px;height:80px;border-radius:999px;
+    background: radial-gradient(circle at 30% 30%, rgba(74,163,255,.18), transparent 65%);
+  }
+  .pinDigit.blur{
+    filter: blur(2px);
+    opacity:.65;
+  }
+  .lockNote{
+    margin-top:10px;color:var(--muted);font-size:13px;line-height:1.45
+  }
+  .pinInputRow{
+    margin-top:14px;
+    display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  }
+  .pinInput{
+    flex:1 1 260px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(0,0,0,.24);
+    padding:12px 12px;
+    color:var(--ink);
+    font-size:14px;
+    outline:none;
+  }
+  .pinInput::placeholder{color:rgba(255,255,255,.35)}
+  .lockMsg{
+    margin-top:10px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(0,0,0,.22);
+    padding:10px 12px;
+    color:var(--muted);
+    font-size:12.5px;
+    display:none;
+  }
+  .lockMsg.show{display:block}
+  .lockMsg.good{border-color: rgba(61,220,151,.25)}
+  .lockMsg.bad{border-color: rgba(255,92,108,.25)}
+
+  /* Station modal */
   .modalWrap{
     position:fixed;inset:0;
-    display:none;
-    place-items:center;
+    display:none;place-items:center;
     padding:16px;
-    background: rgba(0,0,0,.62);
-    backdrop-filter: blur(10px);
-    z-index: 50;
+    background: rgba(0,0,0,.64);
+    backdrop-filter: blur(12px);
+    z-index: 55;
   }
   .modalWrap.show{display:grid}
   .modal{
-    width:min(900px, 100%);
-    border-radius:24px;
-    border:1px solid var(--line);
-    background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
+    width:min(980px, 100%);
+    border-radius:26px;
+    border:1px solid rgba(255,255,255,.14);
+    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
     box-shadow: var(--shadow);
     overflow:hidden;
   }
   .modalHead{
     padding:12px 14px;
-    border-bottom:1px solid var(--line);
+    border-bottom:1px solid rgba(255,255,255,.12);
     background: rgba(0,0,0,.22);
     display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
   }
@@ -340,64 +436,120 @@
     grid-template-columns: 1.05fr .95fr;
     gap:12px;
   }
-  @media (max-width: 860px){ .modalBody{grid-template-columns:1fr} }
+  @media (max-width: 900px){ .modalBody{grid-template-columns:1fr} }
 
+  /* Mock Windows settings panel */
   .mock{
-    border-radius:20px;
-    border:1px solid var(--line);
-    background: rgba(0,0,0,.25);
+    border-radius:22px;
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(0,0,0,.28);
     padding:14px;
     position:relative;
     overflow:hidden;
-    min-height: 280px;
+    min-height: 320px;
   }
-  .mockTop{
-    display:flex;align-items:center;justify-content:space-between;gap:10px;
+  .mockHeader{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
     padding:10px 10px;
-    border-radius:16px;
+    border-radius:18px;
     border:1px solid rgba(255,255,255,.10);
     background: rgba(255,255,255,.03);
   }
-  .mockTop b{font-weight:950}
-  .mockPanel{
+  .mockHeader b{font-weight:950}
+  .crumb{color:var(--muted);font-size:12px}
+  .mockGrid{
     margin-top:12px;
     display:grid;
     grid-template-columns: 1fr 1fr;
     gap:10px;
   }
   .miniTile{
-    border-radius:16px;
+    border-radius:18px;
     border:1px solid rgba(255,255,255,.10);
     background: rgba(255,255,255,.03);
     padding:10px;
+    min-height: 88px;
   }
   .miniTile .k{font-weight:950;font-size:12.5px}
   .miniTile .v{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.35}
 
-  .pulse{
-    position:absolute;inset:-60px;
-    background: radial-gradient(520px 280px at 35% 25%, rgba(74,163,255,.13), transparent 60%);
-    pointer-events:none;
+  /* Interactive tasks */
+  .taskBox{
+    margin-top:12px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(0,0,0,.22);
+    padding:12px;
   }
-  .pulse.good{background: radial-gradient(520px 280px at 35% 25%, rgba(61,220,151,.12), transparent 60%)}
-  .pulse.bad{background: radial-gradient(520px 280px at 35% 25%, rgba(255,92,108,.12), transparent 60%)}
+  .taskBox .tt{font-weight:950;font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .taskList{display:grid;gap:10px;margin-top:10px}
+  .task{
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.03);
+    padding:10px 12px;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+  }
+  .task .left{display:flex;gap:10px;align-items:flex-start}
+  .task .left b{font-weight:900}
+  .task .left p{margin:2px 0 0;color:var(--muted);font-size:12px;line-height:1.35}
+  .switch{
+    width:54px;height:30px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.07);
+    position:relative;
+    cursor:pointer;
+    flex:0 0 auto;
+  }
+  .switch i{
+    position:absolute;top:3px;left:3px;
+    width:24px;height:24px;border-radius:999px;
+    background: rgba(255,255,255,.75);
+    transition: left .25s ease, background .25s ease;
+  }
+  .switch.on{border-color: rgba(61,220,151,.28); background: rgba(61,220,151,.10)}
+  .switch.on i{left:27px;background: rgba(61,220,151,.95)}
+  .check{
+    width:28px;height:28px;border-radius:12px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.04);
+    display:grid;place-items:center;
+    cursor:pointer;
+    flex:0 0 auto;
+    color:rgba(255,255,255,.35);
+  }
+  .check.on{border-color: rgba(61,220,151,.28); background: rgba(61,220,151,.10); color: rgba(61,220,151,.95)}
+  .applyRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .applyBtn{
+    border-radius:14px;
+    padding:10px 12px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(74,163,255,.14);
+    color:var(--ink);
+    font-weight:950;
+    cursor:pointer;
+  }
+  .applyBtn:hover{border-color: rgba(74,163,255,.40)}
+  .applyBtn:disabled{opacity:.55;cursor:not-allowed}
+  .applyHint{color:var(--muted);font-size:12px;align-self:center}
 
+  /* Quiz */
   .quiz{
-    border-radius:20px;
-    border:1px solid var(--line);
-    background: rgba(0,0,0,.25);
+    border-radius:22px;
+    border:1px solid rgba(255,255,255,.12);
+    background: rgba(0,0,0,.28);
     padding:14px;
   }
   .quiz .q{font-weight:950;font-size:13px;line-height:1.4}
   .opts{display:grid;gap:10px;margin-top:12px}
   .opt{
-    border-radius:16px;
+    border-radius:18px;
     border:1px solid rgba(255,255,255,.12);
     background: rgba(255,255,255,.04);
     padding:10px 12px;
     display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
     cursor:pointer;
-    transition: transform .12s ease, border-color .22s ease, background .22s ease;
+    transition: transform .12s ease, border-color .22s ease;
   }
   .opt:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.20)}
   .opt:disabled{opacity:.55;cursor:not-allowed}
@@ -417,31 +569,41 @@
   }
   .fb{
     margin-top:12px;
-    border-radius:16px;
+    border-radius:18px;
     border:1px solid rgba(255,255,255,.12);
-    background: rgba(0,0,0,.25);
+    background: rgba(0,0,0,.22);
     padding:12px;
     display:none;
   }
   .fb.show{display:block}
-  .fb.good{border-color: rgba(61,220,151,.25); background: linear-gradient(180deg, rgba(61,220,151,.10), rgba(0,0,0,.25))}
-  .fb.bad{border-color: rgba(255,92,108,.25); background: linear-gradient(180deg, rgba(255,92,108,.10), rgba(0,0,0,.25))}
+  .fb.good{border-color: rgba(61,220,151,.25); background: linear-gradient(180deg, rgba(61,220,151,.10), rgba(0,0,0,.22))}
+  .fb.bad{border-color: rgba(255,92,108,.25); background: linear-gradient(180deg, rgba(255,92,108,.10), rgba(0,0,0,.22))}
   .fb .t{font-weight:950}
   .fb .p{margin-top:6px;color:var(--muted);font-size:12.5px;line-height:1.45}
+  .fbBtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
 
-  /* ---------- End modal ---------- */
-  .endGrid{
-    display:grid;gap:10px;margin-top:12px
+  /* End modal */
+  .endModal{position:fixed;inset:0;display:none;place-items:center;padding:16px;background: rgba(0,0,0,.64);backdrop-filter: blur(12px);z-index: 58;}
+  .endModal.show{display:grid}
+  .endCard{
+    width:min(820px, 100%);
+    border-radius:26px;
+    border:1px solid rgba(255,255,255,.14);
+    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
+    box-shadow: var(--shadow);
+    overflow:hidden;
   }
+  .endHead{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.12);background: rgba(0,0,0,.22);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .endHead .mh{font-weight:950}
+  .endBody{padding:14px}
+  .endGrid{display:grid;gap:10px;margin-top:12px}
   .rowOk{
-    border-radius:16px;
-    border:1px solid rgba(61,220,151,.25);
+    border-radius:18px;border:1px solid rgba(61,220,151,.25);
     background: rgba(61,220,151,.08);
     padding:10px 12px;
     display:flex;align-items:center;justify-content:space-between;gap:10px;
   }
 
-  /* Reduced motion */
   @media (prefers-reduced-motion: reduce){
     *{transition:none !important; animation:none !important}
   }
@@ -454,35 +616,50 @@
     <div class="brand">
       <div class="logo" aria-hidden="true"></div>
       <div class="title">
-        <h1>Office PC Rescue — Escape Room</h1>
-        <p>Unlock the secured desktop by fixing 5 Windows security stations</p>
+        <h1>Office PC Rescue — Escape Room (v3)</h1>
+        <p>Fix stations, calm alerts, reveal the PIN, unlock the desktop</p>
       </div>
     </div>
 
     <div class="chips">
       <div class="chip">🔑 Keys: <b id="keysText">0</b>/5</div>
-      <div class="chip">🟩 Progress <b id="progText">0%</b></div>
-      <div class="chip">🧑‍💻 Shift <span class="clock" id="clock">--:--</span></div>
+
+      <div class="chip">
+        🟩 Security Score <b id="scoreText">35</b>
+        <span class="meter" id="scoreMeter" aria-hidden="true"><i id="scoreFill"></i></span>
+      </div>
+
+      <div class="chip">
+        ⚠ Threat <b id="threatText">High</b>
+        <span class="meter red" id="threatMeter" aria-hidden="true"><i id="threatFill"></i></span>
+      </div>
+
+      <div class="chip">🧑‍💻 Shift <b id="clock">--:--</b></div>
       <button class="btnTop" id="resetTop" type="button">Reset</button>
     </div>
   </div>
 
   <div class="stage">
-    <!-- Desktop Map -->
+    <!-- Desktop -->
     <div class="panel">
       <div class="head">
         <div>
           <div class="h">Desktop Map</div>
-          <div class="s" id="subline">Complete stations in order. Each station gives a key fragment.</div>
+          <div class="s" id="subline">Complete stations in order. Each success reduces alerts and reveals the PIN.</div>
         </div>
-        <div class="chip">Wi-Fi: <b>Office_Guest</b> · Mode: <b>Escape</b></div>
+        <div class="chip">
+          <span class="badgeDot red" id="alertDot"></span>
+          Alerts: <b id="alertCount">6</b>
+        </div>
       </div>
 
       <div class="desktop" id="desktop">
         <div class="wallpaper"></div>
         <div class="gridNoise"></div>
 
-        <!-- Connectors (simple wires) -->
+        <div class="toasts" id="toasts"></div>
+
+        <!-- wires -->
         <div class="wire" id="w1"></div>
         <div class="wire" id="w2"></div>
         <div class="wire" id="w3"></div>
@@ -495,9 +672,9 @@
           <div class="top">
             <div>
               <div class="nm">👤 Accounts</div>
-              <div class="ds">Fix shared login & sign-in safety</div>
+              <div class="ds">Shared login & sign-in safety</div>
             </div>
-            <div class="pill"><span class="led"></span><span class="st">Locked</span></div>
+            <div class="statePill"><span class="led"></span><span class="st">Locked</span></div>
           </div>
         </div>
 
@@ -508,7 +685,7 @@
               <div class="nm">🔒 Screen Lock</div>
               <div class="ds">Auto-lock & sign-in on resume</div>
             </div>
-            <div class="pill"><span class="led"></span><span class="st">Locked</span></div>
+            <div class="statePill"><span class="led"></span><span class="st">Locked</span></div>
           </div>
         </div>
 
@@ -517,31 +694,32 @@
           <div class="top">
             <div>
               <div class="nm">🔄 Updates</div>
-              <div class="ds">Patch the OS safely (active hours)</div>
+              <div class="ds">Patch OS (active hours)</div>
             </div>
-            <div class="pill"><span class="led"></span><span class="st">Locked</span></div>
+            <div class="statePill"><span class="led"></span><span class="st">Locked</span></div>
           </div>
         </div>
 
         <div class="node locked" id="n4" data-key="firewall" data-state="red" style="right:80px; bottom:170px;">
           <div class="glowNode"></div>
           <div class="top">
-            <div>
-              <div class="nm">🛡️ Firewall</div>
-              <div class="ds">Secure public/private network profiles</div>
-            </div>
-            <div class="pill"><span class="led"></span><span class="st">Locked</span></div>
+            <div class="nm">🛡️ Firewall</div>
+            <div class="ds">Profiles for public/private</div>
+          </div>
+          <div class="top" style="margin-top:10px">
+            <div style="opacity:.01">.</div>
+            <div class="statePill"><span class="led"></span><span class="st">Locked</span></div>
           </div>
         </div>
 
-        <div class="node locked" id="n5" data-key="privacy" data-state="red" style="left:280px; top:210px; width:190px;">
+        <div class="node locked" id="n5" data-key="privacy" data-state="red" style="left:290px; top:220px; width:200px;">
           <div class="glowNode"></div>
           <div class="top">
             <div>
               <div class="nm">👁️ Privacy</div>
-              <div class="ds">App permissions & diagnostic settings</div>
+              <div class="ds">App permissions & diagnostics</div>
             </div>
-            <div class="pill"><span class="led"></span><span class="st">Locked</span></div>
+            <div class="statePill"><span class="led"></span><span class="st">Locked</span></div>
           </div>
         </div>
 
@@ -553,24 +731,8 @@
             <div class="tbIcon">🔍</div>
           </div>
           <div class="tbRight">
-            <span class="wifiPill">🔒 Secure Desktop</span>
-            <span class="wifiPill">🔔 <span id="notif">5</span></span>
-          </div>
-        </div>
-
-        <!-- Lock overlay -->
-        <div class="lockOverlay show" id="lockOverlay">
-          <div class="lockCard">
-            <div class="lockRing"></div>
-            <div class="big">🔐 PC Locked</div>
-            <p>
-              This office PC cannot be used safely until core Windows security settings are restored.
-              Complete all 5 stations to unlock the desktop.
-            </p>
-            <div class="btnRow" style="margin-top:12px">
-              <button class="btn" id="beginBtn" type="button">Begin</button>
-              <button class="btn ghost" id="howBtn" type="button">How to play</button>
-            </div>
+            <span class="pill">Wi-Fi: <b>Office_Guest</b></span>
+            <span class="pill">🔔 <b id="notif">6</b></span>
           </div>
         </div>
 
@@ -581,17 +743,17 @@
     <div class="panel side">
       <div class="head">
         <div>
-          <div class="h">Security Keyring</div>
-          <div class="s">Each station unlock gives one key fragment</div>
+          <div class="h">Keyring & Lock Code</div>
+          <div class="s">Each secured station reveals 2 digits of the PIN</div>
         </div>
-        <div class="chip">Goal: <b>Unlock Desktop</b></div>
+        <div class="chip">Goal: <b>Unlock PC</b></div>
       </div>
 
       <div class="sideBody">
         <div class="card">
-          <div class="t">📌 Mission</div>
+          <div class="t">🔑 Key Fragments</div>
           <div class="p" id="missionText">
-            Start with <b>Accounts</b>. Each station becomes available after the previous one is secured.
+            Start with <b>Accounts</b>. Complete stations in order.
           </div>
           <div class="keyring" id="keyring">
             <div class="keyFrag" id="k1">1</div>
@@ -603,83 +765,122 @@
         </div>
 
         <div class="card">
-          <div class="t">🧠 How to win</div>
-          <div class="p">
-            In each station, answer <b>2 correct</b> questions to secure the station and obtain its key fragment.
-            Options are shuffled automatically, so no pattern guessing.
-          </div>
-          <div class="hint" style="margin-top:10px">
-            Tip: Make decisions like real IT support: authentication first, then protection, then privacy hardening.
-          </div>
+          <div class="t">🔐 PIN (10 digits)</div>
+          <div class="p">Digits reveal as you secure stations. Enter the full PIN on the lock screen to finish.</div>
+          <div class="pinRow" id="pinPreview"></div>
         </div>
 
         <div class="card">
-          <div class="t">⚙ Controls</div>
-          <div class="p">
-            Click a station node to enter. Use keyboard <b>1–4</b> to answer options faster.
-          </div>
+          <div class="t">📌 Status</div>
+          <div class="p" id="statusText">PC is locked. Fix stations to reveal the PIN.</div>
           <div class="btnRow">
+            <button class="btn ghost" id="openLockBtn" type="button">Open Lock Screen</button>
             <button class="btn ghost" id="resetBtn" type="button">Reset Game</button>
           </div>
         </div>
 
-        <div class="card" id="statusCard">
-          <div class="t">📶 Status</div>
-          <div class="p" id="statusText">Locked. Begin to start.</div>
+        <div class="card">
+          <div class="t">🎮 How this is “game style”</div>
+          <div class="p">
+            Each station has quick <b>hands-on tasks</b> (toggles/checklists) plus a decision question.
+            Score and alerts respond to your fixes.
+          </div>
         </div>
+
       </div>
     </div>
 
   </div>
 </div>
 
-<!-- Station Modal -->
-<div class="modalWrap" id="stationModal" aria-hidden="true">
+<!-- Lock Screen (PIN entry) -->
+<div class="lockWrap" id="lockWrap">
+  <div class="lockCard">
+    <div class="lockTop">
+      <div>
+        <b>🔐 Office PC — Locked</b>
+        <div style="color:var(--muted);font-size:12px;margin-top:2px" id="lockSub">Fix security stations to reveal the PIN.</div>
+      </div>
+      <div class="chip">Security Score <b id="lockScore">35</b></div>
+    </div>
+    <div class="lockBody">
+      <div style="font-weight:950">PIN Digits (revealed as you progress)</div>
+      <div class="pinRow" id="pinDigits"></div>
+      <div class="lockNote">
+        When all digits are revealed, enter the full 10-digit PIN to unlock the desktop.
+      </div>
+      <div class="pinInputRow">
+        <input class="pinInput" id="pinInput" inputmode="numeric" maxlength="10" placeholder="Enter 10-digit PIN" />
+        <button class="btn" id="unlockBtn" type="button">Unlock</button>
+        <button class="btn ghost" id="closeLockBtn" type="button">Close</button>
+      </div>
+      <div class="lockMsg" id="lockMsg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Station modal -->
+<div class="modalWrap" id="stationModal">
   <div class="modal">
     <div class="modalHead">
       <div>
         <div class="mh" id="mTitle">Station</div>
-        <div class="ms" id="mSub">Complete 2 correct to secure this station</div>
+        <div class="ms" id="mSub">Do tasks → Apply → Answer (1 MCQ)</div>
       </div>
-      <div class="chip">Correct: <b id="mCount">0</b>/2</div>
+      <div class="chip">Step: <b id="stepText">Tasks</b></div>
     </div>
 
     <div class="modalBody">
+      <!-- Mock settings + tasks -->
       <div class="mock">
-        <div class="pulse" id="pulse"></div>
-        <div class="mockTop">
+        <div class="mockHeader">
           <div>⚙ <b id="mockName">Windows Settings</b></div>
-          <div class="chip">Path: <b id="mockPath">Settings</b></div>
+          <div class="crumb" id="mockPath">Settings</div>
         </div>
-        <div class="mockPanel">
+
+        <div class="mockGrid">
           <div class="miniTile">
-            <div class="k" id="a1k">Status</div>
-            <div class="v" id="a1v">Needs attention</div>
+            <div class="k">Status</div>
+            <div class="v" id="statusV">Needs attention</div>
           </div>
           <div class="miniTile">
-            <div class="k" id="a2k">Recommended</div>
-            <div class="v" id="a2v">Apply the safest first action</div>
+            <div class="k">Risk</div>
+            <div class="v" id="riskV">High exposure</div>
           </div>
           <div class="miniTile">
-            <div class="k" id="a3k">Impact</div>
-            <div class="v" id="a3v">Reduces exposure and prevents misuse</div>
+            <div class="k">Impact</div>
+            <div class="v" id="impactV">Reduces misuse and attack surface</div>
           </div>
           <div class="miniTile">
-            <div class="k" id="a4k">Hint</div>
-            <div class="v" id="a4v">Think of least privilege and safe defaults</div>
+            <div class="k">Hint</div>
+            <div class="v" id="hintV">Use safe defaults and least privilege</div>
+          </div>
+        </div>
+
+        <div class="taskBox">
+          <div class="tt">
+            <span>Hands-on tasks</span>
+            <span style="color:var(--muted);font-size:12px">Complete both tasks to enable Apply</span>
+          </div>
+          <div class="taskList" id="taskList"></div>
+
+          <div class="applyRow">
+            <button class="applyBtn" id="applyBtn" type="button" disabled>Apply Changes</button>
+            <div class="applyHint" id="applyHint">Finish tasks to apply.</div>
           </div>
         </div>
       </div>
 
+      <!-- Quiz -->
       <div class="quiz">
-        <div class="q" id="qText">Question</div>
+        <div class="q" id="qText">Answer will unlock after Apply.</div>
         <div class="opts" id="opts"></div>
 
         <div class="fb" id="fb">
           <div class="t" id="fbT">—</div>
           <div class="p" id="fbP">—</div>
-          <div class="btnRow" style="margin-top:10px">
-            <button class="btn" id="nextBtn" type="button">Next</button>
+          <div class="fbBtns">
+            <button class="btn" id="finishBtn" type="button">Finish Station</button>
             <button class="btn ghost" id="closeStationBtn" type="button">Close</button>
           </div>
         </div>
@@ -689,49 +890,22 @@
   </div>
 </div>
 
-<!-- How to play modal -->
-<div class="modalWrap" id="howModal">
-  <div class="modal">
-    <div class="modalHead">
-      <div class="mh">How to play</div>
-      <div class="chip">Escape Room Mode</div>
-    </div>
-    <div class="modalBody" style="grid-template-columns:1fr">
-      <div style="padding:2px 2px 10px">
-        <div style="font-weight:950;font-size:14px">Rules</div>
-        <ul style="margin:10px 0 0;padding-left:18px;color:var(--muted);line-height:1.55;font-size:13px">
-          <li>Stations must be completed in order.</li>
-          <li>Each station requires <b>2 correct</b> answers (questions are scenario-based).</li>
-          <li>After completion, the station turns green and a key fragment is added to your keyring.</li>
-          <li>After 5 keys, the lock overlay disappears and the desktop becomes secured.</li>
-          <li>Options are shuffled each time you see a question.</li>
-        </ul>
-        <div class="btnRow" style="margin-top:14px">
-          <button class="btn" id="closeHowBtn" type="button">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- End modal -->
-<div class="modalWrap" id="endModal">
-  <div class="modal">
-    <div class="modalHead">
-      <div class="mh">Desktop Unlocked</div>
-      <div class="chip">Keys <b>5/5</b></div>
+<div class="endModal" id="endModal">
+  <div class="endCard">
+    <div class="endHead">
+      <div class="mh">✅ Desktop Unlocked</div>
+      <div class="chip">Security Score <b id="endScore">90</b></div>
     </div>
-    <div class="modalBody" style="grid-template-columns:1fr">
-      <div style="padding:2px 2px 10px">
-        <div style="font-weight:950;font-size:14px">System status</div>
-        <div style="margin-top:6px;color:var(--muted);font-size:13px;line-height:1.55">
-          You restored baseline Windows security. The office desktop is now safe to use.
-        </div>
-        <div class="endGrid" id="endGrid"></div>
-        <div class="btnRow" style="margin-top:14px">
-          <button class="btn" id="playAgainBtn" type="button">Play again</button>
-          <button class="btn ghost" id="closeEndBtn" type="button">Close</button>
-        </div>
+    <div class="endBody">
+      <div style="font-weight:950;font-size:14px">You restored baseline security</div>
+      <div style="margin-top:6px;color:var(--muted);font-size:13px;line-height:1.55">
+        Stations are secured, alerts are cleared, and the PC is safe for normal work.
+      </div>
+      <div class="endGrid" id="endGrid"></div>
+      <div class="btnRow" style="margin-top:14px">
+        <button class="btn" id="playAgainBtn" type="button">Play again</button>
+        <button class="btn ghost" id="closeEndBtn" type="button">Close</button>
       </div>
     </div>
   </div>
@@ -739,334 +913,172 @@
 
 <script>
 /* =========================================================
-   Office PC Rescue — Escape Room (Option B)
-   - 5 stations, sequential unlocking
-   - Each station needs 2 correct
-   - Options shuffled every question (no “first option correct” pattern)
-   - Smooth UI, no flicker, mobile-friendly
+   Escape Room v3 — More realistic "game style"
+   - Lock screen with 10-digit PIN revealed by progress
+   - Each station: 2 interactive tasks + Apply + 1 MCQ
+   - Security Score + Threat meter + Alerts/toasts react
+   - Options shuffled every question (no predictable correct position)
 ========================================================= */
 
-/* --------- Station definitions --------- */
 const STATIONS = [
   {
-    key:"accounts", nodeId:"n1", keyId:"k1",
-    title:"Accounts Security", icon:"👤",
-    subtitle:"Stop shared access and enforce safe sign-in",
+    key:"accounts", nodeId:"n1", icon:"👤",
+    title:"Accounts Security",
     path:"Settings → Accounts → Sign-in options",
-    facts:{
-      status:"Shared/weak access patterns detected",
-      recommended:"Separate users and enforce sign-in rules",
-      impact:"Prevents misuse and improves accountability",
-      hint:"Authentication is the first line of defense"
-    }
+    tiles:{
+      status:"Shared login detected",
+      risk:"Medium",
+      impact:"Improves access control and accountability",
+      hint:"Use separate accounts and least privilege"
+    },
+    tasks:[
+      {type:"check", label:"Create separate user accounts", sub:"Stop shared logins; assign unique accounts"},
+      {type:"check", label:"Enforce strong sign-in behavior", sub:"Require password/PIN and disable password sharing"}
+    ]
   },
   {
-    key:"lock", nodeId:"n2", keyId:"k2",
-    title:"Screen Lock", icon:"🔒",
-    subtitle:"Ensure the PC locks when unattended",
-    path:"Settings → Accounts → Sign-in options / Screen saver",
-    facts:{
-      status:"PC remains unlocked after inactivity",
-      recommended:"Auto-lock + require sign-in on resume",
-      impact:"Stops walk-up misuse in shared spaces",
-      hint:"Use short timeouts on shared computers"
-    }
+    key:"lock", nodeId:"n2", icon:"🔒",
+    title:"Screen Lock",
+    path:"Settings → Accounts → Sign-in options",
+    tiles:{
+      status:"Auto-lock is off",
+      risk:"Medium",
+      impact:"Prevents walk-up misuse",
+      hint:"Short timeout + sign-in on resume"
+    },
+    tasks:[
+      {type:"switch", label:"Require sign-in on wake", sub:"Lock screen appears when resuming"},
+      {type:"switch", label:"Auto-lock after inactivity", sub:"Locks if user forgets to lock manually"}
+    ]
   },
   {
-    key:"updates", nodeId:"n3", keyId:"k3",
-    title:"Windows Updates", icon:"🔄",
-    subtitle:"Patch vulnerabilities using safe defaults",
+    key:"updates", nodeId:"n3", icon:"🔄",
+    title:"Windows Updates",
     path:"Settings → Windows Update",
-    facts:{
-      status:"Updates are delayed/disabled",
-      recommended:"Enable automatic updates + active hours",
-      impact:"Reduces exposure to known vulnerabilities",
-      hint:"Security patches matter more than convenience"
-    }
+    tiles:{
+      status:"Updates delayed",
+      risk:"High",
+      impact:"Patches known vulnerabilities",
+      hint:"Enable automatic updates with active hours"
+    },
+    tasks:[
+      {type:"switch", label:"Automatic updates", sub:"Download and install security updates"},
+      {type:"check", label:"Set active hours", sub:"Reduce disruption without disabling updates"}
+    ]
   },
   {
-    key:"firewall", nodeId:"n4", keyId:"k4",
-    title:"Firewall Profiles", icon:"🛡️",
-    subtitle:"Protect on public and private networks",
+    key:"firewall", nodeId:"n4", icon:"🛡️",
+    title:"Firewall Profiles",
     path:"Windows Security → Firewall & network protection",
-    facts:{
-      status:"Firewall protection is inconsistent",
-      recommended:"Ensure firewall is ON across profiles",
-      impact:"Reduces inbound attack surface on networks",
-      hint:"Public Wi-Fi is higher risk"
-    }
+    tiles:{
+      status:"Inconsistent protection",
+      risk:"High",
+      impact:"Reduces inbound attack surface",
+      hint:"Public profile must be strict"
+    },
+    tasks:[
+      {type:"switch", label:"Firewall ON (Public profile)", sub:"Strict protection on risky networks"},
+      {type:"switch", label:"Firewall ON (Private profile)", sub:"Baseline protection in office/home"}
+    ]
   },
   {
-    key:"privacy", nodeId:"n5", keyId:"k5",
-    title:"Privacy & Permissions", icon:"👁️",
-    subtitle:"Tighten camera/mic/app permissions",
+    key:"privacy", nodeId:"n5", icon:"👁️",
+    title:"Privacy & Permissions",
     path:"Settings → Privacy (or Privacy & security)",
-    facts:{
-      status:"Apps have unnecessary sensitive access",
-      recommended:"Disable unneeded permissions and background access",
-      impact:"Reduces data leakage and attack surface",
-      hint:"Follow least privilege"
-    }
+    tiles:{
+      status:"Over-permissioned apps",
+      risk:"Medium",
+      impact:"Reduces data leakage",
+      hint:"Disable unnecessary camera/mic/background access"
+    },
+    tasks:[
+      {type:"check", label:"Review camera/mic permissions", sub:"Only allow required apps"},
+      {type:"check", label:"Disable unnecessary background access", sub:"Reduce silent data access"}
+    ]
   }
 ];
 
-/* --------- Question bank (sample) ---------
-   Replace these with your chapter-derived questions later.
-   Keep structure:
-   { stationKey, q, options:[{t, icon},...], correctIndex, ok, bad }
-------------------------------------------- */
+/* Question bank (sample). Replace with your chapter-derived items later. */
 const QUESTION_BANK = [
-  // ACCOUNTS
   { stationKey:"accounts",
-    q:"Multiple staff members use one shared login. What is the best first step?",
-    options:[
-      {t:"Create separate user accounts and enforce passwords", icon:"👤"},
-      {t:"Keep one account and share the password in a group", icon:"🔑"},
-      {t:"Disable sign-in to speed up access", icon:"⚡"},
-      {t:"Write the password on a note near the monitor", icon:"📝"}
-    ],
-    correctIndex:0,
-    ok:"Separate accounts enable real access control and accountability.",
-    bad:"Shared accounts remove accountability and increase exposure."
-  },
-  { stationKey:"accounts",
-    q:"What is the safest habit for administrator access on an office PC?",
+    q:"Best practice for admin rights on office PCs?",
     options:[
       {t:"Use standard accounts daily and elevate only when needed", icon:"🧑‍💻"},
-      {t:"Always stay logged in as Administrator", icon:"👑"},
-      {t:"Share admin password with all staff for convenience", icon:"🔓"},
-      {t:"Disable UAC prompts so nothing interrupts work", icon:"🚫"}
+      {t:"Always use Administrator for convenience", icon:"👑"},
+      {t:"Share admin password with the team", icon:"🔑"},
+      {t:"Disable all prompts permanently", icon:"🚫"}
     ],
     correctIndex:0,
-    ok:"Least privilege reduces damage if something goes wrong.",
-    bad:"Constant admin access increases risk and impact of mistakes."
-  },
-  { stationKey:"accounts",
-    q:"The PC wakes from sleep without asking credentials. What should you do?",
-    options:[
-      {t:"Require sign-in when the PC wakes up (on resume)", icon:"🔒"},
-      {t:"Disable the lock screen permanently", icon:"🚫"},
-      {t:"Ignore it because it saves time", icon:"⏳"},
-      {t:"Turn off sleep forever", icon:"💡"}
-    ],
-    correctIndex:0,
-    ok:"Sign-in on resume prevents walk-up access during breaks.",
-    bad:"Unattended access remains a serious risk in shared environments."
-  },
-
-  // LOCK
-  { stationKey:"lock",
-    q:"Employees forget to lock the screen during breaks. Best practical control?",
-    options:[
-      {t:"Set a short inactivity timeout and require sign-in on resume", icon:"⏲️"},
-      {t:"Increase timeout so it rarely locks", icon:"🕰️"},
-      {t:"Disable screen lock to reduce complaints", icon:"🚫"},
-      {t:"Lock only at the end of the day", icon:"🌙"}
-    ],
-    correctIndex:0,
-    ok:"Auto-lock reduces reliance on memory and habits.",
-    bad:"Long or disabled locking increases chances of misuse."
+    ok:"Least privilege limits damage from mistakes or malware.",
+    bad:"Constant admin use increases both likelihood and impact of security issues."
   },
   { stationKey:"lock",
-    q:"Which quick action is recommended when leaving the desk briefly?",
+    q:"Main purpose of auto-lock on shared PCs?",
     options:[
-      {t:"Manually lock the PC before stepping away", icon:"🔒"},
-      {t:"Minimize windows only", icon:"🪟"},
-      {t:"Turn brightness down to look ‘off’", icon:"🌗"},
-      {t:"Close the lid without lock settings", icon:"🧳"}
+      {t:"Prevent walk-up access when the user steps away", icon:"🛡️"},
+      {t:"Make the PC faster", icon:"⚡"},
+      {t:"Improve Wi-Fi strength", icon:"📶"},
+      {t:"Increase storage", icon:"💾"}
     ],
     correctIndex:0,
-    ok:"Manual lock is instant and reliable.",
-    bad:"Minimizing or dimming does not prevent access."
-  },
-  { stationKey:"lock",
-    q:"What is the main reason for using a short lock timeout on shared PCs?",
-    options:[
-      {t:"It reduces walk-up access and opportunistic misuse", icon:"🛡️"},
-      {t:"It makes the PC faster", icon:"⚡"},
-      {t:"It increases storage space", icon:"💾"},
-      {t:"It improves Wi-Fi strength", icon:"📶"}
-    ],
-    correctIndex:0,
-    ok:"Short timeouts reduce exposure when someone forgets to lock.",
-    bad:"The purpose is security, not performance or networking."
-  },
-
-  // UPDATES
-  { stationKey:"updates",
-    q:"Updates were disabled due to work disruption. Best first action?",
-    options:[
-      {t:"Enable automatic updates and set active hours", icon:"🔄"},
-      {t:"Update only once a year", icon:"📆"},
-      {t:"Disable update notifications permanently", icon:"🔕"},
-      {t:"Skip updates if antivirus is present", icon:"🦠"}
-    ],
-    correctIndex:0,
-    ok:"Active hours keep updates practical while staying protected.",
-    bad:"Delaying updates keeps known vulnerabilities open longer."
+    ok:"Auto-lock reduces exposure from forgetfulness and shared spaces.",
+    bad:"Auto-lock is a security control, not a performance feature."
   },
   { stationKey:"updates",
-    q:"Why are OS security updates important for office PCs?",
+    q:"Why are OS updates important for security?",
     options:[
-      {t:"They patch known vulnerabilities used by attackers", icon:"🩹"},
-      {t:"They only change the look of Windows", icon:"🎨"},
-      {t:"They reduce password requirements", icon:"🔓"},
-      {t:"They make antivirus unnecessary", icon:"🚫"}
+      {t:"They patch known vulnerabilities exploited by attackers", icon:"🩹"},
+      {t:"They are only cosmetic changes", icon:"🎨"},
+      {t:"They remove the need for antivirus", icon:"🚫"},
+      {t:"They weaken password requirements", icon:"🔓"}
     ],
     correctIndex:0,
-    ok:"Updates reduce exposure to known, documented issues.",
-    bad:"Updates matter for security; they do not replace protections."
-  },
-  { stationKey:"updates",
-    q:"What is a safe way to reduce interruptions without disabling updates?",
-    options:[
-      {t:"Schedule update times using active hours and restart options", icon:"⏱️"},
-      {t:"Turn updates off and hope antivirus catches everything", icon:"😐"},
-      {t:"Block all update servers", icon:"🚧"},
-      {t:"Ignore pending restarts indefinitely", icon:"⏳"}
-    ],
-    correctIndex:0,
-    ok:"Scheduling keeps protection while respecting workflow.",
-    bad:"Blocking or ignoring restarts increases risk over time."
-  },
-
-  // FIREWALL
-  { stationKey:"firewall",
-    q:"A laptop connects to public Wi-Fi. What should you verify first?",
-    options:[
-      {t:"Firewall is ON for both public and private profiles", icon:"🛡️"},
-      {t:"Turn OFF firewall to improve speed", icon:"⚡"},
-      {t:"Enable open file sharing for convenience", icon:"📂"},
-      {t:"Only change the desktop theme", icon:"🎨"}
-    ],
-    correctIndex:0,
-    ok:"Firewall reduces unwanted inbound connections on risky networks.",
-    bad:"Disabling firewall or opening sharing increases exposure."
+    ok:"Updates close known security holes and reduce exposure.",
+    bad:"Updates are a baseline security control and do not replace other layers."
   },
   { stationKey:"firewall",
-    q:"Which statement about firewall profiles is most accurate?",
+    q:"Which network profile is typically higher risk?",
     options:[
-      {t:"Public networks generally need stricter firewall settings", icon:"📶"},
-      {t:"Public networks are safer than private networks", icon:"😄"},
-      {t:"Firewall only matters if malware is already present", icon:"🦠"},
-      {t:"Firewall should be OFF in offices", icon:"🚫"}
+      {t:"Public networks (cafes, airports, guest Wi-Fi)", icon:"📶"},
+      {t:"Private home network always", icon:"🏠"},
+      {t:"Any network is equally safe", icon:"😐"},
+      {t:"Only wired networks are risky", icon:"🔌"}
     ],
     correctIndex:0,
-    ok:"Public networks are higher risk; stricter controls are sensible.",
-    bad:"Firewall is a baseline protection, not a last resort."
-  },
-  { stationKey:"firewall",
-    q:"What is a sensible goal when configuring firewall on an office PC?",
-    options:[
-      {t:"Keep firewall enabled and allow only necessary apps", icon:"✅"},
-      {t:"Disable firewall to avoid prompts", icon:"🔕"},
-      {t:"Allow all inbound connections by default", icon:"🌊"},
-      {t:"Use firewall only on weekends", icon:"📅"}
-    ],
-    correctIndex:0,
-    ok:"Default-deny + allow required apps is safer and manageable.",
-    bad:"Over-permissive settings defeat the purpose of the firewall."
-  },
-
-  // PRIVACY
-  { stationKey:"privacy",
-    q:"Many apps have camera/mic access without clear need. Best first action?",
-    options:[
-      {t:"Review permissions and disable unnecessary access", icon:"👁️"},
-      {t:"Allow all permissions to avoid errors", icon:"✅"},
-      {t:"Disable screen lock instead", icon:"🔓"},
-      {t:"Share admin password so apps install easily", icon:"🔑"}
-    ],
-    correctIndex:0,
-    ok:"Least-privilege permissions reduce privacy leakage and risk.",
-    bad:"Unnecessary access increases exposure without improving security."
+    ok:"Public networks are less trustworthy and need stricter controls.",
+    bad:"Public networks are generally higher risk because you can't trust other devices."
   },
   { stationKey:"privacy",
-    q:"Which choice best reduces privacy exposure on shared PCs?",
-    options:[
-      {t:"Disable unneeded background app access and tracking", icon:"🧩"},
-      {t:"Turn off updates to stop changes", icon:"🔄"},
-      {t:"Disable firewall to reduce prompts", icon:"🛡️"},
-      {t:"Ignore settings because defaults are always perfect", icon:"😐"}
-    ],
-    correctIndex:0,
-    ok:"Reducing background access and tracking lowers exposure.",
-    bad:"Changing unrelated protections does not address privacy risk."
-  },
-  { stationKey:"privacy",
-    q:"What principle should guide app permission decisions?",
+    q:"What principle should guide app permissions?",
     options:[
       {t:"Grant only what is needed (least privilege)", icon:"🎯"},
-      {t:"Grant everything once and never review", icon:"✅"},
-      {t:"Permissions do not matter for security", icon:"🚫"},
+      {t:"Grant everything once and forget", icon:"✅"},
+      {t:"Permissions do not affect security", icon:"🚫"},
       {t:"Always allow microphone for all apps", icon:"🎙️"}
     ],
     correctIndex:0,
-    ok:"Least privilege reduces attack surface and unwanted data access.",
-    bad:"Over-permissioning increases risk and is hard to audit later."
+    ok:"Least privilege reduces unwanted access and attack surface.",
+    bad:"Over-permissioning increases exposure and is hard to audit later."
   }
 ];
 
-/* --------- Game state --------- */
-const state = {
-  started:false,
-  currentIndex:0, // station index
-  keys:0,
-  stationCorrect:0,
-  activeStationKey:null,
-  usedQs: new Set(), // question IDs if you add ids later
-};
-
+/* UI */
 const els = {
   keysText: document.getElementById("keysText"),
-  progText: document.getElementById("progText"),
-  clock: document.getElementById("clock"),
+  scoreText: document.getElementById("scoreText"),
+  threatText: document.getElementById("threatText"),
+  alertCount: document.getElementById("alertCount"),
   notif: document.getElementById("notif"),
+  alertDot: document.getElementById("alertDot"),
   subline: document.getElementById("subline"),
   missionText: document.getElementById("missionText"),
   statusText: document.getElementById("statusText"),
+  clock: document.getElementById("clock"),
 
-  lockOverlay: document.getElementById("lockOverlay"),
-  beginBtn: document.getElementById("beginBtn"),
-  howBtn: document.getElementById("howBtn"),
-  howModal: document.getElementById("howModal"),
-  closeHowBtn: document.getElementById("closeHowBtn"),
-
-  resetBtn: document.getElementById("resetBtn"),
-  resetTop: document.getElementById("resetTop"),
-
-  stationModal: document.getElementById("stationModal"),
-  mTitle: document.getElementById("mTitle"),
-  mSub: document.getElementById("mSub"),
-  mCount: document.getElementById("mCount"),
-
-  mockName: document.getElementById("mockName"),
-  mockPath: document.getElementById("mockPath"),
-  a1k: document.getElementById("a1k"),
-  a1v: document.getElementById("a1v"),
-  a2k: document.getElementById("a2k"),
-  a2v: document.getElementById("a2v"),
-  a3k: document.getElementById("a3k"),
-  a3v: document.getElementById("a3v"),
-  a4k: document.getElementById("a4k"),
-  a4v: document.getElementById("a4v"),
-  pulse: document.getElementById("pulse"),
-
-  qText: document.getElementById("qText"),
-  opts: document.getElementById("opts"),
-  fb: document.getElementById("fb"),
-  fbT: document.getElementById("fbT"),
-  fbP: document.getElementById("fbP"),
-  nextBtn: document.getElementById("nextBtn"),
-  closeStationBtn: document.getElementById("closeStationBtn"),
-
-  keyEls: [
-    document.getElementById("k1"),
-    document.getElementById("k2"),
-    document.getElementById("k3"),
-    document.getElementById("k4"),
-    document.getElementById("k5")
-  ],
+  scoreFill: document.getElementById("scoreFill"),
+  scoreMeter: document.getElementById("scoreMeter"),
+  threatFill: document.getElementById("threatFill"),
+  threatMeter: document.getElementById("threatMeter"),
 
   nodes: {
     accounts: document.getElementById("n1"),
@@ -1078,11 +1090,54 @@ const els = {
 
   wires: [document.getElementById("w1"),document.getElementById("w2"),document.getElementById("w3"),document.getElementById("w4")],
   spark: document.getElementById("spark"),
+  toasts: document.getElementById("toasts"),
+
+  keyEls: [document.getElementById("k1"),document.getElementById("k2"),document.getElementById("k3"),document.getElementById("k4"),document.getElementById("k5")],
+
+  pinPreview: document.getElementById("pinPreview"),
+
+  lockWrap: document.getElementById("lockWrap"),
+  pinDigits: document.getElementById("pinDigits"),
+  pinInput: document.getElementById("pinInput"),
+  unlockBtn: document.getElementById("unlockBtn"),
+  closeLockBtn: document.getElementById("closeLockBtn"),
+  openLockBtn: document.getElementById("openLockBtn"),
+  lockMsg: document.getElementById("lockMsg"),
+  lockSub: document.getElementById("lockSub"),
+  lockScore: document.getElementById("lockScore"),
+
+  stationModal: document.getElementById("stationModal"),
+  mTitle: document.getElementById("mTitle"),
+  mSub: document.getElementById("mSub"),
+  stepText: document.getElementById("stepText"),
+
+  mockName: document.getElementById("mockName"),
+  mockPath: document.getElementById("mockPath"),
+  statusV: document.getElementById("statusV"),
+  riskV: document.getElementById("riskV"),
+  impactV: document.getElementById("impactV"),
+  hintV: document.getElementById("hintV"),
+
+  taskList: document.getElementById("taskList"),
+  applyBtn: document.getElementById("applyBtn"),
+  applyHint: document.getElementById("applyHint"),
+
+  qText: document.getElementById("qText"),
+  opts: document.getElementById("opts"),
+  fb: document.getElementById("fb"),
+  fbT: document.getElementById("fbT"),
+  fbP: document.getElementById("fbP"),
+  finishBtn: document.getElementById("finishBtn"),
+  closeStationBtn: document.getElementById("closeStationBtn"),
 
   endModal: document.getElementById("endModal"),
   endGrid: document.getElementById("endGrid"),
+  endScore: document.getElementById("endScore"),
   playAgainBtn: document.getElementById("playAgainBtn"),
   closeEndBtn: document.getElementById("closeEndBtn"),
+
+  resetBtn: document.getElementById("resetBtn"),
+  resetTop: document.getElementById("resetTop"),
 };
 
 function setClock(){
@@ -1101,28 +1156,123 @@ function shuffle(arr){
   }
   return a;
 }
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
-function setNodeState(stationKey, s){
-  const n = els.nodes[stationKey];
+/* Game state */
+const state = {
+  started: true,           // we show lock screen immediately
+  keys: 0,
+  currentIndex: 0,
+  activeStationKey: null,
+  stationApplied: false,
+  stationQDone: false,
+
+  score: 35,
+  threat: 85,              // 0..100 (higher = worse)
+  alerts: 6,
+
+  pin: [],                 // 10 digits
+  revealed: Array(10).fill(false),
+
+  // per-station task completion tracking
+  taskDone: [],
+  currentQ: null,
+  locked: false
+};
+
+/* Create a deterministic-ish PIN per session */
+function generatePin(){
+  const digits = [];
+  for(let i=0;i<10;i++) digits.push(String(Math.floor(Math.random()*10)));
+  state.pin = digits;
+  state.revealed = Array(10).fill(false);
+}
+
+function renderPinPreview(){
+  els.pinPreview.innerHTML = "";
+  for(let i=0;i<10;i++){
+    const d = document.createElement("div");
+    d.className = "pinDigit " + (state.revealed[i] ? "revealed" : "blur");
+    d.textContent = state.revealed[i] ? state.pin[i] : "•";
+    els.pinPreview.appendChild(d);
+  }
+}
+
+function renderLockDigits(){
+  els.pinDigits.innerHTML = "";
+  for(let i=0;i<10;i++){
+    const d = document.createElement("div");
+    d.className = "pinDigit " + (state.revealed[i] ? "revealed" : "blur");
+    d.textContent = state.revealed[i] ? state.pin[i] : "•";
+    els.pinDigits.appendChild(d);
+  }
+}
+
+function setNodeState(key, s){
+  const n = els.nodes[key];
   if(!n) return;
   n.dataset.state = s;
   const st = n.querySelector(".st");
   if(st) st.textContent = s==="green" ? "Secured" : (s==="amber" ? "In progress" : "Locked");
 }
-
-function setNodeLocked(stationKey, locked){
-  const n = els.nodes[stationKey];
+function setNodeLocked(key, locked){
+  const n = els.nodes[key];
   if(!n) return;
   n.classList.toggle("locked", locked);
 }
-
-function setActiveNode(stationKey){
-  Object.values(els.nodes).forEach(n => n.classList.remove("active"));
-  const n = els.nodes[stationKey];
-  if(n) n.classList.add("active");
+function setActiveNode(key){
+  Object.values(els.nodes).forEach(n=> n.classList.remove("active"));
+  if(els.nodes[key]) els.nodes[key].classList.add("active");
 }
 
-/* Wire layout between nodes (purely decorative) */
+function updateMeters(){
+  // score meter
+  const sPct = clamp(state.score, 0, 100);
+  els.scoreFill.style.width = sPct + "%";
+  els.scoreText.textContent = String(state.score);
+  els.lockScore.textContent = String(state.score);
+
+  if(state.score < 50) els.scoreMeter.className = "meter red";
+  else if(state.score < 75) els.scoreMeter.className = "meter amber";
+  else els.scoreMeter.className = "meter";
+
+  // threat meter (inverse display: lower better)
+  const tPct = clamp(state.threat, 0, 100);
+  els.threatFill.style.width = tPct + "%";
+  const label = tPct >= 70 ? "High" : (tPct >= 40 ? "Medium" : "Low");
+  els.threatText.textContent = label;
+
+  if(tPct >= 70) els.threatMeter.className = "meter red";
+  else if(tPct >= 40) els.threatMeter.className = "meter amber";
+  else els.threatMeter.className = "meter";
+
+  // alerts
+  els.alertCount.textContent = String(state.alerts);
+  els.notif.textContent = String(state.alerts);
+  els.alertDot.className = "badgeDot " + (label==="High" ? "red" : (label==="Medium" ? "amber" : "green"));
+}
+
+function updateKeyring(){
+  els.keysText.textContent = String(state.keys);
+  els.keyEls.forEach((k,i)=> k.classList.toggle("on", i < state.keys));
+}
+
+function showToast(kind, title, text){
+  const t = document.createElement("div");
+  t.className = "toast " + kind;
+  t.innerHTML = `
+    <div class="t">
+      <span>${title}</span>
+      <small>${new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"})}</small>
+    </div>
+    <div class="p">${text}</div>
+  `;
+  els.toasts.prepend(t);
+  // keep max 3
+  const items = [...els.toasts.querySelectorAll(".toast")];
+  items.slice(3).forEach(x=> x.remove());
+}
+
 function layoutWires(){
   const p = document.getElementById("desktop").getBoundingClientRect();
   const order = ["accounts","lock","privacy","updates","firewall"];
@@ -1143,9 +1293,7 @@ function layoutWires(){
   }
 }
 window.addEventListener("resize", ()=> setTimeout(layoutWires, 50));
-setTimeout(layoutWires, 80);
 
-/* Spark run along wires when station completes */
 function runSpark(fromKey, toKey){
   const p = document.getElementById("desktop").getBoundingClientRect();
   const aR = els.nodes[fromKey].getBoundingClientRect();
@@ -1159,37 +1307,23 @@ function runSpark(fromKey, toKey){
   els.spark.style.setProperty("--dx", (bx-ax) + "px");
   els.spark.style.setProperty("--dy", (by-ay) + "px");
   els.spark.classList.remove("go");
-  // force reflow
   void els.spark.offsetWidth;
   els.spark.classList.add("go");
 }
 
-/* Progress + keyring */
-function updateTop(){
-  els.keysText.textContent = String(state.keys);
-  const pct = Math.round((state.keys/5)*100);
-  els.progText.textContent = pct + "%";
-  els.notif.textContent = String(Math.max(0, 5-state.keys));
-  els.keyEls.forEach((k,i)=> k.classList.toggle("on", i < state.keys));
-  if(state.keys === 5){
-    els.statusText.textContent = "Unlocked. Desktop is secured.";
-  }else{
-    const next = STATIONS[state.currentIndex]?.title || "—";
-    els.statusText.textContent = state.started
-      ? `Next: ${next}. Complete stations to unlock.`
-      : "Locked. Begin to start.";
-  }
+function setWireProgress(){
+  // turn wires on for completed links
+  const done = state.keys; // keys == completed stations
+  // links: 0 between 1-2, 1 between 2-3, etc
+  els.wires.forEach((w,i)=> w.classList.toggle("on", i < done));
 }
 
-/* Station availability rules (sequential) */
 function refreshAvailability(){
   STATIONS.forEach((st, idx)=>{
-    const isDone = idx < state.keys;
-    const isCurrent = idx === state.keys;
-    if(isDone){
+    if(idx < state.keys){
       setNodeLocked(st.key, false);
       setNodeState(st.key, "green");
-    }else if(isCurrent){
+    }else if(idx === state.keys){
       setNodeLocked(st.key, false);
       setNodeState(st.key, "red");
     }else{
@@ -1201,27 +1335,15 @@ function refreshAvailability(){
   const next = STATIONS[state.keys];
   if(next){
     setActiveNode(next.key);
-    els.missionText.innerHTML = `Current target: <b>${next.title}</b>. Click the glowing station node to enter.`;
-    els.subline.textContent = "Complete stations in order. Each completion gives one key fragment.";
+    els.missionText.innerHTML = `Current target: <b>${next.title}</b>. Click the highlighted station node.`;
+    els.statusText.textContent = `Next: ${next.title}. Complete it to reveal more PIN digits.`;
   }
 }
 
-/* Pick questions per station */
-function bankFor(stationKey){
-  return QUESTION_BANK.filter(q => q.stationKey === stationKey);
-}
-function pickQuestion(stationKey){
-  const pool = bankFor(stationKey);
-  if(!pool.length) return null;
-
-  // avoid immediate repetition by shuffling and selecting with rotation
-  const shuffled = shuffle(pool);
-
-  // return first; you can add stronger de-dup later by giving each question an id
-  return structuredClone(shuffled[0]);
+function stationQuestions(stKey){
+  return QUESTION_BANK.filter(q => q.stationKey === stKey);
 }
 
-/* Shuffle options at runtime and re-map correct index */
 function shuffleOptions(q){
   const opts = q.options.map((o, idx)=> ({...o, _orig: idx}));
   const shuffled = shuffle(opts);
@@ -1229,47 +1351,140 @@ function shuffleOptions(q){
   return {...q, options: shuffled.map(o=>({t:o.t, icon:o.icon})), correctIndex: newCorrect};
 }
 
-/* Station modal flow */
-let currentQ = null;
-let locked = false;
+function openLock(){
+  renderLockDigits();
+  renderPinPreview();
+  els.lockMsg.className = "lockMsg";
+  els.lockMsg.textContent = "";
+  els.pinInput.value = "";
+  els.lockSub.textContent = state.keys < 5
+    ? "Fix security stations to reveal the PIN."
+    : "All digits revealed. Enter PIN to unlock.";
+  els.lockWrap.style.display = "grid";
+}
+function closeLock(){
+  els.lockWrap.style.display = "none";
+}
 
-function openStation(stationKey){
-  const idx = STATIONS.findIndex(s=>s.key===stationKey);
-  if(idx !== state.keys) return; // enforce sequential
+function openStation(stKey){
+  const idx = STATIONS.findIndex(s=>s.key===stKey);
+  if(idx !== state.keys) return;
 
-  state.activeStationKey = stationKey;
-  state.stationCorrect = 0;
+  state.activeStationKey = stKey;
+  state.stationApplied = false;
+  state.stationQDone = false;
+  state.taskDone = STATIONS[idx].tasks.map(()=> false);
 
   const st = STATIONS[idx];
   els.mTitle.textContent = `${st.icon} ${st.title}`;
-  els.mSub.textContent = st.subtitle + " · Need 2 correct to secure";
-  els.mCount.textContent = "0";
+  els.mSub.textContent = "Complete tasks → Apply changes → Answer one decision question";
+  els.stepText.textContent = "Tasks";
 
-  // mock
   els.mockName.textContent = st.title;
   els.mockPath.textContent = st.path;
-  els.a1k.textContent = "Status";
-  els.a1v.textContent = st.facts.status;
-  els.a2k.textContent = "Recommended";
-  els.a2v.textContent = st.facts.recommended;
-  els.a3k.textContent = "Impact";
-  els.a3v.textContent = st.facts.impact;
-  els.a4k.textContent = "Hint";
-  els.a4v.textContent = st.facts.hint;
+  els.statusV.textContent = st.tiles.status;
+  els.riskV.textContent = st.tiles.risk;
+  els.impactV.textContent = st.tiles.impact;
+  els.hintV.textContent = st.tiles.hint;
 
-  els.pulse.className = "pulse";
+  // render tasks
+  renderTasks(st);
+
+  // disable apply until tasks complete
+  els.applyBtn.disabled = true;
+  els.applyHint.textContent = "Finish tasks to apply.";
+
+  // quiz locked until apply
+  els.qText.textContent = "Apply changes to unlock the decision question.";
+  els.opts.innerHTML = "";
   els.fb.className = "fb";
-  els.stationModal.classList.add("show");
-  els.stationModal.setAttribute("aria-hidden","false");
 
-  nextQuestion();
+  els.stationModal.classList.add("show");
 }
 
 function closeStation(){
   els.stationModal.classList.remove("show");
-  els.stationModal.setAttribute("aria-hidden","true");
-  currentQ = null;
-  locked = false;
+  state.activeStationKey = null;
+  state.currentQ = null;
+  state.locked = false;
+}
+
+function renderTasks(st){
+  els.taskList.innerHTML = "";
+  st.tasks.forEach((t, i)=>{
+    const row = document.createElement("div");
+    row.className = "task";
+    const right = document.createElement("div");
+
+    if(t.type === "switch"){
+      right.className = "switch";
+      right.innerHTML = "<i></i>";
+      right.addEventListener("click", ()=>{
+        state.taskDone[i] = !state.taskDone[i];
+        right.classList.toggle("on", state.taskDone[i]);
+        refreshApply();
+      });
+    }else{
+      right.className = "check";
+      right.textContent = "✓";
+      right.addEventListener("click", ()=>{
+        state.taskDone[i] = !state.taskDone[i];
+        right.classList.toggle("on", state.taskDone[i]);
+        refreshApply();
+      });
+    }
+
+    row.innerHTML = `
+      <div class="left">
+        <div style="width:28px;height:28px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);display:grid;place-items:center;color:var(--muted)">⚙</div>
+        <div>
+          <b>${t.label}</b>
+          <p>${t.sub}</p>
+        </div>
+      </div>
+    `;
+    row.appendChild(right);
+    els.taskList.appendChild(row);
+  });
+}
+
+function refreshApply(){
+  const all = state.taskDone.every(Boolean);
+  els.applyBtn.disabled = !all;
+  els.applyHint.textContent = all ? "Ready to apply." : "Finish tasks to apply.";
+}
+
+function applyStation(){
+  if(state.stationApplied) return;
+  if(!state.taskDone.every(Boolean)) return;
+
+  state.stationApplied = true;
+  els.stepText.textContent = "Decision";
+  els.applyHint.textContent = "Applied. Now answer the decision question.";
+  els.applyBtn.disabled = true;
+
+  // Improve meters a bit just for applying tasks
+  state.score = clamp(state.score + 6, 0, 100);
+  state.threat = clamp(state.threat - 10, 0, 100);
+  state.alerts = clamp(state.alerts - 1, 0, 99);
+  updateMeters();
+
+  // make node amber while working
+  setNodeState(state.activeStationKey, "amber");
+
+  showToast("amber", "Settings applied", "Changes saved. Confirm the best action to secure this station.");
+
+  // load question
+  const pool = stationQuestions(state.activeStationKey);
+  const q0 = pool.length ? pick(pool) : null;
+  state.currentQ = q0 ? shuffleOptions(structuredClone(q0)) : null;
+
+  if(!state.currentQ){
+    els.qText.textContent = "No question available for this station. Please update the question bank.";
+    els.opts.innerHTML = "";
+    return;
+  }
+  renderQuestion(state.currentQ);
 }
 
 function renderQuestion(q){
@@ -1293,127 +1508,171 @@ function renderQuestion(q){
   });
 }
 
-function nextQuestion(){
-  const stationKey = state.activeStationKey;
-  const q0 = pickQuestion(stationKey);
-  if(!q0){
-    // fallback if no questions
-    currentQ = null;
-    els.qText.textContent = "No questions found for this station. Please update the question bank.";
-    els.opts.innerHTML = "";
-    return;
-  }
-  currentQ = shuffleOptions(q0);
-  renderQuestion(currentQ);
-}
-
-function setFeedback(ok){
-  els.fb.className = "fb show " + (ok ? "good" : "bad");
-  els.fbT.textContent = ok ? "Correct" : "Not quite";
-  els.fbP.textContent = ok ? currentQ.ok : currentQ.bad;
-  els.pulse.className = "pulse " + (ok ? "good" : "bad");
-}
-
 function lockOptions(v){
-  Array.from(els.opts.querySelectorAll("button")).forEach(b=> b.disabled = v);
+  [...els.opts.querySelectorAll("button")].forEach(b=> b.disabled = v);
 }
 
 function answer(i){
-  if(locked || !currentQ) return;
-  locked = true;
+  if(state.locked || !state.currentQ || !state.stationApplied) return;
+  state.locked = true;
   lockOptions(true);
 
-  const ok = (i === currentQ.correctIndex);
-  if(ok){
-    state.stationCorrect += 1;
-    els.mCount.textContent = String(state.stationCorrect);
-    // node amber while in progress
-    setNodeState(state.activeStationKey, "amber");
-  }
-  setFeedback(ok);
+  const ok = (i === state.currentQ.correctIndex);
+  els.fb.className = "fb show " + (ok ? "good" : "bad");
+  els.fbT.textContent = ok ? "Correct decision" : "Not the best decision";
+  els.fbP.textContent = ok ? state.currentQ.ok : state.currentQ.bad;
 
-  // completion check
-  if(ok && state.stationCorrect >= 2){
-    els.nextBtn.textContent = "Secure Station";
+  // Consequences
+  if(ok){
+    state.stationQDone = true;
+    state.score = clamp(state.score + 10, 0, 100);
+    state.threat = clamp(state.threat - 18, 0, 100);
+    state.alerts = clamp(state.alerts - 1, 0, 99);
+    updateMeters();
+    showToast("green", "Station stabilized", "Good decision. Risk reduced.");
   }else{
-    els.nextBtn.textContent = "Next";
+    state.stationQDone = false;
+    state.score = clamp(state.score - 4, 0, 100);
+    state.threat = clamp(state.threat + 8, 0, 100);
+    updateMeters();
+    showToast("red", "Risk persists", "Re-check your understanding. You can still finish, but score suffers.");
+  }
+
+  els.finishBtn.textContent = ok ? "Finish Station" : "Finish Anyway";
+}
+
+function revealDigitsForStation(stationIndex){
+  // each station reveals 2 digits => (0..1), (2..3) ...
+  const start = stationIndex * 2;
+  for(let i=start;i<start+2;i++){
+    if(i>=0 && i<10) state.revealed[i] = true;
   }
 }
 
-function completeStation(){
-  const idx = STATIONS.findIndex(s=>s.key===state.activeStationKey);
-  // award key
+function finishStation(){
+  if(!state.stationApplied) return;
+
+  const idx = state.keys;
+  const st = STATIONS[idx];
+
+  // mark as secured even if question wrong, but reward differs
+  const ok = !!state.stationQDone;
+
+  // Set state/score bonuses for completion
+  if(ok){
+    state.score = clamp(state.score + 6, 0, 100);
+    state.threat = clamp(state.threat - 10, 0, 100);
+  }else{
+    // still progresses, but less benefit
+    state.score = clamp(state.score + 2, 0, 100);
+    state.threat = clamp(state.threat - 4, 0, 100);
+  }
+
+  // complete station
+  setNodeState(st.key, "green");
   state.keys = clamp(state.keys + 1, 0, 5);
   state.currentIndex = state.keys;
 
-  // visuals
-  setNodeState(state.activeStationKey, "green");
-  // unlock next node by refreshing availability
-  updateTop();
-  refreshAvailability();
+  // reveal PIN digits for that completed station
+  revealDigitsForStation(idx);
 
-  // spark animation to next if exists
+  updateKeyring();
+  updateMeters();
+  renderPinPreview();
+
+  // wire progress and spark
+  setWireProgress();
   const next = STATIONS[state.keys];
   if(next){
-    runSpark(STATIONS[state.keys-1].key, next.key);
+    runSpark(st.key, next.key);
   }
 
-  // end if all keys
+  // toast
+  showToast("green", "Key fragment acquired", `${st.title} secured. PIN digits revealed.`);
+  closeStation();
+
+  // unlock next station
+  refreshAvailability();
+
+  // completion
   if(state.keys === 5){
-    closeStation();
-    unlockDesktop();
-  }else{
-    closeStation();
+    showToast("green", "All keys collected", "All PIN digits are now revealed. Enter the PIN to unlock.");
+    els.statusText.textContent = "All digits revealed. Open lock screen and enter the PIN.";
   }
 }
 
-/* Unlock desktop */
-function unlockDesktop(){
-  // hide lock overlay and show end summary
-  els.lockOverlay.classList.remove("show");
-  els.endModal.classList.add("show");
+function attemptUnlock(){
+  const allRevealed = state.revealed.every(Boolean);
+  const msg = els.lockMsg;
+  msg.className = "lockMsg show";
 
-  // end summary list
+  if(!allRevealed){
+    msg.classList.add("bad");
+    msg.textContent = "PIN is not fully revealed yet. Secure all stations first.";
+    return;
+  }
+
+  const input = (els.pinInput.value || "").trim();
+  if(input.length !== 10 || !/^\d{10}$/.test(input)){
+    msg.classList.add("bad");
+    msg.textContent = "Enter a valid 10-digit PIN.";
+    return;
+  }
+
+  const correct = state.pin.join("");
+  if(input !== correct){
+    msg.classList.add("bad");
+    msg.textContent = "Incorrect PIN. Check the revealed digits carefully.";
+    return;
+  }
+
+  // success
+  msg.classList.add("good");
+  msg.textContent = "Unlocked. Desktop is now secured.";
+  closeLock();
+  endGame();
+}
+
+function endGame(){
+  els.endModal.classList.add("show");
+  els.endScore.textContent = String(state.score);
+
   els.endGrid.innerHTML = "";
   STATIONS.forEach(s=>{
     const row = document.createElement("div");
     row.className = "rowOk";
-    row.innerHTML = `<div><b>${s.icon} ${s.title}</b><div style="color:var(--muted);font-size:12px;margin-top:2px">${s.subtitle}</div></div><div style="font-weight:950;color:rgba(61,220,151,.95)">✔</div>`;
+    row.innerHTML = `
+      <div>
+        <b>${s.icon} ${s.title}</b>
+        <div style="color:var(--muted);font-size:12px;margin-top:2px">${s.path}</div>
+      </div>
+      <div style="font-weight:950;color:rgba(61,220,151,.95)">✔</div>
+    `;
     els.endGrid.appendChild(row);
   });
 }
 
-/* Buttons in station modal */
-els.nextBtn.addEventListener("click", ()=>{
-  if(!currentQ) return;
-
-  // If station completed (2 correct), secure it
-  if(state.stationCorrect >= 2){
-    completeStation();
-    return;
-  }
-
-  // normal next question
-  locked = false;
-  lockOptions(false);
-  els.pulse.className = "pulse";
-  els.fb.className = "fb";
-  nextQuestion();
-});
-
-els.closeStationBtn.addEventListener("click", closeStation);
-
-/* Click nodes */
+/* Interactions */
 Object.values(els.nodes).forEach(node=>{
   node.addEventListener("click", ()=>{
-    if(!state.started) return;
     if(node.classList.contains("locked")) return;
     const key = node.dataset.key;
     openStation(key);
   });
 });
 
-/* Keyboard shortcuts (1–4) */
+els.applyBtn.addEventListener("click", applyStation);
+els.finishBtn.addEventListener("click", ()=>{
+  if(!els.fb.classList.contains("show")){
+    // ensure they answer first if they can
+    if(state.stationApplied && state.currentQ && !state.locked){
+      return;
+    }
+  }
+  finishStation();
+});
+els.closeStationBtn.addEventListener("click", closeStation);
+
 document.addEventListener("keydown", (e)=>{
   if(!els.stationModal.classList.contains("show")) return;
   const n = parseInt(e.key, 10);
@@ -1423,76 +1682,87 @@ document.addEventListener("keydown", (e)=>{
   }
 });
 
-/* How modal */
-els.howBtn.addEventListener("click", ()=> els.howModal.classList.add("show"));
-els.closeHowBtn.addEventListener("click", ()=> els.howModal.classList.remove("show"));
+els.openLockBtn.addEventListener("click", openLock);
+els.closeLockBtn.addEventListener("click", closeLock);
+els.unlockBtn.addEventListener("click", attemptUnlock);
 
-/* Begin + resets */
-function start(){
-  state.started = true;
+function resetAll(){
   state.keys = 0;
   state.currentIndex = 0;
-  state.stationCorrect = 0;
   state.activeStationKey = null;
+  state.stationApplied = false;
+  state.stationQDone = false;
+  state.taskDone = [];
+  state.currentQ = null;
+  state.locked = false;
 
-  // initial states
-  updateTop();
-  refreshAvailability();
-  layoutWires();
+  state.score = 35;
+  state.threat = 85;
+  state.alerts = 6;
 
-  els.lockOverlay.classList.remove("show");
-  els.statusText.textContent = "Started. Click Accounts to begin.";
-}
-els.beginBtn.addEventListener("click", start);
+  generatePin();
+  renderPinPreview();
+  renderLockDigits();
 
-function hardReset(){
-  // Reset visuals and state
-  state.started = false;
-  state.keys = 0;
-  state.currentIndex = 0;
-  state.stationCorrect = 0;
-  state.activeStationKey = null;
+  // clear toasts
+  els.toasts.innerHTML = "";
+  showToast("red", "Windows Security", "Multiple issues detected. Start with Accounts.");
 
-  // close modals
-  els.stationModal.classList.remove("show");
-  els.howModal.classList.remove("show");
-  els.endModal.classList.remove("show");
-
-  // restore lock overlay
-  els.lockOverlay.classList.add("show");
-
-  // node states
-  STATIONS.forEach(st=>{
-    setNodeLocked(st.key, true);
+  // reset nodes
+  STATIONS.forEach((st, idx)=>{
+    setNodeLocked(st.key, idx !== 0);
     setNodeState(st.key, "red");
   });
-  setNodeLocked("accounts", false);
-
-  updateTop();
-  els.statusText.textContent = "Locked. Begin to start.";
-  els.missionText.innerHTML = `Start with <b>Accounts</b>. Each station becomes available after the previous one is secured.`;
-  els.subline.textContent = "Complete stations in order. Each station gives a key fragment.";
   setActiveNode("accounts");
-  layoutWires();
-}
-els.resetBtn.addEventListener("click", hardReset);
-els.resetTop.addEventListener("click", hardReset);
 
-/* End modal buttons */
-els.playAgainBtn.addEventListener("click", hardReset);
+  setWireProgress();
+  updateKeyring();
+  updateMeters();
+  refreshAvailability();
+
+  closeStation();
+  closeLock();
+  els.endModal.classList.remove("show");
+}
+
+els.resetBtn.addEventListener("click", resetAll);
+els.resetTop.addEventListener("click", resetAll);
+els.playAgainBtn.addEventListener("click", resetAll);
 els.closeEndBtn.addEventListener("click", ()=> els.endModal.classList.remove("show"));
 
-/* Initial UI */
+/* Init */
 (function init(){
-  // lock all except accounts
-  STATIONS.forEach(st=>{
-    setNodeLocked(st.key, true);
+  generatePin();
+
+  // render pin preview UI
+  const preview = document.getElementById("pinPreview");
+  for(let i=0;i<10;i++){
+    const d = document.createElement("div");
+    d.className = "pinDigit blur";
+    d.textContent = "•";
+    preview.appendChild(d);
+  }
+  renderPinPreview();
+  renderLockDigits();
+
+  // nodes locked except first
+  STATIONS.forEach((st, idx)=>{
+    setNodeLocked(st.key, idx !== 0);
     setNodeState(st.key, "red");
   });
-  setNodeLocked("accounts", false);
   setActiveNode("accounts");
-  updateTop();
-  layoutWires();
+
+  // default toasts
+  showToast("red", "Windows Security", "Threat level is high. Fix core settings to unlock this PC.");
+  showToast("amber", "Account warning", "Shared login detected. Secure Accounts first.");
+
+  updateKeyring();
+  updateMeters();
+
+  setTimeout(()=>{ layoutWires(); setWireProgress(); }, 80);
+
+  // show lock screen at start
+  openLock();
 })();
 </script>
 </body>
