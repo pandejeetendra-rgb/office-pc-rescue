@@ -3,558 +3,142 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Office PC Rescue — Escape Room v3 (Game Style)</title>
+<title>Office PC Rescue — Simple (Graphic Rich)</title>
 <style>
   :root{
-    --bg0:#050812;
-    --bg1:#0a1230;
-
+    --bg1:#050816;
+    --bg2:#0b1a3a;
     --panel: rgba(255,255,255,.08);
-    --panel2: rgba(0,0,0,.28);
     --line: rgba(255,255,255,.12);
-
-    --ink:#eaf0ff;
+    --text:#eaf0ff;
     --muted:#a9b6d6;
 
     --blue:#4aa3ff;
     --green:#3ddc97;
     --amber:#ffcc66;
     --red:#ff5c6c;
-
-    --shadow: 0 18px 52px rgba(0,0,0,.48);
-    --r:18px;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
     margin:0;
-    color:var(--ink);
+    color:var(--text);
     font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     background:
       radial-gradient(1200px 760px at 16% 12%, rgba(74,163,255,.18), transparent 55%),
       radial-gradient(900px 620px at 80% 18%, rgba(61,220,151,.12), transparent 60%),
       radial-gradient(900px 600px at 72% 88%, rgba(255,92,108,.10), transparent 60%),
-      linear-gradient(180deg, var(--bg0), var(--bg1));
-    overflow-x:hidden;
+      linear-gradient(180deg, var(--bg1), var(--bg2));
+    overflow:hidden;
   }
-
-  .wrap{max-width:1220px;margin:0 auto;padding:18px}
-
-  /* Topbar */
-  .topbar{
-    display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+  .wrap{
+    height:100%;
+    display:grid;
+    grid-template-columns: 1.25fr .75fr;
+    gap:14px;
     padding:14px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  @media (max-width: 980px){
+    .wrap{grid-template-columns:1fr; grid-template-rows: 1.2fr .8fr; overflow:auto}
+    body{overflow:auto}
+  }
+  .card{
     border:1px solid var(--line);
-    border-radius: var(--r);
+    border-radius:18px;
     background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03));
-    box-shadow: var(--shadow);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 18px 52px rgba(0,0,0,.48);
+    overflow:hidden;
+    position:relative;
   }
-  .brand{display:flex;align-items:center;gap:10px}
-  .logo{
-    width:40px;height:40px;border-radius:14px;
-    background:
-      radial-gradient(circle at 30% 30%, rgba(74,163,255,.95), rgba(74,163,255,.20) 60%, rgba(0,0,0,0)),
-      radial-gradient(circle at 75% 80%, rgba(61,220,151,.55), transparent 55%);
-    border:1px solid rgba(74,163,255,.35);
-    box-shadow: 0 0 0 7px rgba(74,163,255,.08);
+  .head{
+    padding:12px 14px;
+    border-bottom:1px solid var(--line);
+    background: rgba(0,0,0,.22);
+    display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
   }
-  .title{line-height:1.12}
-  .title h1{margin:0;font-size:15px;font-weight:950;letter-spacing:.2px}
-  .title p{margin:2px 0 0;font-size:12px;color:var(--muted)}
-  .chips{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+  .head .t{font-weight:900;font-size:13px}
+  .head .s{color:var(--muted);font-size:12px}
   .chip{
-    display:inline-flex;gap:8px;align-items:center;
-    padding:7px 10px;border-radius:999px;
+    display:inline-flex;align-items:center;gap:8px;
+    padding:7px 10px;
+    border-radius:999px;
     border:1px solid var(--line);
     background: rgba(255,255,255,.05);
     color:var(--muted);
     font-size:12px;
     white-space:nowrap;
   }
-  .chip b{color:var(--ink)}
-  .btnTop{
-    padding:8px 12px;border-radius:14px;border:1px solid var(--line);
-    background: rgba(74,163,255,.14);
-    color:var(--ink);
-    font-weight:950;
-    cursor:pointer;
-  }
-  .btnTop:hover{border-color: rgba(74,163,255,.40)}
-
-  /* Meters */
-  .meter{
-    width:160px;height:10px;border-radius:999px;
-    border:1px solid rgba(255,255,255,.10);
-    background: rgba(255,255,255,.08);
-    overflow:hidden;
-  }
-  .meter > i{display:block;height:100%;width:40%;background: rgba(61,220,151,.85);transition: width .5s ease, background .5s ease;}
-  .meter.red > i{background: rgba(255,92,108,.85)}
-  .meter.amber > i{background: rgba(255,204,102,.85)}
-
-  /* Layout */
-  .stage{margin-top:16px;display:grid;grid-template-columns: 1.35fr .65fr;gap:14px}
-  @media (max-width: 980px){ .stage{grid-template-columns:1fr} }
-
-  .panel{
-    border:1px solid var(--line);
-    border-radius: var(--r);
-    background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-    box-shadow: var(--shadow);
-    overflow:hidden;
-    position:relative;
-    min-height: 580px;
-  }
-  .head{
-    padding:12px 14px;border-bottom:1px solid var(--line);
-    background: rgba(0,0,0,.22);
-    display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-  }
-  .head .h{font-weight:950;font-size:13px}
-  .head .s{color:var(--muted);font-size:12px}
-
-  /* Desktop */
-  .desktop{
-    position:relative;
-    min-height: 540px;
-    padding:14px;
-    overflow:hidden;
-  }
-  .wallpaper{
-    position:absolute;inset:0;
-    background:
-      radial-gradient(760px 560px at 30% 22%, rgba(74,163,255,.14), transparent 60%),
-      radial-gradient(620px 520px at 78% 75%, rgba(61,220,151,.10), transparent 60%),
-      radial-gradient(520px 420px at 80% 18%, rgba(255,204,102,.09), transparent 60%),
-      linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.18));
-    pointer-events:none;
-  }
-  .gridNoise{
-    position:absolute;inset:0;
-    background-image:
-      linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
-    background-size: 34px 34px;
-    opacity:.34;
-    pointer-events:none;
-    mask-image: radial-gradient(700px 480px at 45% 35%, black 35%, transparent 72%);
-  }
-
-  /* Taskbar */
-  .taskbar{
-    position:absolute;left:14px;right:14px;bottom:14px;
-    height:56px;
-    border-radius:18px;
-    border:1px solid var(--line);
-    background: rgba(0,0,0,.30);
-    display:flex;align-items:center;justify-content:space-between;
-    padding:10px 12px;
-    backdrop-filter: blur(10px);
-    z-index: 2;
-  }
-  .tbLeft{display:flex;gap:10px;align-items:center}
-  .tbIcon{
-    width:34px;height:34px;border-radius:12px;
-    border:1px solid rgba(255,255,255,.12);
-    background: rgba(255,255,255,.05);
-    display:grid;place-items:center;
-    color:var(--muted);
-  }
-  .tbRight{display:flex;gap:8px;align-items:center;color:var(--muted);font-size:12px}
-  .pill{
-    padding:6px 10px;border-radius:999px;border:1px solid var(--line);
-    background:rgba(255,255,255,.04);
-    display:inline-flex;gap:8px;align-items:center;
-    white-space:nowrap;
-  }
-  .pill b{color:var(--ink)}
-  .badgeDot{
-    width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.12)
-  }
-  .badgeDot.red{background:rgba(255,92,108,.95)}
-  .badgeDot.amber{background:rgba(255,204,102,.95)}
-  .badgeDot.green{background:rgba(61,220,151,.95)}
-
-  /* Toast notifications */
-  .toasts{
-    position:absolute;right:16px;top:16px;
-    display:grid;gap:10px;
-    z-index: 3;
-    width:min(360px, 92%);
-  }
-  .toast{
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,.12);
-    background: rgba(0,0,0,.28);
-    padding:10px 12px;
-    box-shadow: 0 12px 34px rgba(0,0,0,.35);
-    backdrop-filter: blur(10px);
-    transform: translateY(-6px);
-    opacity:0;
-    animation: toastIn .45s ease forwards;
-  }
-  @keyframes toastIn{
-    to{transform: translateY(0); opacity:1}
-  }
-  .toast .t{font-weight:950;font-size:12.5px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .toast .p{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.35}
-  .toast small{color:var(--muted)}
-  .toast.red{border-color: rgba(255,92,108,.25)}
-  .toast.amber{border-color: rgba(255,204,102,.25)}
-  .toast.green{border-color: rgba(61,220,151,.25)}
-
-  /* Nodes */
-  .node{
-    position:absolute;
-    width:170px;
-    border-radius:18px;
-    border:1px solid var(--line);
-    background: rgba(0,0,0,.24);
-    padding:12px;
-    cursor:pointer;
-    transition: transform .15s ease, border-color .25s ease, box-shadow .25s ease, opacity .25s ease;
-    user-select:none;
-    z-index: 1;
-  }
-  .node:hover{transform: translateY(-2px); border-color: rgba(255,255,255,.22)}
-  .node.locked{opacity:.55; cursor:not-allowed}
-  .node.active{
-    outline: 2px solid rgba(74,163,255,.55);
-    box-shadow: 0 0 0 10px rgba(74,163,255,.10);
-  }
-  .node .top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-  .node .nm{font-weight:950;font-size:13px}
-  .node .ds{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.3}
-  .statePill{
-    padding:6px 10px;border-radius:999px;border:1px solid var(--line);
-    background: rgba(255,255,255,.04);
-    color:var(--muted);
-    font-size:11px;white-space:nowrap;
-    display:inline-flex;gap:6px;align-items:center;
-  }
-  .led{width:9px;height:9px;border-radius:999px;background: rgba(255,255,255,.12)}
-  .node[data-state="red"] .led{background: rgba(255,92,108,.95)}
-  .node[data-state="amber"] .led{background: rgba(255,204,102,.95)}
-  .node[data-state="green"] .led{background: rgba(61,220,151,.95)}
-  .glowNode{
-    position:absolute;inset:-34px -34px auto auto;
-    width:130px;height:130px;border-radius:999px;
-    background: radial-gradient(circle at 30% 30%, rgba(74,163,255,.16), transparent 68%);
-    pointer-events:none;
-  }
-
-  /* Connectors */
-  .wire{
-    position:absolute;height:3px;border-radius:999px;
-    background: linear-gradient(90deg, rgba(74,163,255,.22), rgba(255,255,255,.06));
-    opacity:.65;
-    transform-origin:left center;
-    pointer-events:none;
-    z-index: 0;
-  }
-  .wire.on{
-    background: linear-gradient(90deg, rgba(61,220,151,.35), rgba(255,255,255,.06));
-    opacity:.85;
-  }
-  .spark{
-    position:absolute;
-    width:10px;height:10px;border-radius:999px;
-    background: rgba(74,163,255,.9);
-    box-shadow: 0 0 0 8px rgba(74,163,255,.10);
-    opacity:0;
-    pointer-events:none;
-    z-index: 0;
-  }
-  .spark.go{
-    animation: sparkMove 1.15s ease forwards;
-    opacity:1;
-  }
-  @keyframes sparkMove{
-    0%{transform: translate(0,0) scale(.9); opacity:0}
-    10%{opacity:1}
-    100%{transform: translate(var(--dx), var(--dy)) scale(1); opacity:0}
-  }
-
-  /* Sidebar */
-  .side{display:flex;flex-direction:column;min-height: 580px}
-  .sideBody{padding:14px;display:flex;flex-direction:column;gap:12px;min-height: 540px}
-  .card{
-    border-radius:18px;
-    border:1px solid var(--line);
-    background: rgba(0,0,0,.24);
-    padding:12px;
-  }
-  .card .t{font-weight:950;font-size:13px;display:flex;align-items:center;gap:8px}
-  .card .p{margin-top:6px;color:var(--muted);font-size:12.5px;line-height:1.45}
-  .keyring{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .keyFrag{
-    width:44px;height:44px;border-radius:16px;
-    border:1px solid var(--line);
-    background: rgba(255,255,255,.04);
-    display:grid;place-items:center;
-    font-weight:950;color:var(--muted);
-    position:relative;
-    overflow:hidden;
-  }
-  .keyFrag.on{
-    border-color: rgba(61,220,151,.30);
-    background: rgba(61,220,151,.08);
-    color: rgba(61,220,151,.95);
-    box-shadow: 0 0 0 8px rgba(61,220,151,.08);
-  }
-  .keyFrag.on::after{
-    content:"";
-    position:absolute;inset:-30px -30px auto auto;
-    width:80px;height:80px;border-radius:999px;
-    background: radial-gradient(circle at 30% 30%, rgba(61,220,151,.20), transparent 65%);
-  }
-  .btnRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+  .chip b{color:var(--text)}
   .btn{
     border-radius:14px;
     padding:10px 12px;
     border:1px solid var(--line);
     background: rgba(74,163,255,.14);
-    color:var(--ink);
-    font-weight:950;
+    color:var(--text);
+    font-weight:900;
     cursor:pointer;
   }
   .btn:hover{border-color: rgba(74,163,255,.40)}
   .btn.ghost{background: rgba(255,255,255,.04)}
-  .btn:disabled{opacity:.55;cursor:not-allowed}
+  .game{
+    position:relative;
+    height:100%;
+    min-height: 520px;
+    background: radial-gradient(900px 540px at 40% 20%, rgba(255,255,255,.04), rgba(0,0,0,.16));
+  }
+  canvas{width:100%;height:100%;display:block}
 
-  /* Lock screen */
-  .lockWrap{
-    position:fixed;inset:0;
-    display:grid;place-items:center;
-    background:
-      radial-gradient(900px 560px at 45% 22%, rgba(255,92,108,.13), transparent 60%),
-      rgba(0,0,0,.72);
-    backdrop-filter: blur(12px);
-    z-index: 60;
-  }
-  .lockCard{
-    width:min(640px, 94%);
-    border-radius:26px;
-    border:1px solid rgba(255,255,255,.14);
-    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.34));
-    box-shadow: var(--shadow);
-    overflow:hidden;
-    position:relative;
-  }
-  .lockTop{
-    padding:14px 16px;
-    border-bottom:1px solid rgba(255,255,255,.12);
-    background: rgba(0,0,0,.22);
-    display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-  }
-  .lockTop b{font-weight:950}
-  .lockBody{padding:16px}
-  .pinRow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .pinDigit{
-    width:44px;height:44px;border-radius:16px;
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(0,0,0,.22);
-    display:grid;place-items:center;
-    font-weight:950;
-    color:rgba(255,255,255,.35);
-    position:relative;
-    overflow:hidden;
-  }
-  .pinDigit.revealed{color:var(--ink); background: rgba(255,255,255,.05)}
-  .pinDigit.revealed::after{
-    content:"";
-    position:absolute;inset:-30px -30px auto auto;
-    width:80px;height:80px;border-radius:999px;
-    background: radial-gradient(circle at 30% 30%, rgba(74,163,255,.18), transparent 65%);
-  }
-  .pinDigit.blur{
-    filter: blur(2px);
-    opacity:.65;
-  }
-  .lockNote{
-    margin-top:10px;color:var(--muted);font-size:13px;line-height:1.45
-  }
-  .pinInputRow{
-    margin-top:14px;
-    display:flex;gap:10px;align-items:center;flex-wrap:wrap;
-  }
-  .pinInput{
-    flex:1 1 260px;
+  /* Right panel (MCQ) */
+  .sideBody{padding:14px;display:flex;flex-direction:column;gap:12px}
+  .status{
+    border:1px solid var(--line);
     border-radius:16px;
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(0,0,0,.24);
-    padding:12px 12px;
-    color:var(--ink);
-    font-size:14px;
-    outline:none;
-  }
-  .pinInput::placeholder{color:rgba(255,255,255,.35)}
-  .lockMsg{
-    margin-top:10px;
-    border-radius:16px;
-    border:1px solid rgba(255,255,255,.12);
-    background: rgba(0,0,0,.22);
-    padding:10px 12px;
-    color:var(--muted);
-    font-size:12.5px;
-    display:none;
-  }
-  .lockMsg.show{display:block}
-  .lockMsg.good{border-color: rgba(61,220,151,.25)}
-  .lockMsg.bad{border-color: rgba(255,92,108,.25)}
-
-  /* Station modal */
-  .modalWrap{
-    position:fixed;inset:0;
-    display:none;place-items:center;
-    padding:16px;
-    background: rgba(0,0,0,.64);
-    backdrop-filter: blur(12px);
-    z-index: 55;
-  }
-  .modalWrap.show{display:grid}
-  .modal{
-    width:min(980px, 100%);
-    border-radius:26px;
-    border:1px solid rgba(255,255,255,.14);
-    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
-    box-shadow: var(--shadow);
-    overflow:hidden;
-  }
-  .modalHead{
-    padding:12px 14px;
-    border-bottom:1px solid rgba(255,255,255,.12);
-    background: rgba(0,0,0,.22);
-    display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-  }
-  .modalHead .mh{font-weight:950}
-  .modalHead .ms{color:var(--muted);font-size:12px}
-  .modalBody{
-    padding:14px;
-    display:grid;
-    grid-template-columns: 1.05fr .95fr;
-    gap:12px;
-  }
-  @media (max-width: 900px){ .modalBody{grid-template-columns:1fr} }
-
-  /* Mock Windows settings panel */
-  .mock{
-    border-radius:22px;
-    border:1px solid rgba(255,255,255,.12);
-    background: rgba(0,0,0,.28);
-    padding:14px;
-    position:relative;
-    overflow:hidden;
-    min-height: 320px;
-  }
-  .mockHeader{
-    display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-    padding:10px 10px;
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,.10);
-    background: rgba(255,255,255,.03);
-  }
-  .mockHeader b{font-weight:950}
-  .crumb{color:var(--muted);font-size:12px}
-  .mockGrid{
-    margin-top:12px;
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap:10px;
-  }
-  .miniTile{
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,.10);
-    background: rgba(255,255,255,.03);
-    padding:10px;
-    min-height: 88px;
-  }
-  .miniTile .k{font-weight:950;font-size:12.5px}
-  .miniTile .v{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.35}
-
-  /* Interactive tasks */
-  .taskBox{
-    margin-top:12px;
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,.12);
     background: rgba(0,0,0,.22);
     padding:12px;
   }
-  .taskBox .tt{font-weight:950;font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .taskList{display:grid;gap:10px;margin-top:10px}
-  .task{
-    border-radius:16px;
-    border:1px solid rgba(255,255,255,.10);
-    background: rgba(255,255,255,.03);
-    padding:10px 12px;
-    display:flex;align-items:center;justify-content:space-between;gap:10px;
-  }
-  .task .left{display:flex;gap:10px;align-items:flex-start}
-  .task .left b{font-weight:900}
-  .task .left p{margin:2px 0 0;color:var(--muted);font-size:12px;line-height:1.35}
-  .switch{
-    width:54px;height:30px;border-radius:999px;
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(255,255,255,.07);
-    position:relative;
-    cursor:pointer;
-    flex:0 0 auto;
-  }
-  .switch i{
-    position:absolute;top:3px;left:3px;
-    width:24px;height:24px;border-radius:999px;
-    background: rgba(255,255,255,.75);
-    transition: left .25s ease, background .25s ease;
-  }
-  .switch.on{border-color: rgba(61,220,151,.28); background: rgba(61,220,151,.10)}
-  .switch.on i{left:27px;background: rgba(61,220,151,.95)}
-  .check{
-    width:28px;height:28px;border-radius:12px;
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(255,255,255,.04);
-    display:grid;place-items:center;
-    cursor:pointer;
-    flex:0 0 auto;
-    color:rgba(255,255,255,.35);
-  }
-  .check.on{border-color: rgba(61,220,151,.28); background: rgba(61,220,151,.10); color: rgba(61,220,151,.95)}
-  .applyRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-  .applyBtn{
-    border-radius:14px;
-    padding:10px 12px;
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(74,163,255,.14);
-    color:var(--ink);
-    font-weight:950;
-    cursor:pointer;
-  }
-  .applyBtn:hover{border-color: rgba(74,163,255,.40)}
-  .applyBtn:disabled{opacity:.55;cursor:not-allowed}
-  .applyHint{color:var(--muted);font-size:12px;align-self:center}
-
-  /* Quiz */
-  .quiz{
-    border-radius:22px;
+  .status .row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .status .big{font-weight:950;font-size:13px}
+  .status .small{color:var(--muted);font-size:12px;margin-top:6px;line-height:1.45}
+  .progress{
+    margin-top:10px;
+    height:10px;border-radius:999px;
     border:1px solid rgba(255,255,255,.12);
-    background: rgba(0,0,0,.28);
-    padding:14px;
+    background: rgba(255,255,255,.08);
+    overflow:hidden;
   }
-  .quiz .q{font-weight:950;font-size:13px;line-height:1.4}
+  .progress i{
+    display:block;height:100%;width:0%;
+    background: rgba(61,220,151,.85);
+    transition: width .45s ease;
+  }
+
+  .qbox{
+    border:1px solid var(--line);
+    border-radius:16px;
+    background: rgba(0,0,0,.22);
+    padding:12px;
+  }
+  .q{
+    font-weight:950;
+    font-size:13px;
+    line-height:1.45;
+  }
   .opts{display:grid;gap:10px;margin-top:12px}
   .opt{
-    border-radius:18px;
+    border-radius:16px;
     border:1px solid rgba(255,255,255,.12);
     background: rgba(255,255,255,.04);
     padding:10px 12px;
-    display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
     cursor:pointer;
-    transition: transform .12s ease, border-color .22s ease;
+    display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+    transition: transform .12s ease, border-color .18s ease;
   }
   .opt:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.20)}
-  .opt:disabled{opacity:.55;cursor:not-allowed}
-  .opt .l{display:flex;gap:10px;align-items:flex-start}
-  .ico{
+  .opt[disabled]{opacity:.55;cursor:not-allowed}
+  .left{display:flex;gap:10px;align-items:flex-start}
+  .badge{
     width:28px;height:28px;border-radius:10px;
     border:1px solid rgba(74,163,255,.22);
     background: rgba(74,163,255,.12);
@@ -562,590 +146,199 @@
     flex:0 0 auto;
   }
   .kbd{
-    padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
+    padding:4px 10px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.12);
     background: rgba(0,0,0,.28);
     color:var(--muted);
-    font-size:11px;white-space:nowrap;
+    font-size:11px;
+    white-space:nowrap;
   }
   .fb{
+    display:none;
     margin-top:12px;
-    border-radius:18px;
+    border-radius:16px;
     border:1px solid rgba(255,255,255,.12);
     background: rgba(0,0,0,.22);
     padding:12px;
-    display:none;
   }
   .fb.show{display:block}
   .fb.good{border-color: rgba(61,220,151,.25); background: linear-gradient(180deg, rgba(61,220,151,.10), rgba(0,0,0,.22))}
   .fb.bad{border-color: rgba(255,92,108,.25); background: linear-gradient(180deg, rgba(255,92,108,.10), rgba(0,0,0,.22))}
   .fb .t{font-weight:950}
   .fb .p{margin-top:6px;color:var(--muted);font-size:12.5px;line-height:1.45}
-  .fbBtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .rowBtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
 
-  /* End modal */
-  .endModal{position:fixed;inset:0;display:none;place-items:center;padding:16px;background: rgba(0,0,0,.64);backdrop-filter: blur(12px);z-index: 58;}
-  .endModal.show{display:grid}
-  .endCard{
-    width:min(820px, 100%);
-    border-radius:26px;
-    border:1px solid rgba(255,255,255,.14);
-    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
-    box-shadow: var(--shadow);
-    overflow:hidden;
-  }
-  .endHead{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.12);background: rgba(0,0,0,.22);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-  .endHead .mh{font-weight:950}
-  .endBody{padding:14px}
-  .endGrid{display:grid;gap:10px;margin-top:12px}
-  .rowOk{
-    border-radius:18px;border:1px solid rgba(61,220,151,.25);
-    background: rgba(61,220,151,.08);
-    padding:10px 12px;
-    display:flex;align-items:center;justify-content:space-between;gap:10px;
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    *{transition:none !important; animation:none !important}
+  .hint{
+    border:1px solid var(--line);
+    border-radius:16px;
+    background: rgba(255,255,255,.04);
+    padding:12px;
+    color:var(--muted);
+    font-size:12.5px;
+    line-height:1.45;
   }
 </style>
 </head>
 <body>
 <div class="wrap">
 
-  <div class="topbar">
-    <div class="brand">
-      <div class="logo" aria-hidden="true"></div>
-      <div class="title">
-        <h1>Office PC Rescue — Escape Room (v3)</h1>
-        <p>Fix stations, calm alerts, reveal the PIN, unlock the desktop</p>
-      </div>
-    </div>
-
-    <div class="chips">
-      <div class="chip">🔑 Keys: <b id="keysText">0</b>/5</div>
-
-      <div class="chip">
-        🟩 Security Score <b id="scoreText">35</b>
-        <span class="meter" id="scoreMeter" aria-hidden="true"><i id="scoreFill"></i></span>
-      </div>
-
-      <div class="chip">
-        ⚠ Threat <b id="threatText">High</b>
-        <span class="meter red" id="threatMeter" aria-hidden="true"><i id="threatFill"></i></span>
-      </div>
-
-      <div class="chip">🧑‍💻 Shift <b id="clock">--:--</b></div>
-      <button class="btnTop" id="resetTop" type="button">Reset</button>
-    </div>
-  </div>
-
-  <div class="stage">
-    <!-- Desktop -->
-    <div class="panel">
-      <div class="head">
-        <div>
-          <div class="h">Desktop Map</div>
-          <div class="s" id="subline">Complete stations in order. Each success reduces alerts and reveals the PIN.</div>
-        </div>
-        <div class="chip">
-          <span class="badgeDot red" id="alertDot"></span>
-          Alerts: <b id="alertCount">6</b>
-        </div>
-      </div>
-
-      <div class="desktop" id="desktop">
-        <div class="wallpaper"></div>
-        <div class="gridNoise"></div>
-
-        <div class="toasts" id="toasts"></div>
-
-        <!-- wires -->
-        <div class="wire" id="w1"></div>
-        <div class="wire" id="w2"></div>
-        <div class="wire" id="w3"></div>
-        <div class="wire" id="w4"></div>
-        <div class="spark" id="spark"></div>
-
-        <!-- Nodes -->
-        <div class="node" id="n1" data-key="accounts" data-state="red" style="left:18px; top:18px;">
-          <div class="glowNode"></div>
-          <div class="top">
-            <div>
-              <div class="nm">👤 Accounts</div>
-              <div class="ds">Shared login & sign-in safety</div>
-            </div>
-            <div class="statePill"><span class="led"></span><span class="st">Locked</span></div>
-          </div>
-        </div>
-
-        <div class="node locked" id="n2" data-key="lock" data-state="red" style="right:18px; top:58px;">
-          <div class="glowNode"></div>
-          <div class="top">
-            <div>
-              <div class="nm">🔒 Screen Lock</div>
-              <div class="ds">Auto-lock & sign-in on resume</div>
-            </div>
-            <div class="statePill"><span class="led"></span><span class="st">Locked</span></div>
-          </div>
-        </div>
-
-        <div class="node locked" id="n3" data-key="updates" data-state="red" style="left:70px; bottom:120px;">
-          <div class="glowNode"></div>
-          <div class="top">
-            <div>
-              <div class="nm">🔄 Updates</div>
-              <div class="ds">Patch OS (active hours)</div>
-            </div>
-            <div class="statePill"><span class="led"></span><span class="st">Locked</span></div>
-          </div>
-        </div>
-
-        <div class="node locked" id="n4" data-key="firewall" data-state="red" style="right:80px; bottom:170px;">
-          <div class="glowNode"></div>
-          <div class="top">
-            <div class="nm">🛡️ Firewall</div>
-            <div class="ds">Profiles for public/private</div>
-          </div>
-          <div class="top" style="margin-top:10px">
-            <div style="opacity:.01">.</div>
-            <div class="statePill"><span class="led"></span><span class="st">Locked</span></div>
-          </div>
-        </div>
-
-        <div class="node locked" id="n5" data-key="privacy" data-state="red" style="left:290px; top:220px; width:200px;">
-          <div class="glowNode"></div>
-          <div class="top">
-            <div>
-              <div class="nm">👁️ Privacy</div>
-              <div class="ds">App permissions & diagnostics</div>
-            </div>
-            <div class="statePill"><span class="led"></span><span class="st">Locked</span></div>
-          </div>
-        </div>
-
-        <div class="taskbar">
-          <div class="tbLeft">
-            <div class="tbIcon">⊞</div>
-            <div class="tbIcon">⚙</div>
-            <div class="tbIcon">🛡</div>
-            <div class="tbIcon">🔍</div>
-          </div>
-          <div class="tbRight">
-            <span class="pill">Wi-Fi: <b>Office_Guest</b></span>
-            <span class="pill">🔔 <b id="notif">6</b></span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Sidebar -->
-    <div class="panel side">
-      <div class="head">
-        <div>
-          <div class="h">Keyring & Lock Code</div>
-          <div class="s">Each secured station reveals 2 digits of the PIN</div>
-        </div>
-        <div class="chip">Goal: <b>Unlock PC</b></div>
-      </div>
-
-      <div class="sideBody">
-        <div class="card">
-          <div class="t">🔑 Key Fragments</div>
-          <div class="p" id="missionText">
-            Start with <b>Accounts</b>. Complete stations in order.
-          </div>
-          <div class="keyring" id="keyring">
-            <div class="keyFrag" id="k1">1</div>
-            <div class="keyFrag" id="k2">2</div>
-            <div class="keyFrag" id="k3">3</div>
-            <div class="keyFrag" id="k4">4</div>
-            <div class="keyFrag" id="k5">5</div>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="t">🔐 PIN (10 digits)</div>
-          <div class="p">Digits reveal as you secure stations. Enter the full PIN on the lock screen to finish.</div>
-          <div class="pinRow" id="pinPreview"></div>
-        </div>
-
-        <div class="card">
-          <div class="t">📌 Status</div>
-          <div class="p" id="statusText">PC is locked. Fix stations to reveal the PIN.</div>
-          <div class="btnRow">
-            <button class="btn ghost" id="openLockBtn" type="button">Open Lock Screen</button>
-            <button class="btn ghost" id="resetBtn" type="button">Reset Game</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="t">🎮 How this is “game style”</div>
-          <div class="p">
-            Each station has quick <b>hands-on tasks</b> (toggles/checklists) plus a decision question.
-            Score and alerts respond to your fixes.
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- Lock Screen (PIN entry) -->
-<div class="lockWrap" id="lockWrap">
-  <div class="lockCard">
-    <div class="lockTop">
+  <!-- GAME -->
+  <div class="card">
+    <div class="head">
       <div>
-        <b>🔐 Office PC — Locked</b>
-        <div style="color:var(--muted);font-size:12px;margin-top:2px" id="lockSub">Fix security stations to reveal the PIN.</div>
+        <div class="t">Office PC Rescue (Simple Game)</div>
+        <div class="s">Answer one question per checkpoint. Correct builds the shield path and moves you forward.</div>
       </div>
-      <div class="chip">Security Score <b id="lockScore">35</b></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <div class="chip">Checkpoint: <b id="cpName">Accounts</b></div>
+        <button class="btn ghost" id="resetBtn" type="button">Reset</button>
+      </div>
     </div>
-    <div class="lockBody">
-      <div style="font-weight:950">PIN Digits (revealed as you progress)</div>
-      <div class="pinRow" id="pinDigits"></div>
-      <div class="lockNote">
-        When all digits are revealed, enter the full 10-digit PIN to unlock the desktop.
-      </div>
-      <div class="pinInputRow">
-        <input class="pinInput" id="pinInput" inputmode="numeric" maxlength="10" placeholder="Enter 10-digit PIN" />
-        <button class="btn" id="unlockBtn" type="button">Unlock</button>
-        <button class="btn ghost" id="closeLockBtn" type="button">Close</button>
-      </div>
-      <div class="lockMsg" id="lockMsg"></div>
+    <div class="game">
+      <canvas id="cv"></canvas>
     </div>
   </div>
-</div>
 
-<!-- Station modal -->
-<div class="modalWrap" id="stationModal">
-  <div class="modal">
-    <div class="modalHead">
+  <!-- MCQ PANEL -->
+  <div class="card">
+    <div class="head">
       <div>
-        <div class="mh" id="mTitle">Station</div>
-        <div class="ms" id="mSub">Do tasks → Apply → Answer (1 MCQ)</div>
+        <div class="t">Decision Panel</div>
+        <div class="s">Options shuffle every time (no “always A”).</div>
       </div>
-      <div class="chip">Step: <b id="stepText">Tasks</b></div>
+      <div class="chip">Progress <b id="progText">0/5</b></div>
     </div>
 
-    <div class="modalBody">
-      <!-- Mock settings + tasks -->
-      <div class="mock">
-        <div class="mockHeader">
-          <div>⚙ <b id="mockName">Windows Settings</b></div>
-          <div class="crumb" id="mockPath">Settings</div>
+    <div class="sideBody">
+      <div class="status">
+        <div class="row">
+          <div class="big">Security Path</div>
+          <div class="chip">Rescue status: <b id="rescueText">In progress</b></div>
         </div>
-
-        <div class="mockGrid">
-          <div class="miniTile">
-            <div class="k">Status</div>
-            <div class="v" id="statusV">Needs attention</div>
-          </div>
-          <div class="miniTile">
-            <div class="k">Risk</div>
-            <div class="v" id="riskV">High exposure</div>
-          </div>
-          <div class="miniTile">
-            <div class="k">Impact</div>
-            <div class="v" id="impactV">Reduces misuse and attack surface</div>
-          </div>
-          <div class="miniTile">
-            <div class="k">Hint</div>
-            <div class="v" id="hintV">Use safe defaults and least privilege</div>
-          </div>
-        </div>
-
-        <div class="taskBox">
-          <div class="tt">
-            <span>Hands-on tasks</span>
-            <span style="color:var(--muted);font-size:12px">Complete both tasks to enable Apply</span>
-          </div>
-          <div class="taskList" id="taskList"></div>
-
-          <div class="applyRow">
-            <button class="applyBtn" id="applyBtn" type="button" disabled>Apply Changes</button>
-            <div class="applyHint" id="applyHint">Finish tasks to apply.</div>
-          </div>
-        </div>
+        <div class="small" id="statusText">Secure the PC by completing all 5 checkpoints.</div>
+        <div class="progress" aria-hidden="true"><i id="bar"></i></div>
       </div>
 
-      <!-- Quiz -->
-      <div class="quiz">
-        <div class="q" id="qText">Answer will unlock after Apply.</div>
+      <div class="qbox">
+        <div class="q" id="qText">Loading…</div>
         <div class="opts" id="opts"></div>
 
         <div class="fb" id="fb">
           <div class="t" id="fbT">—</div>
           <div class="p" id="fbP">—</div>
-          <div class="fbBtns">
-            <button class="btn" id="finishBtn" type="button">Finish Station</button>
-            <button class="btn ghost" id="closeStationBtn" type="button">Close</button>
+          <div class="rowBtns">
+            <button class="btn" id="nextBtn" type="button">Next checkpoint</button>
+            <button class="btn ghost" id="retryBtn" type="button">Try again</button>
           </div>
         </div>
+      </div>
 
+      <div class="hint">
+        Visuals are intentionally “Windows-like” but not a clone. Replace the question bank with your chapter questions anytime.
       </div>
     </div>
   </div>
-</div>
 
-<!-- End modal -->
-<div class="endModal" id="endModal">
-  <div class="endCard">
-    <div class="endHead">
-      <div class="mh">✅ Desktop Unlocked</div>
-      <div class="chip">Security Score <b id="endScore">90</b></div>
-    </div>
-    <div class="endBody">
-      <div style="font-weight:950;font-size:14px">You restored baseline security</div>
-      <div style="margin-top:6px;color:var(--muted);font-size:13px;line-height:1.55">
-        Stations are secured, alerts are cleared, and the PC is safe for normal work.
-      </div>
-      <div class="endGrid" id="endGrid"></div>
-      <div class="btnRow" style="margin-top:14px">
-        <button class="btn" id="playAgainBtn" type="button">Play again</button>
-        <button class="btn ghost" id="closeEndBtn" type="button">Close</button>
-      </div>
-    </div>
-  </div>
 </div>
 
 <script>
 /* =========================================================
-   Escape Room v3 — More realistic "game style"
-   - Lock screen with 10-digit PIN revealed by progress
-   - Each station: 2 interactive tasks + Apply + 1 MCQ
-   - Security Score + Threat meter + Alerts/toasts react
-   - Options shuffled every question (no predictable correct position)
+   Simple Office PC Rescue
+   - 5 checkpoints
+   - 1 question each
+   - Correct: checkpoint turns green + animated shield bridge + player walks
+   - Wrong: alert flash + shake + retry
+   - Options always shuffled
 ========================================================= */
 
-const STATIONS = [
-  {
-    key:"accounts", nodeId:"n1", icon:"👤",
-    title:"Accounts Security",
-    path:"Settings → Accounts → Sign-in options",
-    tiles:{
-      status:"Shared login detected",
-      risk:"Medium",
-      impact:"Improves access control and accountability",
-      hint:"Use separate accounts and least privilege"
-    },
-    tasks:[
-      {type:"check", label:"Create separate user accounts", sub:"Stop shared logins; assign unique accounts"},
-      {type:"check", label:"Enforce strong sign-in behavior", sub:"Require password/PIN and disable password sharing"}
-    ]
-  },
-  {
-    key:"lock", nodeId:"n2", icon:"🔒",
-    title:"Screen Lock",
-    path:"Settings → Accounts → Sign-in options",
-    tiles:{
-      status:"Auto-lock is off",
-      risk:"Medium",
-      impact:"Prevents walk-up misuse",
-      hint:"Short timeout + sign-in on resume"
-    },
-    tasks:[
-      {type:"switch", label:"Require sign-in on wake", sub:"Lock screen appears when resuming"},
-      {type:"switch", label:"Auto-lock after inactivity", sub:"Locks if user forgets to lock manually"}
-    ]
-  },
-  {
-    key:"updates", nodeId:"n3", icon:"🔄",
-    title:"Windows Updates",
-    path:"Settings → Windows Update",
-    tiles:{
-      status:"Updates delayed",
-      risk:"High",
-      impact:"Patches known vulnerabilities",
-      hint:"Enable automatic updates with active hours"
-    },
-    tasks:[
-      {type:"switch", label:"Automatic updates", sub:"Download and install security updates"},
-      {type:"check", label:"Set active hours", sub:"Reduce disruption without disabling updates"}
-    ]
-  },
-  {
-    key:"firewall", nodeId:"n4", icon:"🛡️",
-    title:"Firewall Profiles",
-    path:"Windows Security → Firewall & network protection",
-    tiles:{
-      status:"Inconsistent protection",
-      risk:"High",
-      impact:"Reduces inbound attack surface",
-      hint:"Public profile must be strict"
-    },
-    tasks:[
-      {type:"switch", label:"Firewall ON (Public profile)", sub:"Strict protection on risky networks"},
-      {type:"switch", label:"Firewall ON (Private profile)", sub:"Baseline protection in office/home"}
-    ]
-  },
-  {
-    key:"privacy", nodeId:"n5", icon:"👁️",
-    title:"Privacy & Permissions",
-    path:"Settings → Privacy (or Privacy & security)",
-    tiles:{
-      status:"Over-permissioned apps",
-      risk:"Medium",
-      impact:"Reduces data leakage",
-      hint:"Disable unnecessary camera/mic/background access"
-    },
-    tasks:[
-      {type:"check", label:"Review camera/mic permissions", sub:"Only allow required apps"},
-      {type:"check", label:"Disable unnecessary background access", sub:"Reduce silent data access"}
-    ]
-  }
+const CHECKPOINTS = [
+  { key:"accounts", label:"Accounts", icon:"👤" },
+  { key:"lock",     label:"Screen Lock", icon:"🔒" },
+  { key:"updates",  label:"Updates", icon:"🔄" },
+  { key:"firewall", label:"Firewall", icon:"🛡️" },
+  { key:"privacy",  label:"Privacy", icon:"👁️" },
 ];
 
-/* Question bank (sample). Replace with your chapter-derived items later. */
-const QUESTION_BANK = [
-  { stationKey:"accounts",
-    q:"Best practice for admin rights on office PCs?",
-    options:[
-      {t:"Use standard accounts daily and elevate only when needed", icon:"🧑‍💻"},
-      {t:"Always use Administrator for convenience", icon:"👑"},
-      {t:"Share admin password with the team", icon:"🔑"},
-      {t:"Disable all prompts permanently", icon:"🚫"}
+// Replace these with your chapter-derived questions later.
+const QUESTIONS = {
+  accounts: {
+    q: "Best practice for daily work on an office PC?",
+    options: [
+      "Use a standard user account and elevate only when required",
+      "Always use Administrator for convenience",
+      "Share one admin account with the team",
+      "Disable sign-in methods to avoid prompts"
     ],
-    correctIndex:0,
-    ok:"Least privilege limits damage from mistakes or malware.",
-    bad:"Constant admin use increases both likelihood and impact of security issues."
+    correct: 0,
+    ok: "Least privilege reduces damage if something goes wrong.",
+    bad:"Admin-by-default increases risk and impact."
   },
-  { stationKey:"lock",
-    q:"Main purpose of auto-lock on shared PCs?",
-    options:[
-      {t:"Prevent walk-up access when the user steps away", icon:"🛡️"},
-      {t:"Make the PC faster", icon:"⚡"},
-      {t:"Improve Wi-Fi strength", icon:"📶"},
-      {t:"Increase storage", icon:"💾"}
+  lock: {
+    q: "What does auto-lock primarily prevent?",
+    options: [
+      "Walk-up access when the user leaves the desk",
+      "Low disk space",
+      "Slow internet speed",
+      "Printer driver issues"
     ],
-    correctIndex:0,
-    ok:"Auto-lock reduces exposure from forgetfulness and shared spaces.",
-    bad:"Auto-lock is a security control, not a performance feature."
+    correct: 0,
+    ok: "Auto-lock protects shared spaces and busy offices.",
+    bad:"Auto-lock is a security control, not a performance tool."
   },
-  { stationKey:"updates",
-    q:"Why are OS updates important for security?",
-    options:[
-      {t:"They patch known vulnerabilities exploited by attackers", icon:"🩹"},
-      {t:"They are only cosmetic changes", icon:"🎨"},
-      {t:"They remove the need for antivirus", icon:"🚫"},
-      {t:"They weaken password requirements", icon:"🔓"}
+  updates: {
+    q: "Why are Windows updates important for security?",
+    options: [
+      "They patch known vulnerabilities attackers exploit",
+      "They remove the need for backups",
+      "They guarantee no phishing will happen",
+      "They only change themes and wallpapers"
     ],
-    correctIndex:0,
-    ok:"Updates close known security holes and reduce exposure.",
-    bad:"Updates are a baseline security control and do not replace other layers."
+    correct: 0,
+    ok: "Updates close known security holes.",
+    bad:"Updates help, but they are not the only protection you need."
   },
-  { stationKey:"firewall",
-    q:"Which network profile is typically higher risk?",
-    options:[
-      {t:"Public networks (cafes, airports, guest Wi-Fi)", icon:"📶"},
-      {t:"Private home network always", icon:"🏠"},
-      {t:"Any network is equally safe", icon:"😐"},
-      {t:"Only wired networks are risky", icon:"🔌"}
+  firewall: {
+    q: "Which profile should be strictest on untrusted networks?",
+    options: [
+      "Public profile",
+      "Private profile",
+      "Domain profile only",
+      "No profile needs strict rules"
     ],
-    correctIndex:0,
-    ok:"Public networks are less trustworthy and need stricter controls.",
-    bad:"Public networks are generally higher risk because you can't trust other devices."
+    correct: 0,
+    ok: "Public networks are riskier, so rules should be stricter.",
+    bad:"Public networks are typically less trustworthy."
   },
-  { stationKey:"privacy",
-    q:"What principle should guide app permissions?",
-    options:[
-      {t:"Grant only what is needed (least privilege)", icon:"🎯"},
-      {t:"Grant everything once and forget", icon:"✅"},
-      {t:"Permissions do not affect security", icon:"🚫"},
-      {t:"Always allow microphone for all apps", icon:"🎙️"}
+  privacy: {
+    q: "Good rule for app permissions (camera/mic/location)?",
+    options: [
+      "Allow only when needed (least privilege)",
+      "Allow everything once and forget",
+      "Permissions do not affect security",
+      "Always allow microphone for all apps"
     ],
-    correctIndex:0,
-    ok:"Least privilege reduces unwanted access and attack surface.",
-    bad:"Over-permissioning increases exposure and is hard to audit later."
+    correct: 0,
+    ok: "Grant only what is necessary to reduce exposure.",
+    bad:"Over-permissioning increases data leakage risk."
   }
-];
+};
 
-/* UI */
-const els = {
-  keysText: document.getElementById("keysText"),
-  scoreText: document.getElementById("scoreText"),
-  threatText: document.getElementById("threatText"),
-  alertCount: document.getElementById("alertCount"),
-  notif: document.getElementById("notif"),
-  alertDot: document.getElementById("alertDot"),
-  subline: document.getElementById("subline"),
-  missionText: document.getElementById("missionText"),
+const el = {
+  cv: document.getElementById("cv"),
+  cpName: document.getElementById("cpName"),
+  progText: document.getElementById("progText"),
+  rescueText: document.getElementById("rescueText"),
   statusText: document.getElementById("statusText"),
-  clock: document.getElementById("clock"),
-
-  scoreFill: document.getElementById("scoreFill"),
-  scoreMeter: document.getElementById("scoreMeter"),
-  threatFill: document.getElementById("threatFill"),
-  threatMeter: document.getElementById("threatMeter"),
-
-  nodes: {
-    accounts: document.getElementById("n1"),
-    lock: document.getElementById("n2"),
-    updates: document.getElementById("n3"),
-    firewall: document.getElementById("n4"),
-    privacy: document.getElementById("n5"),
-  },
-
-  wires: [document.getElementById("w1"),document.getElementById("w2"),document.getElementById("w3"),document.getElementById("w4")],
-  spark: document.getElementById("spark"),
-  toasts: document.getElementById("toasts"),
-
-  keyEls: [document.getElementById("k1"),document.getElementById("k2"),document.getElementById("k3"),document.getElementById("k4"),document.getElementById("k5")],
-
-  pinPreview: document.getElementById("pinPreview"),
-
-  lockWrap: document.getElementById("lockWrap"),
-  pinDigits: document.getElementById("pinDigits"),
-  pinInput: document.getElementById("pinInput"),
-  unlockBtn: document.getElementById("unlockBtn"),
-  closeLockBtn: document.getElementById("closeLockBtn"),
-  openLockBtn: document.getElementById("openLockBtn"),
-  lockMsg: document.getElementById("lockMsg"),
-  lockSub: document.getElementById("lockSub"),
-  lockScore: document.getElementById("lockScore"),
-
-  stationModal: document.getElementById("stationModal"),
-  mTitle: document.getElementById("mTitle"),
-  mSub: document.getElementById("mSub"),
-  stepText: document.getElementById("stepText"),
-
-  mockName: document.getElementById("mockName"),
-  mockPath: document.getElementById("mockPath"),
-  statusV: document.getElementById("statusV"),
-  riskV: document.getElementById("riskV"),
-  impactV: document.getElementById("impactV"),
-  hintV: document.getElementById("hintV"),
-
-  taskList: document.getElementById("taskList"),
-  applyBtn: document.getElementById("applyBtn"),
-  applyHint: document.getElementById("applyHint"),
-
+  bar: document.getElementById("bar"),
   qText: document.getElementById("qText"),
   opts: document.getElementById("opts"),
   fb: document.getElementById("fb"),
   fbT: document.getElementById("fbT"),
   fbP: document.getElementById("fbP"),
-  finishBtn: document.getElementById("finishBtn"),
-  closeStationBtn: document.getElementById("closeStationBtn"),
-
-  endModal: document.getElementById("endModal"),
-  endGrid: document.getElementById("endGrid"),
-  endScore: document.getElementById("endScore"),
-  playAgainBtn: document.getElementById("playAgainBtn"),
-  closeEndBtn: document.getElementById("closeEndBtn"),
-
+  nextBtn: document.getElementById("nextBtn"),
+  retryBtn: document.getElementById("retryBtn"),
   resetBtn: document.getElementById("resetBtn"),
-  resetTop: document.getElementById("resetTop"),
 };
-
-function setClock(){
-  const now = new Date();
-  els.clock.textContent = String(now.getHours()).padStart(2,"0") + ":" + String(now.getMinutes()).padStart(2,"0");
-}
-setClock();
-setInterval(setClock, 15000);
 
 function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
 function shuffle(arr){
@@ -1156,614 +349,573 @@ function shuffle(arr){
   }
   return a;
 }
-function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
-/* Game state */
+/* ---------- Game state ---------- */
 const state = {
-  started: true,           // we show lock screen immediately
-  keys: 0,
-  currentIndex: 0,
-  activeStationKey: null,
-  stationApplied: false,
-  stationQDone: false,
-
-  score: 35,
-  threat: 85,              // 0..100 (higher = worse)
-  alerts: 6,
-
-  pin: [],                 // 10 digits
-  revealed: Array(10).fill(false),
-
-  // per-station task completion tracking
-  taskDone: [],
+  idx: 0,
+  solved: Array(CHECKPOINTS.length).fill(false),
+  locked: false,
   currentQ: null,
-  locked: false
+  // animation
+  playerX: 0,
+  playerY: 0,
+  targetX: 0,
+  moving: false,
+  moveT: 0,
+  flash: 0,
+  shake: 0,
+  particles: [],
+  bridges: 0, // how many segments built (0..4)
 };
 
-/* Create a deterministic-ish PIN per session */
-function generatePin(){
-  const digits = [];
-  for(let i=0;i<10;i++) digits.push(String(Math.floor(Math.random()*10)));
-  state.pin = digits;
-  state.revealed = Array(10).fill(false);
-}
-
-function renderPinPreview(){
-  els.pinPreview.innerHTML = "";
-  for(let i=0;i<10;i++){
-    const d = document.createElement("div");
-    d.className = "pinDigit " + (state.revealed[i] ? "revealed" : "blur");
-    d.textContent = state.revealed[i] ? state.pin[i] : "•";
-    els.pinPreview.appendChild(d);
-  }
-}
-
-function renderLockDigits(){
-  els.pinDigits.innerHTML = "";
-  for(let i=0;i<10;i++){
-    const d = document.createElement("div");
-    d.className = "pinDigit " + (state.revealed[i] ? "revealed" : "blur");
-    d.textContent = state.revealed[i] ? state.pin[i] : "•";
-    els.pinDigits.appendChild(d);
-  }
-}
-
-function setNodeState(key, s){
-  const n = els.nodes[key];
-  if(!n) return;
-  n.dataset.state = s;
-  const st = n.querySelector(".st");
-  if(st) st.textContent = s==="green" ? "Secured" : (s==="amber" ? "In progress" : "Locked");
-}
-function setNodeLocked(key, locked){
-  const n = els.nodes[key];
-  if(!n) return;
-  n.classList.toggle("locked", locked);
-}
-function setActiveNode(key){
-  Object.values(els.nodes).forEach(n=> n.classList.remove("active"));
-  if(els.nodes[key]) els.nodes[key].classList.add("active");
-}
-
-function updateMeters(){
-  // score meter
-  const sPct = clamp(state.score, 0, 100);
-  els.scoreFill.style.width = sPct + "%";
-  els.scoreText.textContent = String(state.score);
-  els.lockScore.textContent = String(state.score);
-
-  if(state.score < 50) els.scoreMeter.className = "meter red";
-  else if(state.score < 75) els.scoreMeter.className = "meter amber";
-  else els.scoreMeter.className = "meter";
-
-  // threat meter (inverse display: lower better)
-  const tPct = clamp(state.threat, 0, 100);
-  els.threatFill.style.width = tPct + "%";
-  const label = tPct >= 70 ? "High" : (tPct >= 40 ? "Medium" : "Low");
-  els.threatText.textContent = label;
-
-  if(tPct >= 70) els.threatMeter.className = "meter red";
-  else if(tPct >= 40) els.threatMeter.className = "meter amber";
-  else els.threatMeter.className = "meter";
-
-  // alerts
-  els.alertCount.textContent = String(state.alerts);
-  els.notif.textContent = String(state.alerts);
-  els.alertDot.className = "badgeDot " + (label==="High" ? "red" : (label==="Medium" ? "amber" : "green"));
-}
-
-function updateKeyring(){
-  els.keysText.textContent = String(state.keys);
-  els.keyEls.forEach((k,i)=> k.classList.toggle("on", i < state.keys));
-}
-
-function showToast(kind, title, text){
-  const t = document.createElement("div");
-  t.className = "toast " + kind;
-  t.innerHTML = `
-    <div class="t">
-      <span>${title}</span>
-      <small>${new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"})}</small>
-    </div>
-    <div class="p">${text}</div>
-  `;
-  els.toasts.prepend(t);
-  // keep max 3
-  const items = [...els.toasts.querySelectorAll(".toast")];
-  items.slice(3).forEach(x=> x.remove());
-}
-
-function layoutWires(){
-  const p = document.getElementById("desktop").getBoundingClientRect();
-  const order = ["accounts","lock","privacy","updates","firewall"];
-  const pts = order.map(k=>{
-    const r = els.nodes[k].getBoundingClientRect();
-    return { x:(r.left - p.left) + r.width/2, y:(r.top - p.top) + r.height/2 };
-  });
-  for(let i=0;i<4;i++){
-    const a = pts[i], b = pts[i+1];
-    const dx = b.x - a.x, dy = b.y - a.y;
-    const len = Math.hypot(dx,dy);
-    const ang = Math.atan2(dy,dx) * (180/Math.PI);
-    const w = els.wires[i];
-    w.style.left = a.x + "px";
-    w.style.top  = a.y + "px";
-    w.style.width = len + "px";
-    w.style.transform = `rotate(${ang}deg)`;
-  }
-}
-window.addEventListener("resize", ()=> setTimeout(layoutWires, 50));
-
-function runSpark(fromKey, toKey){
-  const p = document.getElementById("desktop").getBoundingClientRect();
-  const aR = els.nodes[fromKey].getBoundingClientRect();
-  const bR = els.nodes[toKey].getBoundingClientRect();
-  const ax = (aR.left - p.left) + aR.width/2;
-  const ay = (aR.top - p.top) + aR.height/2;
-  const bx = (bR.left - p.left) + bR.width/2;
-  const by = (bR.top - p.top) + bR.height/2;
-  els.spark.style.left = ax + "px";
-  els.spark.style.top  = ay + "px";
-  els.spark.style.setProperty("--dx", (bx-ax) + "px");
-  els.spark.style.setProperty("--dy", (by-ay) + "px");
-  els.spark.classList.remove("go");
-  void els.spark.offsetWidth;
-  els.spark.classList.add("go");
-}
-
-function setWireProgress(){
-  // turn wires on for completed links
-  const done = state.keys; // keys == completed stations
-  // links: 0 between 1-2, 1 between 2-3, etc
-  els.wires.forEach((w,i)=> w.classList.toggle("on", i < done));
-}
-
-function refreshAvailability(){
-  STATIONS.forEach((st, idx)=>{
-    if(idx < state.keys){
-      setNodeLocked(st.key, false);
-      setNodeState(st.key, "green");
-    }else if(idx === state.keys){
-      setNodeLocked(st.key, false);
-      setNodeState(st.key, "red");
-    }else{
-      setNodeLocked(st.key, true);
-      setNodeState(st.key, "red");
-    }
-  });
-
-  const next = STATIONS[state.keys];
-  if(next){
-    setActiveNode(next.key);
-    els.missionText.innerHTML = `Current target: <b>${next.title}</b>. Click the highlighted station node.`;
-    els.statusText.textContent = `Next: ${next.title}. Complete it to reveal more PIN digits.`;
-  }
-}
-
-function stationQuestions(stKey){
-  return QUESTION_BANK.filter(q => q.stationKey === stKey);
-}
-
-function shuffleOptions(q){
-  const opts = q.options.map((o, idx)=> ({...o, _orig: idx}));
-  const shuffled = shuffle(opts);
-  const newCorrect = shuffled.findIndex(o => o._orig === q.correctIndex);
-  return {...q, options: shuffled.map(o=>({t:o.t, icon:o.icon})), correctIndex: newCorrect};
-}
-
-function openLock(){
-  renderLockDigits();
-  renderPinPreview();
-  els.lockMsg.className = "lockMsg";
-  els.lockMsg.textContent = "";
-  els.pinInput.value = "";
-  els.lockSub.textContent = state.keys < 5
-    ? "Fix security stations to reveal the PIN."
-    : "All digits revealed. Enter PIN to unlock.";
-  els.lockWrap.style.display = "grid";
-}
-function closeLock(){
-  els.lockWrap.style.display = "none";
-}
-
-function openStation(stKey){
-  const idx = STATIONS.findIndex(s=>s.key===stKey);
-  if(idx !== state.keys) return;
-
-  state.activeStationKey = stKey;
-  state.stationApplied = false;
-  state.stationQDone = false;
-  state.taskDone = STATIONS[idx].tasks.map(()=> false);
-
-  const st = STATIONS[idx];
-  els.mTitle.textContent = `${st.icon} ${st.title}`;
-  els.mSub.textContent = "Complete tasks → Apply changes → Answer one decision question";
-  els.stepText.textContent = "Tasks";
-
-  els.mockName.textContent = st.title;
-  els.mockPath.textContent = st.path;
-  els.statusV.textContent = st.tiles.status;
-  els.riskV.textContent = st.tiles.risk;
-  els.impactV.textContent = st.tiles.impact;
-  els.hintV.textContent = st.tiles.hint;
-
-  // render tasks
-  renderTasks(st);
-
-  // disable apply until tasks complete
-  els.applyBtn.disabled = true;
-  els.applyHint.textContent = "Finish tasks to apply.";
-
-  // quiz locked until apply
-  els.qText.textContent = "Apply changes to unlock the decision question.";
-  els.opts.innerHTML = "";
-  els.fb.className = "fb";
-
-  els.stationModal.classList.add("show");
-}
-
-function closeStation(){
-  els.stationModal.classList.remove("show");
-  state.activeStationKey = null;
-  state.currentQ = null;
+function reset(){
+  state.idx = 0;
+  state.solved.fill(false);
   state.locked = false;
+  state.flash = 0;
+  state.shake = 0;
+  state.particles.length = 0;
+  state.bridges = 0;
+
+  // player starts at first checkpoint position (computed after resize)
+  resize();
+  state.playerX = pathPts[0].x;
+  state.playerY = pathPts[0].y + 18;
+  state.targetX = state.playerX;
+  state.moving = false;
+  state.moveT = 0;
+
+  el.rescueText.textContent = "In progress";
+  el.statusText.textContent = "Secure the PC by completing all 5 checkpoints.";
+  el.fb.className = "fb";
+  loadQuestion();
+  updateUI();
 }
 
-function renderTasks(st){
-  els.taskList.innerHTML = "";
-  st.tasks.forEach((t, i)=>{
-    const row = document.createElement("div");
-    row.className = "task";
-    const right = document.createElement("div");
+function updateUI(){
+  const done = state.solved.filter(Boolean).length;
+  el.progText.textContent = `${done}/${CHECKPOINTS.length}`;
+  el.bar.style.width = `${(done/CHECKPOINTS.length)*100}%`;
+  el.cpName.textContent = CHECKPOINTS[state.idx]?.label || "Completed";
 
-    if(t.type === "switch"){
-      right.className = "switch";
-      right.innerHTML = "<i></i>";
-      right.addEventListener("click", ()=>{
-        state.taskDone[i] = !state.taskDone[i];
-        right.classList.toggle("on", state.taskDone[i]);
-        refreshApply();
-      });
-    }else{
-      right.className = "check";
-      right.textContent = "✓";
-      right.addEventListener("click", ()=>{
-        state.taskDone[i] = !state.taskDone[i];
-        right.classList.toggle("on", state.taskDone[i]);
-        refreshApply();
-      });
-    }
-
-    row.innerHTML = `
-      <div class="left">
-        <div style="width:28px;height:28px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);display:grid;place-items:center;color:var(--muted)">⚙</div>
-        <div>
-          <b>${t.label}</b>
-          <p>${t.sub}</p>
-        </div>
-      </div>
-    `;
-    row.appendChild(right);
-    els.taskList.appendChild(row);
-  });
+  if(done === CHECKPOINTS.length){
+    el.rescueText.textContent = "Rescued";
+    el.statusText.textContent = "All checkpoints secured. PC is safe for work.";
+  }
 }
 
-function refreshApply(){
-  const all = state.taskDone.every(Boolean);
-  els.applyBtn.disabled = !all;
-  els.applyHint.textContent = all ? "Ready to apply." : "Finish tasks to apply.";
-}
-
-function applyStation(){
-  if(state.stationApplied) return;
-  if(!state.taskDone.every(Boolean)) return;
-
-  state.stationApplied = true;
-  els.stepText.textContent = "Decision";
-  els.applyHint.textContent = "Applied. Now answer the decision question.";
-  els.applyBtn.disabled = true;
-
-  // Improve meters a bit just for applying tasks
-  state.score = clamp(state.score + 6, 0, 100);
-  state.threat = clamp(state.threat - 10, 0, 100);
-  state.alerts = clamp(state.alerts - 1, 0, 99);
-  updateMeters();
-
-  // make node amber while working
-  setNodeState(state.activeStationKey, "amber");
-
-  showToast("amber", "Settings applied", "Changes saved. Confirm the best action to secure this station.");
-
-  // load question
-  const pool = stationQuestions(state.activeStationKey);
-  const q0 = pool.length ? pick(pool) : null;
-  state.currentQ = q0 ? shuffleOptions(structuredClone(q0)) : null;
-
-  if(!state.currentQ){
-    els.qText.textContent = "No question available for this station. Please update the question bank.";
-    els.opts.innerHTML = "";
+/* ---------- Questions ---------- */
+function loadQuestion(){
+  const cp = CHECKPOINTS[state.idx];
+  if(!cp){
+    // finished
+    el.qText.textContent = "✅ PC Rescued! All security checkpoints are secured.";
+    el.opts.innerHTML = "";
+    el.fb.className = "fb show good";
+    el.fbT.textContent = "Mission complete";
+    el.fbP.textContent = "Well done. You restored baseline Windows security settings.";
+    el.nextBtn.style.display = "none";
+    el.retryBtn.textContent = "Play again";
     return;
   }
-  renderQuestion(state.currentQ);
-}
 
-function renderQuestion(q){
-  els.qText.textContent = q.q;
-  els.opts.innerHTML = "";
-  els.fb.className = "fb";
+  // Shuffle options and recompute correct index
+  const q = QUESTIONS[cp.key];
+  const opts = q.options.map((t,i)=> ({t, orig:i}));
+  const sh = shuffle(opts);
+  const newCorrect = sh.findIndex(o => o.orig === q.correct);
+  state.currentQ = {
+    q: q.q,
+    options: sh.map(o=>o.t),
+    correct: newCorrect,
+    ok: q.ok,
+    bad: q.bad
+  };
 
-  q.options.forEach((o, i)=>{
-    const btn = document.createElement("button");
-    btn.type="button";
-    btn.className="opt";
-    btn.innerHTML = `
-      <div class="l">
-        <div class="ico" aria-hidden="true">${o.icon || "⚙️"}</div>
-        <div style="font-weight:850;line-height:1.35">${o.t}</div>
+  el.qText.textContent = `(${cp.icon} ${cp.label}) ${state.currentQ.q}`;
+  el.opts.innerHTML = "";
+  el.fb.className = "fb";
+  el.nextBtn.style.display = "inline-block";
+  el.retryBtn.textContent = "Try again";
+
+  const badges = ["A","B","C","D"];
+  state.currentQ.options.forEach((t,i)=>{
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "opt";
+    b.innerHTML = `
+      <div class="left">
+        <div class="badge">${badges[i] || "•"}</div>
+        <div style="font-weight:850;line-height:1.35">${t}</div>
       </div>
       <div class="kbd">${i+1}</div>
     `;
-    btn.addEventListener("click", ()=> answer(i));
-    els.opts.appendChild(btn);
+    b.addEventListener("click", ()=> answer(i));
+    el.opts.appendChild(b);
   });
+
+  state.locked = false;
 }
 
+/* ---------- Answer handling ---------- */
 function lockOptions(v){
-  [...els.opts.querySelectorAll("button")].forEach(b=> b.disabled = v);
+  [...el.opts.querySelectorAll("button")].forEach(x=> x.disabled = v);
+}
+
+function confetti(x,y,good=true){
+  const n = good ? 26 : 18;
+  for(let i=0;i<n;i++){
+    state.particles.push({
+      x,y,
+      vx:(Math.random()*2-1) * (good ? 2.6 : 2.1),
+      vy:(Math.random()*-2.6) - (good ? 2.6 : 2.2),
+      life: good ? 48 : 38,
+      good
+    });
+  }
 }
 
 function answer(i){
-  if(state.locked || !state.currentQ || !state.stationApplied) return;
+  if(state.locked) return;
   state.locked = true;
   lockOptions(true);
 
-  const ok = (i === state.currentQ.correctIndex);
-  els.fb.className = "fb show " + (ok ? "good" : "bad");
-  els.fbT.textContent = ok ? "Correct decision" : "Not the best decision";
-  els.fbP.textContent = ok ? state.currentQ.ok : state.currentQ.bad;
+  const ok = (i === state.currentQ.correct);
 
-  // Consequences
   if(ok){
-    state.stationQDone = true;
-    state.score = clamp(state.score + 10, 0, 100);
-    state.threat = clamp(state.threat - 18, 0, 100);
-    state.alerts = clamp(state.alerts - 1, 0, 99);
-    updateMeters();
-    showToast("green", "Station stabilized", "Good decision. Risk reduced.");
+    el.fb.className = "fb show good";
+    el.fbT.textContent = "Correct";
+    el.fbP.textContent = state.currentQ.ok;
+
+    // mark solved + build next bridge + move player
+    state.solved[state.idx] = true;
+    state.bridges = Math.max(state.bridges, state.idx); // segments built from 0..idx-1, so idx solved builds segment idx
+    confetti(pathPts[state.idx].x, pathPts[state.idx].y, true);
+
+    // move to next checkpoint (if exists)
+    const nextIdx = state.idx + 1;
+    if(nextIdx < CHECKPOINTS.length){
+      startMove(nextIdx);
+    }else{
+      // last solved -> finish
+      state.idx++;
+      loadQuestion();
+    }
+
   }else{
-    state.stationQDone = false;
-    state.score = clamp(state.score - 4, 0, 100);
-    state.threat = clamp(state.threat + 8, 0, 100);
-    updateMeters();
-    showToast("red", "Risk persists", "Re-check your understanding. You can still finish, but score suffers.");
+    el.fb.className = "fb show bad";
+    el.fbT.textContent = "Not correct";
+    el.fbP.textContent = state.currentQ.bad;
+
+    // alert flash + shake + red particles
+    state.flash = 1.0;
+    state.shake = 1.0;
+    confetti(pathPts[state.idx].x, pathPts[state.idx].y, false);
   }
 
-  els.finishBtn.textContent = ok ? "Finish Station" : "Finish Anyway";
+  updateUI();
 }
 
-function revealDigitsForStation(stationIndex){
-  // each station reveals 2 digits => (0..1), (2..3) ...
-  const start = stationIndex * 2;
-  for(let i=start;i<start+2;i++){
-    if(i>=0 && i<10) state.revealed[i] = true;
-  }
-}
-
-function finishStation(){
-  if(!state.stationApplied) return;
-
-  const idx = state.keys;
-  const st = STATIONS[idx];
-
-  // mark as secured even if question wrong, but reward differs
-  const ok = !!state.stationQDone;
-
-  // Set state/score bonuses for completion
-  if(ok){
-    state.score = clamp(state.score + 6, 0, 100);
-    state.threat = clamp(state.threat - 10, 0, 100);
-  }else{
-    // still progresses, but less benefit
-    state.score = clamp(state.score + 2, 0, 100);
-    state.threat = clamp(state.threat - 4, 0, 100);
-  }
-
-  // complete station
-  setNodeState(st.key, "green");
-  state.keys = clamp(state.keys + 1, 0, 5);
-  state.currentIndex = state.keys;
-
-  // reveal PIN digits for that completed station
-  revealDigitsForStation(idx);
-
-  updateKeyring();
-  updateMeters();
-  renderPinPreview();
-
-  // wire progress and spark
-  setWireProgress();
-  const next = STATIONS[state.keys];
-  if(next){
-    runSpark(st.key, next.key);
-  }
-
-  // toast
-  showToast("green", "Key fragment acquired", `${st.title} secured. PIN digits revealed.`);
-  closeStation();
-
-  // unlock next station
-  refreshAvailability();
-
-  // completion
-  if(state.keys === 5){
-    showToast("green", "All keys collected", "All PIN digits are now revealed. Enter the PIN to unlock.");
-    els.statusText.textContent = "All digits revealed. Open lock screen and enter the PIN.";
-  }
-}
-
-function attemptUnlock(){
-  const allRevealed = state.revealed.every(Boolean);
-  const msg = els.lockMsg;
-  msg.className = "lockMsg show";
-
-  if(!allRevealed){
-    msg.classList.add("bad");
-    msg.textContent = "PIN is not fully revealed yet. Secure all stations first.";
+/* ---------- Next / Retry ---------- */
+el.nextBtn.addEventListener("click", ()=>{
+  // If not solved, force retry
+  if(!state.solved[state.idx]){
+    // keep same checkpoint, reshuffle and try again
+    loadQuestion();
     return;
   }
-
-  const input = (els.pinInput.value || "").trim();
-  if(input.length !== 10 || !/^\d{10}$/.test(input)){
-    msg.classList.add("bad");
-    msg.textContent = "Enter a valid 10-digit PIN.";
-    return;
-  }
-
-  const correct = state.pin.join("");
-  if(input !== correct){
-    msg.classList.add("bad");
-    msg.textContent = "Incorrect PIN. Check the revealed digits carefully.";
-    return;
-  }
-
-  // success
-  msg.classList.add("good");
-  msg.textContent = "Unlocked. Desktop is now secured.";
-  closeLock();
-  endGame();
-}
-
-function endGame(){
-  els.endModal.classList.add("show");
-  els.endScore.textContent = String(state.score);
-
-  els.endGrid.innerHTML = "";
-  STATIONS.forEach(s=>{
-    const row = document.createElement("div");
-    row.className = "rowOk";
-    row.innerHTML = `
-      <div>
-        <b>${s.icon} ${s.title}</b>
-        <div style="color:var(--muted);font-size:12px;margin-top:2px">${s.path}</div>
-      </div>
-      <div style="font-weight:950;color:rgba(61,220,151,.95)">✔</div>
-    `;
-    els.endGrid.appendChild(row);
-  });
-}
-
-/* Interactions */
-Object.values(els.nodes).forEach(node=>{
-  node.addEventListener("click", ()=>{
-    if(node.classList.contains("locked")) return;
-    const key = node.dataset.key;
-    openStation(key);
-  });
+  // If solved but still on same idx, question will update after movement
+  // This button mostly helps mobile users, but we keep it.
 });
 
-els.applyBtn.addEventListener("click", applyStation);
-els.finishBtn.addEventListener("click", ()=>{
-  if(!els.fb.classList.contains("show")){
-    // ensure they answer first if they can
-    if(state.stationApplied && state.currentQ && !state.locked){
-      return;
+el.retryBtn.addEventListener("click", ()=>{
+  if(el.retryBtn.textContent === "Play again"){
+    reset();
+    return;
+  }
+  loadQuestion();
+});
+
+el.resetBtn.addEventListener("click", reset);
+
+/* ---------- Movement ---------- */
+let pathPts = [];
+function startMove(nextIdx){
+  state.moving = true;
+  state.moveT = 0;
+  state.targetX = pathPts[nextIdx].x;
+  state.targetY = pathPts[nextIdx].y + 18;
+  state.nextIdx = nextIdx;
+}
+
+function ease(t){ return t<.5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2; }
+
+/* ---------- Canvas rendering ---------- */
+const ctx = el.cv.getContext("2d", {alpha:false});
+let W=0,H=0, dpr=1;
+
+function resize(){
+  const r = el.cv.getBoundingClientRect();
+  dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  W = Math.floor(r.width*dpr);
+  H = Math.floor(r.height*dpr);
+  el.cv.width = W;
+  el.cv.height = H;
+
+  // define path points (corridor checkpoints)
+  const padX = 70*dpr;
+  const y = Math.floor(H*0.55);
+  const span = (W - padX*2) / (CHECKPOINTS.length-1);
+  pathPts = CHECKPOINTS.map((_,i)=> ({
+    x: Math.floor(padX + span*i),
+    y: y
+  }));
+
+  // place player if uninitialized
+  if(!state.playerX){
+    state.playerX = pathPts[0].x;
+    state.playerY = pathPts[0].y + 18;
+  }
+}
+window.addEventListener("resize", resize);
+
+/* Draw helpers */
+function roundRect(x,y,w,h,r){
+  r = Math.min(r, w/2, h/2);
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+function glowCircle(x,y,rad,alpha){
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  const g = ctx.createRadialGradient(x,y,0,x,y,rad);
+  g.addColorStop(0,"rgba(74,163,255,.55)");
+  g.addColorStop(1,"rgba(74,163,255,0)");
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(x,y,rad,0,Math.PI*2); ctx.fill();
+  ctx.restore();
+}
+
+function drawBackground(){
+  // base
+  ctx.fillStyle = "#071024";
+  ctx.fillRect(0,0,W,H);
+
+  // soft blobs
+  const g1 = ctx.createRadialGradient(W*0.22,H*0.18,0,W*0.22,H*0.18,W*0.62);
+  g1.addColorStop(0,"rgba(74,163,255,.18)");
+  g1.addColorStop(1,"rgba(0,0,0,0)");
+  ctx.fillStyle = g1; ctx.fillRect(0,0,W,H);
+
+  const g2 = ctx.createRadialGradient(W*0.82,H*0.78,0,W*0.82,H*0.78,W*0.70);
+  g2.addColorStop(0,"rgba(61,220,151,.10)");
+  g2.addColorStop(1,"rgba(0,0,0,0)");
+  ctx.fillStyle = g2; ctx.fillRect(0,0,W,H);
+
+  // corridor floor
+  const floorY = Math.floor(H*0.62);
+  const fg = ctx.createLinearGradient(0,floorY,0,H);
+  fg.addColorStop(0,"rgba(255,255,255,.06)");
+  fg.addColorStop(1,"rgba(0,0,0,.35)");
+  ctx.fillStyle = fg;
+  ctx.fillRect(0,floorY,W,H-floorY);
+
+  // subtle grid
+  ctx.save();
+  ctx.globalAlpha = 0.10;
+  ctx.strokeStyle = "rgba(255,255,255,.18)";
+  const step = 38*dpr;
+  for(let x=0;x<W;x+=step){
+    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke();
+  }
+  for(let y=0;y<H;y+=step){
+    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+  }
+  ctx.restore();
+
+  // "window" panels
+  for(let i=0;i<3;i++){
+    const x = (W*(0.12 + i*0.28));
+    const y = H*0.18;
+    const w = W*0.18;
+    const h = H*0.18;
+    ctx.save();
+    ctx.globalAlpha = 0.55;
+    roundRect(x,y,w,h,18*dpr);
+    ctx.fillStyle = "rgba(255,255,255,.05)";
+    ctx.fill();
+    ctx.globalAlpha = 0.20;
+    ctx.strokeStyle = "rgba(255,255,255,.18)";
+    ctx.lineWidth = 2*dpr;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // taskbar
+  const tbH = 64*dpr;
+  const tbY = H - tbH - 18*dpr;
+  ctx.save();
+  roundRect(18*dpr,tbY,W-36*dpr,tbH,18*dpr);
+  ctx.fillStyle = "rgba(0,0,0,.30)";
+  ctx.fill();
+  ctx.strokeStyle = "rgba(255,255,255,.14)";
+  ctx.lineWidth = 2*dpr;
+  ctx.stroke();
+  // icons
+  for(let i=0;i<4;i++){
+    const ix = 36*dpr + i*52*dpr;
+    const iy = tbY + 16*dpr;
+    roundRect(ix,iy,36*dpr,36*dpr,12*dpr);
+    ctx.fillStyle = "rgba(255,255,255,.05)"; ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,.12)"; ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawPath(){
+  // base line
+  ctx.save();
+  ctx.lineWidth = 6*dpr;
+  ctx.lineCap = "round";
+  ctx.strokeStyle = "rgba(255,255,255,.12)";
+  ctx.beginPath();
+  ctx.moveTo(pathPts[0].x, pathPts[0].y);
+  for(let i=1;i<pathPts.length;i++) ctx.lineTo(pathPts[i].x, pathPts[i].y);
+  ctx.stroke();
+
+  // built "shield bridge" segments
+  for(let i=0;i<state.bridges;i++){
+    const a = pathPts[i], b = pathPts[i+1];
+    const grad = ctx.createLinearGradient(a.x,a.y,b.x,b.y);
+    grad.addColorStop(0,"rgba(61,220,151,.55)");
+    grad.addColorStop(1,"rgba(74,163,255,.20)");
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 10*dpr;
+    ctx.beginPath();
+    ctx.moveTo(a.x,a.y);
+    ctx.lineTo(b.x,b.y);
+    ctx.stroke();
+
+    // little pulses
+    glowCircle(b.x,b.y,38*dpr,0.20);
+  }
+  ctx.restore();
+}
+
+function drawCheckpoints(){
+  for(let i=0;i<pathPts.length;i++){
+    const p = pathPts[i];
+    const solved = state.solved[i];
+    const isCurrent = (i === state.idx);
+
+    // glow
+    if(isCurrent) glowCircle(p.x,p.y,70*dpr,0.30);
+
+    // outer ring
+    ctx.save();
+    ctx.lineWidth = 3*dpr;
+    ctx.strokeStyle = solved ? "rgba(61,220,151,.85)" : (isCurrent ? "rgba(74,163,255,.85)" : "rgba(255,255,255,.25)");
+    ctx.fillStyle = "rgba(0,0,0,.28)";
+    ctx.beginPath(); ctx.arc(p.x,p.y,22*dpr,0,Math.PI*2); ctx.fill(); ctx.stroke();
+
+    // inner light
+    ctx.fillStyle = solved ? "rgba(61,220,151,.95)" : (isCurrent ? "rgba(74,163,255,.85)" : "rgba(255,255,255,.25)");
+    ctx.beginPath(); ctx.arc(p.x,p.y,10*dpr,0,Math.PI*2); ctx.fill();
+
+    // label plate
+    const label = CHECKPOINTS[i].label;
+    const plateW = Math.max(96*dpr, (label.length*7.2)*dpr);
+    const plateH = 28*dpr;
+    const px = p.x - plateW/2;
+    const py = p.y - 56*dpr;
+    roundRect(px,py,plateW,plateH,12*dpr);
+    ctx.fillStyle = "rgba(0,0,0,.34)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,.14)";
+    ctx.stroke();
+
+    // text
+    ctx.fillStyle = "rgba(234,240,255,.92)";
+    ctx.font = `${12*dpr}px system-ui, Segoe UI, Arial`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(label, p.x, py + plateH/2);
+
+    // small icon
+    ctx.font = `${14*dpr}px system-ui, Segoe UI, Arial`;
+    ctx.fillText(CHECKPOINTS[i].icon, p.x, p.y - 86*dpr);
+
+    ctx.restore();
+  }
+}
+
+function drawPlayer(t){
+  // simple character: body + head + toolbag + walking feet
+  const x = state.playerX;
+  const y = state.playerY;
+  const bob = Math.sin(t*8) * (state.moving ? 2*dpr : 1*dpr);
+
+  ctx.save();
+  ctx.translate(x, y + bob);
+
+  // shadow
+  ctx.globalAlpha = 0.35;
+  ctx.fillStyle = "rgba(0,0,0,.55)";
+  ctx.beginPath(); ctx.ellipse(0, 18*dpr, 22*dpr, 8*dpr, 0, 0, Math.PI*2); ctx.fill();
+  ctx.globalAlpha = 1;
+
+  // legs (walk)
+  const step = Math.sin(t*10) * (state.moving ? 10*dpr : 2*dpr);
+  ctx.strokeStyle = "rgba(234,240,255,.75)";
+  ctx.lineWidth = 4*dpr;
+  ctx.lineCap = "round";
+  ctx.beginPath(); ctx.moveTo(-6*dpr, 10*dpr); ctx.lineTo(-10*dpr + step*0.06, 24*dpr); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo( 6*dpr, 10*dpr); ctx.lineTo( 10*dpr - step*0.06, 24*dpr); ctx.stroke();
+
+  // body
+  roundRect(-14*dpr, -10*dpr, 28*dpr, 26*dpr, 10*dpr);
+  ctx.fillStyle = "rgba(74,163,255,.25)";
+  ctx.fill();
+  ctx.strokeStyle = "rgba(74,163,255,.55)";
+  ctx.stroke();
+
+  // toolbag
+  roundRect(16*dpr, 0*dpr, 20*dpr, 16*dpr, 7*dpr);
+  ctx.fillStyle = "rgba(255,204,102,.18)";
+  ctx.fill();
+  ctx.strokeStyle = "rgba(255,204,102,.55)";
+  ctx.stroke();
+
+  // head
+  ctx.beginPath(); ctx.arc(0, -18*dpr, 10*dpr, 0, Math.PI*2);
+  ctx.fillStyle = "rgba(234,240,255,.85)";
+  ctx.fill();
+
+  // visor glow
+  ctx.globalAlpha = 0.7;
+  ctx.fillStyle = "rgba(61,220,151,.65)";
+  roundRect(-7*dpr, -21*dpr, 14*dpr, 6*dpr, 3*dpr);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+
+  // tiny shield aura when moving
+  if(state.moving){
+    const g = ctx.createRadialGradient(0,-2*dpr,0,0,-2*dpr,40*dpr);
+    g.addColorStop(0,"rgba(61,220,151,.18)");
+    g.addColorStop(1,"rgba(61,220,151,0)");
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(0,-2*dpr,40*dpr,0,Math.PI*2); ctx.fill();
+  }
+
+  ctx.restore();
+}
+
+function drawParticles(){
+  for(const p of state.particles){
+    ctx.save();
+    ctx.globalAlpha = Math.max(0, p.life/60);
+    ctx.fillStyle = p.good ? "rgba(61,220,151,.9)" : "rgba(255,92,108,.9)";
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 3*dpr, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+/* ---------- Loop ---------- */
+let last = performance.now();
+function tick(now){
+  const dt = Math.min(0.033, (now-last)/1000);
+  last = now;
+
+  // movement
+  if(state.moving){
+    state.moveT += dt;
+    const t = clamp(state.moveT / 0.85, 0, 1);
+    const e = ease(t);
+    const sx = pathPts[state.idx].x;
+    const sy = pathPts[state.idx].y + 18;
+    state.playerX = sx + (state.targetX - sx) * e;
+    state.playerY = sy + (state.targetY - sy) * e;
+
+    if(t >= 1){
+      state.moving = false;
+      state.idx = state.nextIdx;
+      loadQuestion();
+      updateUI();
     }
   }
-  finishStation();
-});
-els.closeStationBtn.addEventListener("click", closeStation);
 
+  // flash + shake
+  state.flash = Math.max(0, state.flash - dt*2.2);
+  state.shake = Math.max(0, state.shake - dt*2.6);
+
+  // particles
+  for(const p of state.particles){
+    p.x += p.vx * 60 * dt;
+    p.y += p.vy * 60 * dt;
+    p.vy += 0.22 * 60 * dt;
+    p.life -= 1;
+  }
+  state.particles = state.particles.filter(p=> p.life > 0);
+
+  // render
+  ctx.save();
+  // shake transform
+  if(state.shake > 0){
+    const mag = 6*dpr*state.shake;
+    ctx.translate((Math.random()*2-1)*mag, (Math.random()*2-1)*mag);
+  }
+
+  drawBackground();
+  drawPath();
+  drawCheckpoints();
+  drawParticles();
+  drawPlayer(now/1000);
+
+  // alert flash overlay
+  if(state.flash > 0){
+    ctx.save();
+    ctx.globalAlpha = 0.22 * state.flash;
+    ctx.fillStyle = "rgba(255,92,108,.9)";
+    ctx.fillRect(0,0,W,H);
+    ctx.restore();
+  }
+
+  ctx.restore();
+
+  requestAnimationFrame(tick);
+}
+
+/* ---------- Movement trigger on correct ---------- */
+function startMove(nextIdx){
+  state.moving = true;
+  state.moveT = 0;
+  state.targetX = pathPts[nextIdx].x;
+  state.targetY = pathPts[nextIdx].y + 18;
+
+  // build bridge segment now (visual reward)
+  state.bridges = Math.max(state.bridges, state.idx+1);
+}
+
+/* ---------- Keyboard support ---------- */
 document.addEventListener("keydown", (e)=>{
-  if(!els.stationModal.classList.contains("show")) return;
-  const n = parseInt(e.key, 10);
+  const n = parseInt(e.key,10);
   if(n>=1 && n<=4){
-    const btn = els.opts.querySelectorAll("button")[n-1];
+    const btn = el.opts.querySelectorAll("button")[n-1];
     if(btn && !btn.disabled) btn.click();
   }
 });
 
-els.openLockBtn.addEventListener("click", openLock);
-els.closeLockBtn.addEventListener("click", closeLock);
-els.unlockBtn.addEventListener("click", attemptUnlock);
-
-function resetAll(){
-  state.keys = 0;
-  state.currentIndex = 0;
-  state.activeStationKey = null;
-  state.stationApplied = false;
-  state.stationQDone = false;
-  state.taskDone = [];
-  state.currentQ = null;
-  state.locked = false;
-
-  state.score = 35;
-  state.threat = 85;
-  state.alerts = 6;
-
-  generatePin();
-  renderPinPreview();
-  renderLockDigits();
-
-  // clear toasts
-  els.toasts.innerHTML = "";
-  showToast("red", "Windows Security", "Multiple issues detected. Start with Accounts.");
-
-  // reset nodes
-  STATIONS.forEach((st, idx)=>{
-    setNodeLocked(st.key, idx !== 0);
-    setNodeState(st.key, "red");
-  });
-  setActiveNode("accounts");
-
-  setWireProgress();
-  updateKeyring();
-  updateMeters();
-  refreshAvailability();
-
-  closeStation();
-  closeLock();
-  els.endModal.classList.remove("show");
-}
-
-els.resetBtn.addEventListener("click", resetAll);
-els.resetTop.addEventListener("click", resetAll);
-els.playAgainBtn.addEventListener("click", resetAll);
-els.closeEndBtn.addEventListener("click", ()=> els.endModal.classList.remove("show"));
-
-/* Init */
-(function init(){
-  generatePin();
-
-  // render pin preview UI
-  const preview = document.getElementById("pinPreview");
-  for(let i=0;i<10;i++){
-    const d = document.createElement("div");
-    d.className = "pinDigit blur";
-    d.textContent = "•";
-    preview.appendChild(d);
-  }
-  renderPinPreview();
-  renderLockDigits();
-
-  // nodes locked except first
-  STATIONS.forEach((st, idx)=>{
-    setNodeLocked(st.key, idx !== 0);
-    setNodeState(st.key, "red");
-  });
-  setActiveNode("accounts");
-
-  // default toasts
-  showToast("red", "Windows Security", "Threat level is high. Fix core settings to unlock this PC.");
-  showToast("amber", "Account warning", "Shared login detected. Secure Accounts first.");
-
-  updateKeyring();
-  updateMeters();
-
-  setTimeout(()=>{ layoutWires(); setWireProgress(); }, 80);
-
-  // show lock screen at start
-  openLock();
-})();
+/* ---------- Start ---------- */
+resize();
+reset();
+requestAnimationFrame(tick);
 </script>
 </body>
 </html>
