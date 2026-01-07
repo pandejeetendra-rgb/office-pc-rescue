@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Office PC Rescue — Windows Security GBL</title>
+<title>Office PC Rescue v2 — Triage Mode</title>
 <style>
   :root{
     --bg:#0b1220;
@@ -12,7 +12,6 @@
     --ink:#eaf0ff;
     --muted:#a9b6d6;
     --line:rgba(255,255,255,.10);
-
     --blue:#4aa3ff;
     --green:#3ddc97;
     --amber:#ffcc66;
@@ -21,21 +20,20 @@
     --shadow: 0 14px 40px rgba(0,0,0,.35);
     --r:18px;
   }
-
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
     margin:0;
-    background: radial-gradient(1200px 700px at 20% 10%, rgba(74,163,255,.18), transparent 55%),
-                radial-gradient(900px 600px at 85% 20%, rgba(61,220,151,.12), transparent 60%),
-                radial-gradient(900px 600px at 75% 85%, rgba(255,92,108,.10), transparent 60%),
-                var(--bg);
+    background:
+      radial-gradient(1200px 700px at 20% 10%, rgba(74,163,255,.18), transparent 55%),
+      radial-gradient(900px 600px at 85% 20%, rgba(61,220,151,.12), transparent 60%),
+      radial-gradient(900px 600px at 75% 85%, rgba(255,92,108,.10), transparent 60%),
+      var(--bg);
     color:var(--ink);
     font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     overflow-x:hidden;
   }
-
-  .wrap{max-width:1100px;margin:0 auto;padding:18px}
+  .wrap{max-width:1180px;margin:0 auto;padding:18px}
   .topbar{
     display:flex;align-items:center;justify-content:space-between;gap:12px;
     padding:14px 14px;
@@ -45,7 +43,7 @@
     box-shadow: var(--shadow);
     backdrop-filter: blur(8px);
   }
-  .brand{display:flex;align-items:center;gap:10px;min-width:220px}
+  .brand{display:flex;align-items:center;gap:10px;min-width:240px}
   .logo{
     width:38px;height:38px;border-radius:12px;
     background: radial-gradient(circle at 30% 30%, rgba(74,163,255,.9), rgba(74,163,255,.15) 60%, rgba(0,0,0,0));
@@ -53,96 +51,77 @@
     box-shadow: 0 0 0 6px rgba(74,163,255,.08);
   }
   .title{line-height:1.1}
-  .title h1{margin:0;font-size:15px;font-weight:750;letter-spacing:.2px}
+  .title h1{margin:0;font-size:15px;font-weight:800;letter-spacing:.2px}
   .title p{margin:2px 0 0;color:var(--muted);font-size:12px}
 
-  .meters{display:flex;align-items:center;gap:14px}
-  .meterCard{
-    display:flex;align-items:center;gap:10px;
-    padding:8px 10px;border-radius:14px;
-    background: rgba(0,0,0,.20);
-    border:1px solid var(--line);
-  }
-  .meterLabel{font-size:12px;color:var(--muted)}
-  .meterValue{font-size:13px;font-weight:700}
-
-  /* Gauge */
-  .gauge{
-    width:48px;height:48px;display:grid;place-items:center;position:relative;
-  }
-  .gauge svg{transform: rotate(-90deg)}
-  .gauge .pct{
-    position:absolute;inset:0;display:grid;place-items:center;
-    font-weight:800;font-size:12px;
-  }
-
-  .riskPills{display:flex;gap:6px;align-items:center}
-  .pill{
-    width:10px;height:10px;border-radius:999px;background: rgba(255,255,255,.10);
-    border:1px solid rgba(255,255,255,.10);
-  }
-  .pill.on{background: rgba(255,92,108,.95);border-color: rgba(255,92,108,.35); box-shadow:0 0 0 5px rgba(255,92,108,.12)}
-  .subinfo{display:flex;gap:10px;align-items:center;color:var(--muted);font-size:12px}
+  .meters{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
   .chip{
     padding:6px 10px;border-radius:999px;background: rgba(255,255,255,.05);
     border:1px solid var(--line);
+    color:var(--muted);
+    font-size:12px;
+    display:inline-flex;gap:8px;align-items:center;
+    white-space:nowrap;
   }
+  .chip b{color:var(--ink)}
+  .bar{
+    width:160px;height:10px;border-radius:999px;
+    background: rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.10);
+    overflow:hidden;
+  }
+  .bar > i{display:block;height:100%;width:50%;background: rgba(61,220,151,.85); transition: width .55s ease, background .55s ease;}
+  .riskDots{display:flex;gap:6px;align-items:center}
+  .dot{
+    width:10px;height:10px;border-radius:999px;
+    background: rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.10);
+  }
+  .dot.on{background: rgba(255,92,108,.95); border-color: rgba(255,92,108,.35); box-shadow:0 0 0 5px rgba(255,92,108,.10)}
+  .clock{font-variant-numeric: tabular-nums; font-weight:900; color:var(--ink)}
+  .stage{margin-top:16px;display:grid;grid-template-columns: 1fr 1fr;gap:14px}
+  @media (max-width: 980px){ .stage{grid-template-columns:1fr} }
 
-  /* Stage */
-  .stage{margin-top:16px;display:grid;grid-template-columns: 1.2fr .8fr;gap:14px}
-  @media (max-width: 920px){ .stage{grid-template-columns:1fr} }
-
-  /* Desktop panel */
-  .desktop{
+  .panel{
     background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
     border:1px solid var(--line);
     border-radius: var(--r);
     box-shadow: var(--shadow);
     overflow:hidden;
     position:relative;
-    min-height: 440px;
+    min-height: 480px;
   }
-  .deskTop{
-    display:flex;align-items:center;justify-content:space-between;
+  .head{
     padding:12px 14px;border-bottom:1px solid var(--line);
     background: rgba(0,0,0,.20);
+    display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
   }
-  .deskTop .left{display:flex;align-items:center;gap:10px}
-  .clock{font-variant-numeric: tabular-nums; font-weight:800}
-  .wifi{color:var(--muted);font-size:12px}
-  .glow{
-    position:absolute;inset:-60px;
-    background: radial-gradient(500px 260px at 45% 25%, rgba(255,204,102,.12), transparent 60%);
-    pointer-events:none;
-    transition: opacity .6s ease, filter .6s ease;
-  }
-  .glow.safe{background: radial-gradient(520px 280px at 45% 25%, rgba(61,220,151,.12), transparent 60%)}
-  .glow.danger{background: radial-gradient(520px 280px at 45% 25%, rgba(255,92,108,.12), transparent 60%)}
+  .head .h{font-weight:950;font-size:13px}
+  .head .s{color:var(--muted);font-size:12px}
 
-  /* Tiles */
+  /* Left: Desktop health tiles + queue */
+  .deskTop{
+    display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+  }
   .tiles{
     display:grid;
     grid-template-columns: repeat(3, minmax(0,1fr));
     gap:10px;
     padding:14px;
   }
-  @media (max-width: 560px){
-    .tiles{grid-template-columns: repeat(2, minmax(0,1fr))}
-  }
+  @media (max-width: 560px){ .tiles{grid-template-columns: repeat(2, minmax(0,1fr))} }
   .tile{
-    position:relative;
     border-radius:16px;
     padding:12px 12px 10px;
     border:1px solid var(--line);
     background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-    min-height: 98px;
-    overflow:hidden;
+    min-height: 92px;
+    position:relative;
     transition: transform .15s ease, border-color .35s ease, background .35s ease;
-    will-change: transform;
   }
   .tile:hover{transform: translateY(-1px)}
   .tile .row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-  .tile .name{font-weight:800;font-size:13px}
+  .tile .name{font-weight:900;font-size:13px}
   .tile .desc{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.3}
   .badge{
     display:inline-flex;align-items:center;gap:6px;
@@ -152,55 +131,85 @@
     border:1px solid var(--line);
     white-space:nowrap;
   }
-  .dot{width:8px;height:8px;border-radius:999px;background: rgba(255,255,255,.15)}
-  .tile[data-state="red"] .dot{background: rgba(255,92,108,.95)}
-  .tile[data-state="amber"] .dot{background: rgba(255,204,102,.95)}
-  .tile[data-state="green"] .dot{background: rgba(61,220,151,.95)}
+  .stateDot{width:8px;height:8px;border-radius:999px;background: rgba(255,255,255,.15)}
+  .tile[data-state="red"] .stateDot{background: rgba(255,92,108,.95)}
+  .tile[data-state="amber"] .stateDot{background: rgba(255,204,102,.95)}
+  .tile[data-state="green"] .stateDot{background: rgba(61,220,151,.95)}
   .tile.active{
     outline: 2px solid rgba(74,163,255,.55);
     box-shadow: 0 0 0 8px rgba(74,163,255,.10);
   }
-  .tile .shine{
-    position:absolute;inset:-40px -50px auto auto;
-    width:120px;height:120px;border-radius:999px;
-    background: radial-gradient(circle at 30% 30%, rgba(74,163,255,.20), transparent 65%);
-    pointer-events:none;
-  }
 
-  /* Side panel */
-  .side{
-    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-    border:1px solid var(--line);
-    border-radius: var(--r);
-    box-shadow: var(--shadow);
-    overflow:hidden;
-    min-height: 440px;
-    display:flex;flex-direction:column;
-  }
-  .sideHeader{
-    padding:12px 14px;border-bottom:1px solid var(--line);
-    display:flex;align-items:center;justify-content:space-between;
-    background: rgba(0,0,0,.20);
-  }
-  .sideHeader .h{font-weight:900;font-size:13px}
-  .sideHeader .mini{color:var(--muted);font-size:12px}
-
-  /* Overlay-like card area */
-  .card{
-    padding:14px;
-    display:flex;
-    flex-direction:column;
+  .queue{
+    padding: 0 14px 14px;
+    display:grid;
     gap:10px;
-    flex:1;
   }
+  .ticket{
+    border-radius:16px;
+    border:1px solid var(--line);
+    background: rgba(0,0,0,.20);
+    padding:12px;
+    display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+    cursor:pointer;
+    transition: transform .12s ease, border-color .22s ease;
+  }
+  .ticket:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.20)}
+  .ticket.selected{
+    outline: 2px solid rgba(74,163,255,.55);
+    box-shadow: 0 0 0 8px rgba(74,163,255,.10);
+  }
+  .ticket .t1{font-weight:950;font-size:13px}
+  .ticket .t2{color:var(--muted);font-size:12px;line-height:1.35;margin-top:4px}
+  .sev{
+    padding:6px 10px;border-radius:999px;border:1px solid var(--line);
+    font-size:11px; white-space:nowrap;
+    color:var(--muted);
+  }
+  .sev.high{border-color: rgba(255,92,108,.35); background: rgba(255,92,108,.10); color: rgba(255,92,108,.95)}
+  .sev.med{border-color: rgba(255,204,102,.35); background: rgba(255,204,102,.10); color: rgba(255,204,102,.95)}
+  .sev.low{border-color: rgba(61,220,151,.25); background: rgba(61,220,151,.08); color: rgba(61,220,151,.95)}
+  .tag{
+    margin-left:8px;
+    padding:6px 10px;border-radius:999px;border:1px solid var(--line);
+    font-size:11px;color:var(--muted); background: rgba(255,255,255,.04);
+  }
+
+  /* Right: Tool pick + action MCQ */
+  .body{padding:14px;display:flex;flex-direction:column;gap:12px}
   .alert{
     border-radius:16px;
-    border:1px solid rgba(255,204,102,.25);
-    background: linear-gradient(180deg, rgba(255,204,102,.14), rgba(0,0,0,.18));
+    border:1px solid rgba(74,163,255,.20);
+    background: linear-gradient(180deg, rgba(74,163,255,.12), rgba(0,0,0,.18));
     padding:12px;
   }
-  .alert .t{display:flex;align-items:center;gap:8px;font-weight:900}
+  .alert .t{display:flex;align-items:center;gap:8px;font-weight:950}
   .alert .p{margin-top:6px;color:var(--ink);opacity:.95;font-size:12.5px;line-height:1.35}
+  .row2{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between}
+  .tools{
+    display:flex;gap:10px;flex-wrap:wrap;
+  }
+  .tool{
+    border-radius:14px;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.04);
+    cursor:pointer;
+    display:flex;gap:10px;align-items:center;
+    transition: transform .12s ease, border-color .22s ease;
+    user-select:none;
+  }
+  .tool:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.20)}
+  .tool.selected{
+    outline: 2px solid rgba(74,163,255,.55);
+    box-shadow: 0 0 0 8px rgba(74,163,255,.10);
+  }
+  .tool .ico{
+    width:28px;height:28px;border-radius:10px;display:grid;place-items:center;
+    background: rgba(74,163,255,.12); border:1px solid rgba(74,163,255,.20);
+  }
+  .tool .nm{font-weight:900;font-size:12.5px}
+  .tool .sm{color:var(--muted);font-size:11.5px}
 
   .qbox{
     border-radius:16px;
@@ -208,7 +217,7 @@
     background: rgba(0,0,0,.20);
     padding:12px;
   }
-  .qbox .q{font-weight:850;font-size:13px;line-height:1.35}
+  .qbox .q{font-weight:900;font-size:13px;line-height:1.35}
   .actions{display:grid;grid-template-columns:1fr;gap:9px;margin-top:10px}
   .btn{
     border:1px solid var(--line);
@@ -224,16 +233,13 @@
   }
   .btn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.22)}
   .btn:active{transform: translateY(0)}
+  .btn:disabled{opacity:.55; cursor:not-allowed}
   .btn .left{display:flex;align-items:center;gap:10px}
   .icon{
     width:28px;height:28px;border-radius:10px;display:grid;place-items:center;
     background: rgba(74,163,255,.12); border:1px solid rgba(74,163,255,.20);
     flex:0 0 auto;
   }
-  .btn.safe .icon{background: rgba(61,220,151,.14); border-color: rgba(61,220,151,.25)}
-  .btn.risky .icon{background: rgba(255,92,108,.14); border-color: rgba(255,92,108,.25)}
-  .btn.neutral .icon{background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.14)}
-  .hint{color:var(--muted);font-size:12px}
   .kbd{
     font-size:11px;color:var(--muted);
     padding:4px 8px;border-radius:999px;border:1px solid var(--line);
@@ -251,13 +257,14 @@
   .feedback.show{display:block}
   .feedback.good{border-color: rgba(61,220,151,.25); background: linear-gradient(180deg, rgba(61,220,151,.10), rgba(0,0,0,.20))}
   .feedback.bad{border-color: rgba(255,92,108,.25); background: linear-gradient(180deg, rgba(255,92,108,.10), rgba(0,0,0,.20))}
-  .feedback .f1{font-weight:900}
+  .feedback .f1{font-weight:950}
   .feedback .f2{margin-top:6px;color:var(--muted);font-size:12.5px;line-height:1.35}
 
   .footerRow{
     margin-top:auto;
     display:flex;align-items:center;justify-content:space-between;gap:10px;
-    padding-top:6px;
+    padding-top:4px;
+    flex-wrap:wrap;
   }
   .small{font-size:12px;color:var(--muted)}
   .primary, .ghost{
@@ -266,14 +273,14 @@
     border:1px solid var(--line);
     background: rgba(74,163,255,.14);
     color:var(--ink);
-    font-weight:850;
+    font-weight:900;
     cursor:pointer;
   }
   .ghost{background: rgba(255,255,255,.04); color:var(--ink)}
   .primary:hover{border-color: rgba(74,163,255,.40)}
   .ghost:hover{border-color: rgba(255,255,255,.22)}
 
-  /* Modal screens (landing, end) */
+  /* Modal */
   .modalWrap{
     position:fixed;inset:0;display:none;place-items:center;
     padding:18px;
@@ -283,7 +290,7 @@
   }
   .modalWrap.show{display:grid}
   .modal{
-    width:min(720px, 100%);
+    width:min(760px, 100%);
     border-radius: 22px;
     border:1px solid var(--line);
     background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
@@ -297,43 +304,9 @@
   }
   .modalHead .mh{font-weight:950}
   .modalBody{padding:16px}
-  .hero{
-    display:grid;grid-template-columns: 1fr 1fr;gap:14px;align-items:center;
-  }
-  @media (max-width: 700px){ .hero{grid-template-columns:1fr} }
-  .monitor{
-    border-radius:20px;
-    border:1px solid var(--line);
-    background: linear-gradient(180deg, rgba(74,163,255,.10), rgba(0,0,0,.25));
-    padding:14px;
-    position:relative;
-    min-height: 220px;
-    overflow:hidden;
-  }
-  .monitor .screen{
-    border-radius:16px;
-    border:1px solid rgba(255,255,255,.12);
-    background: radial-gradient(520px 240px at 30% 20%, rgba(255,204,102,.18), transparent 60%),
-                radial-gradient(520px 240px at 75% 80%, rgba(74,163,255,.12), transparent 60%),
-                rgba(0,0,0,.30);
-    min-height: 150px;
-    padding:12px;
-  }
-  .monitor .toast{
-    margin-top:10px;
-    border-radius:14px;
-    border:1px solid rgba(255,204,102,.25);
-    background: rgba(255,204,102,.12);
-    padding:10px 12px;
-    color: rgba(234,240,255,.95);
-    font-size:12.5px;
-  }
-  .list{
-    margin:0;padding-left:16px;color:var(--muted);font-size:13px;line-height:1.45;
-  }
+  .list{margin:0;padding-left:16px;color:var(--muted);font-size:13px;line-height:1.45;}
   .btnRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 
-  /* Reduced motion */
   @media (prefers-reduced-motion: reduce){
     *{transition:none !important; animation:none !important}
   }
@@ -347,86 +320,87 @@
     <div class="brand">
       <div class="logo" aria-hidden="true"></div>
       <div class="title">
-        <h1>Office PC Rescue</h1>
-        <p>Windows Security module — scenario-based GBL</p>
+        <h1>Office PC Rescue <span style="opacity:.75">v2</span></h1>
+        <p>Triage + Tool + Action (MCQ) — Windows Security GBL</p>
       </div>
     </div>
 
     <div class="meters">
-      <div class="meterCard" title="PC Health">
-        <div class="gauge" aria-label="PC Health gauge">
-          <svg width="48" height="48" viewBox="0 0 48 48">
-            <circle cx="24" cy="24" r="18" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="6"></circle>
-            <circle id="gaugeArc" cx="24" cy="24" r="18" fill="none" stroke="rgba(61,220,151,.90)" stroke-width="6"
-                    stroke-linecap="round" stroke-dasharray="113.1" stroke-dashoffset="56.55"></circle>
-          </svg>
-          <div class="pct" id="healthPct">50%</div>
-        </div>
-        <div>
-          <div class="meterLabel">PC Health</div>
-          <div class="meterValue" id="healthText">50 / 100</div>
-        </div>
+      <div class="chip" title="Secure Score">
+        🟩 Score: <b id="scoreText">0</b>
+        <span class="bar" aria-hidden="true"><i id="scoreBar"></i></span>
       </div>
-
-      <div class="meterCard" title="Risk strikes">
-        <div>
-          <div class="meterLabel">Risk</div>
-          <div class="riskPills" aria-label="Risk strikes">
-            <div class="pill" id="pill1"></div>
-            <div class="pill" id="pill2"></div>
-            <div class="pill" id="pill3"></div>
-          </div>
-        </div>
+      <div class="chip" title="Workday minutes">
+        ⏱ Time: <b id="timeText">12</b> min
       </div>
-
-      <div class="subinfo">
-        <div class="chip" id="episodeChip">Episode 1/6</div>
-        <div class="chip">Wi-Fi: <span class="wifi" id="wifiName">Office_Guest</span></div>
-        <div class="chip">Time: <span class="clock" id="clock">--:--</span></div>
+      <div class="chip" title="Spread risk">
+        ⚠ Spread:
+        <span class="riskDots" aria-label="Spread meter">
+          <span class="dot" id="r1"></span>
+          <span class="dot" id="r2"></span>
+          <span class="dot" id="r3"></span>
+        </span>
+      </div>
+      <div class="chip">
+        🧑‍💻 Shift: <b id="clock">--:--</b>
+      </div>
+      <div class="chip">
+        🔁 Streak: <b id="streakText">0</b>
       </div>
     </div>
   </div>
 
-  <!-- MAIN STAGE -->
   <div class="stage">
-
-    <!-- DESKTOP -->
-    <div class="desktop" aria-label="Office desktop">
-      <div class="glow" id="glow"></div>
-      <div class="deskTop">
-        <div class="left">
-          <div class="chip">User: <b id="userTag">Staff-PC</b></div>
-          <div class="chip">Mode: <b id="modeTag">Rescue</b></div>
+    <!-- LEFT: Desktop + Queue -->
+    <div class="panel">
+      <div class="head">
+        <div>
+          <div class="h">System Dashboard</div>
+          <div class="s" id="leftSub">Pick the right ticket first. High severity cannot be ignored.</div>
         </div>
-        <div class="chip">Status: <b id="statusTag">Needs attention</b></div>
+        <div class="deskTop">
+          <span class="chip">Tickets Resolved: <b id="fixedText">0</b></span>
+          <span class="chip">Queue Pressure: <b id="pressureText">Normal</b></span>
+        </div>
       </div>
 
-      <div class="tiles" id="tiles">
-        <!-- tiles injected by JS -->
+      <div class="tiles" id="tiles"></div>
+
+      <div style="padding:0 14px 10px;color:var(--muted);font-size:12px">
+        <b style="color:var(--ink)">Incident Queue (3)</b> — click one to handle
       </div>
+      <div class="queue" id="queue"></div>
     </div>
 
-    <!-- SIDE PANEL -->
-    <div class="side">
-      <div class="sideHeader">
+    <!-- RIGHT: Tool + MCQ -->
+    <div class="panel">
+      <div class="head">
         <div>
           <div class="h">Helpdesk Console</div>
-          <div class="mini" id="miniLine">Fix one issue at a time. Keep the PC stable.</div>
+          <div class="s" id="rightSub">Step 1: choose tool. Step 2: choose best first action.</div>
         </div>
-        <div class="chip" id="progressChip">0 fixed</div>
+        <div>
+          <button class="ghost" id="resetBtn" type="button">Reset</button>
+          <button class="primary" id="startBtn" type="button">Start</button>
+        </div>
       </div>
 
-      <div class="card">
+      <div class="body">
         <div class="alert" id="alertBox">
-          <div class="t">⚠ Security issue detected</div>
-          <div class="p" id="problemText">Click “Start” to begin.</div>
+          <div class="t">📌 Selected ticket</div>
+          <div class="p" id="ticketText">Start the rescue to generate the queue.</div>
         </div>
 
+        <div class="row2">
+          <div style="font-weight:950;font-size:13px">Choose tool</div>
+          <div class="chip">Tool mismatch costs extra time + spread</div>
+        </div>
+
+        <div class="tools" id="tools"></div>
+
         <div class="qbox" id="qBox">
-          <div class="q" id="questionText">Ready?</div>
-          <div class="actions" id="actions">
-            <!-- action buttons injected -->
-          </div>
+          <div class="q" id="questionText">—</div>
+          <div class="actions" id="actions"></div>
         </div>
 
         <div class="feedback" id="feedback">
@@ -435,10 +409,10 @@
         </div>
 
         <div class="footerRow">
-          <div class="small" id="footNote">Tip: answers apply to real Windows settings.</div>
-          <div style="display:flex;gap:10px">
-            <button class="ghost" id="resetBtn" type="button">Reset</button>
-            <button class="primary" id="startBtn" type="button">Start</button>
+          <div class="small" id="footNote">Tip: Prioritize High severity and choose the correct Windows tool first.</div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button class="ghost" id="quickFixBtn" type="button" style="display:none">Use Quick Fix</button>
+            <button class="primary" id="resolveBtn" type="button" disabled>Resolve Ticket</button>
           </div>
         </div>
       </div>
@@ -447,66 +421,50 @@
   </div>
 </div>
 
-<!-- LANDING MODAL -->
+<!-- LANDING -->
 <div class="modalWrap show" id="landing">
   <div class="modal">
     <div class="modalHead">
-      <div class="mh">Office PC Rescue</div>
-      <div class="chip">Windows Security GBL</div>
+      <div class="mh">Office PC Rescue v2 — Triage Mode</div>
+      <div class="chip">Windows Security</div>
     </div>
     <div class="modalBody">
-      <div class="hero">
-        <div class="monitor">
-          <div class="screen">
-            <div style="font-weight:950;font-size:14px">Today’s situation</div>
-            <div style="margin-top:6px;color:var(--muted);font-size:13px;line-height:1.45">
-              An office PC is showing risky behavior. You are the IT support.
-              Fix security settings step-by-step before the workday ends.
-            </div>
-          </div>
-          <div class="toast">⚠ Multiple protections are OFF or misconfigured.</div>
-        </div>
-
-        <div>
-          <div style="font-weight:950;font-size:14px;margin-bottom:8px">How to play</div>
-          <ul class="list">
-            <li>Read the problem card.</li>
-            <li>Choose the best <b>first action</b>.</li>
-            <li>Correct actions turn tiles green and improve PC Health.</li>
-            <li>3 mistakes = PC compromised.</li>
-          </ul>
-          <div class="btnRow">
-            <button class="primary" id="beginBtn" type="button">Begin Rescue</button>
-            <button class="ghost" id="skipBtn" type="button">Close</button>
-          </div>
-          <div style="margin-top:10px;color:var(--muted);font-size:12px">
-            Instructor can replace the question bank in <code>QUESTION_BANK</code> in the code.
-          </div>
-        </div>
+      <div style="font-weight:950;font-size:14px">How it works</div>
+      <ul class="list" style="margin-top:8px">
+        <li>You will always see 3 incidents in the queue.</li>
+        <li>First pick the right incident (triage).</li>
+        <li>Then pick the right Windows tool, then the best first action (MCQ).</li>
+        <li>High severity incidents increase spread if ignored. Spread 3/3 = compromised.</li>
+        <li>Correct streak unlocks a Quick Fix (one free improvement).</li>
+      </ul>
+      <div class="btnRow">
+        <button class="primary" id="beginBtn" type="button">Begin Rescue</button>
+        <button class="ghost" id="closeBtn" type="button">Close</button>
+      </div>
+      <div style="margin-top:10px;color:var(--muted);font-size:12px">
+        Instructor can replace the incident bank in <code>INCIDENT_BANK</code> in the code.
       </div>
     </div>
   </div>
 </div>
 
-<!-- END MODAL -->
+<!-- END -->
 <div class="modalWrap" id="endModal">
   <div class="modal">
     <div class="modalHead">
       <div class="mh" id="endTitle">Summary</div>
       <div class="chip" id="endChip">—</div>
     </div>
-    <div class="modalBody" id="endBody">
-      <!-- injected -->
-    </div>
+    <div class="modalBody" id="endBody"></div>
   </div>
 </div>
 
 <script>
 /* =========================================================
-   OFFICE PC RESCUE — Single-file HTML/JS
-   - No canvas, no heavy animation
-   - Smooth transitions, no flicker
-   - Replace QUESTION_BANK with your own items
+   Office PC Rescue v2 — Triage Mode
+   - Challenging mechanics: queue + tool + action
+   - Correct options are SHUFFLED at runtime (no patterns)
+   - Single file, smooth transitions, no flicker
 ========================================================= */
 
 const TILE_DEFS = [
@@ -518,216 +476,232 @@ const TILE_DEFS = [
   { key:"privacy",   name:"Privacy & Apps",  icon:"👁️", hint:"App permissions & telemetry" }
 ];
 
-/* ---- Question bank (sample) ----
-   Format:
-   {
-     id, tileKey,
-     problem: "short scenario",
-     question: "What should you do first?",
-     choices: [{t, icon, style, kbd}, ...],
-     correct: index,
-     feedback: { okTitle, okBody, badTitle, badBody }
-   }
-
-   NOTE: These are written as original scenario items aligned to common Windows security practice.
-   Replace with your chapter-derived MCQs as needed.
----------------------------------- */
-const QUESTION_BANK = [
-  {
-    id:"ACC-01", tileKey:"accounts",
-    problem:"A staff member logs in with a shared office account used by everyone.",
-    question:"What is the best first step to reduce this risk?",
-    choices:[
-      {t:"Create separate user accounts for each person", icon:"👤", style:"safe", kbd:"1"},
-      {t:"Keep one account but change wallpaper daily", icon:"🖼️", style:"neutral", kbd:"2"},
-      {t:"Disable sign-in to make access faster", icon:"⚡", style:"risky", kbd:"3"},
-      {t:"Write the password on a sticky note near the monitor", icon:"📝", style:"risky", kbd:"4"},
-    ],
-    correct:0,
-    feedback:{
-      okTitle:"Accounts separated",
-      okBody:"Separate user accounts reduce accidental sharing and make access control meaningful.",
-      badTitle:"Risk increased",
-      badBody:"Shared accounts remove accountability and make it easy for anyone to access sensitive data."
-    }
-  },
-  {
-    id:"ACC-02", tileKey:"accounts",
-    problem:"The PC wakes up from sleep and shows the desktop without asking for a password.",
-    question:"What should you do first?",
-    choices:[
-      {t:"Require sign-in when waking up (password on resume)", icon:"🔒", style:"safe", kbd:"1"},
-      {t:"Turn off sleep entirely", icon:"💡", style:"neutral", kbd:"2"},
-      {t:"Disable the lock screen permanently", icon:"🚫", style:"risky", kbd:"3"},
-      {t:"Ignore it because it saves time", icon:"⏳", style:"risky", kbd:"4"},
-    ],
-    correct:0,
-    feedback:{
-      okTitle:"Sign-in on wake enabled",
-      okBody:"This prevents anyone nearby from gaining access when the PC is unattended.",
-      badTitle:"Unattended access remains",
-      badBody:"If the desktop appears without authentication, anyone can use the system during breaks."
-    }
-  },
-  {
-    id:"LOCK-01", tileKey:"lock",
-    problem:"Employees often leave for tea and forget to lock the screen.",
-    question:"Which change best supports safe behavior?",
-    choices:[
-      {t:"Set a short inactivity timeout + lock on resume", icon:"⏲️", style:"safe", kbd:"1"},
-      {t:"Increase timeout so it never locks", icon:"🕰️", style:"risky", kbd:"2"},
-      {t:"Disable the screen saver feature", icon:"🧩", style:"neutral", kbd:"3"},
-      {t:"Only lock the PC on Mondays", icon:"📅", style:"risky", kbd:"4"},
-    ],
-    correct:0,
-    feedback:{
-      okTitle:"Auto-lock strengthened",
-      okBody:"Automatic lock reduces risk from human forgetfulness in shared spaces.",
-      badTitle:"Exposure stays high",
-      badBody:"Long/no timeouts keep sessions open and increase the chance of misuse."
-    }
-  },
-  {
-    id:"UPD-01", tileKey:"updates",
-    problem:"Updates were turned off because they interrupt work.",
-    question:"What is the best first action?",
-    choices:[
-      {t:"Enable automatic updates and set active hours", icon:"🔄", style:"safe", kbd:"1"},
-      {t:"Update only once a year", icon:"📆", style:"risky", kbd:"2"},
-      {t:"Ignore updates if antivirus is installed", icon:"🦠", style:"risky", kbd:"3"},
-      {t:"Disable update notifications permanently", icon:"🔕", style:"neutral", kbd:"4"},
-    ],
-    correct:0,
-    feedback:{
-      okTitle:"Updates restored",
-      okBody:"Security patches reduce exposure. Active hours minimize disruption while staying protected.",
-      badTitle:"Vulnerability grows",
-      badBody:"Delaying updates increases the window where known issues can be exploited."
-    }
-  },
-  {
-    id:"FW-01", tileKey:"firewall",
-    problem:"A user connects the office laptop to public Wi-Fi during travel.",
-    question:"What should you verify first on Windows?",
-    choices:[
-      {t:"Firewall is ON for both private and public networks", icon:"🛡️", style:"safe", kbd:"1"},
-      {t:"Firewall is OFF to improve speed", icon:"⚡", style:"risky", kbd:"2"},
-      {t:"Only change desktop theme", icon:"🎨", style:"neutral", kbd:"3"},
-      {t:"Share folders openly for convenience", icon:"📂", style:"risky", kbd:"4"},
-    ],
-    correct:0,
-    feedback:{
-      okTitle:"Firewall protection confirmed",
-      okBody:"Public networks are higher risk. Firewall reduces unwanted inbound connections.",
-      badTitle:"Network risk increased",
-      badBody:"Disabling firewall or opening sharing on public Wi-Fi can expose the system."
-    }
-  },
-  {
-    id:"DEF-01", tileKey:"defender",
-    problem:"The PC shows frequent pop-ups and feels slower than usual.",
-    question:"What is the best first step?",
-    choices:[
-      {t:"Run a Windows security scan (quick/full as needed)", icon:"🦠", style:"safe", kbd:"1"},
-      {t:"Ignore pop-ups if work must continue", icon:"⏳", style:"risky", kbd:"2"},
-      {t:"Download random ‘PC booster’ software", icon:"⬇️", style:"risky", kbd:"3"},
-      {t:"Disable real-time protection permanently", icon:"🚫", style:"risky", kbd:"4"},
-    ],
-    correct:0,
-    feedback:{
-      okTitle:"Scan initiated",
-      okBody:"Scanning helps detect and contain threats. Keep protection updated.",
-      badTitle:"Threat likely persists",
-      badBody:"Ignoring symptoms or installing unknown tools can worsen the infection."
-    }
-  },
-  {
-    id:"PRV-01", tileKey:"privacy",
-    problem:"Many apps have access to the microphone and camera without clear need.",
-    question:"What should you do first?",
-    choices:[
-      {t:"Review app permissions and disable unnecessary access", icon:"👁️", style:"safe", kbd:"1"},
-      {t:"Allow all permissions to avoid errors", icon:"✅", style:"neutral", kbd:"2"},
-      {t:"Share admin password with all users", icon:"🔑", style:"risky", kbd:"3"},
-      {t:"Turn off the screen lock instead", icon:"🔓", style:"risky", kbd:"4"},
-    ],
-    correct:0,
-    feedback:{
-      okTitle:"Permissions tightened",
-      okBody:"Limiting permissions reduces privacy leakage and lowers attack surface.",
-      badTitle:"Privacy exposure remains",
-      badBody:"Over-permissioned apps can access sensitive inputs without a strong reason."
-    }
-  },
-  {
-    id:"PRV-02", tileKey:"privacy",
-    problem:"Personalized ads appear across apps and the browser on a shared PC.",
-    question:"What is a sensible first change?",
-    choices:[
-      {t:"Reduce ad/personalization settings in Privacy controls", icon:"⚙️", style:"safe", kbd:"1"},
-      {t:"Disable updates to reduce ads", icon:"🔄", style:"risky", kbd:"2"},
-      {t:"Turn off firewall so ads load faster", icon:"🛡️", style:"risky", kbd:"3"},
-      {t:"Ignore because ads are harmless", icon:"😐", style:"neutral", kbd:"4"},
-    ],
-    correct:0,
-    feedback:{
-      okTitle:"Personalization reduced",
-      okBody:"Privacy controls can limit tracking and reduce unwanted personalization on shared systems.",
-      badTitle:"Tracking likely continues",
-      badBody:"Changing unrelated protections does not address privacy configuration."
-    }
-  },
+const TOOL_DEFS = [
+  { key:"defender", icon:"🦠", name:"Defender", sub:"Scan & protection" },
+  { key:"firewall", icon:"🛡️", name:"Firewall", sub:"Network profiles" },
+  { key:"updates",  icon:"🔄", name:"Windows Update", sub:"Patches & restart" },
+  { key:"accounts", icon:"👤", name:"Accounts", sub:"Sign-in & users" },
+  { key:"privacy",  icon:"👁️", name:"Privacy", sub:"Permissions" },
+  { key:"programs", icon:"🧩", name:"Programs", sub:"Remove bloatware" }
 ];
 
-/* Episodes: order of tiles to focus */
-const EPISODE_ORDER = ["accounts","lock","updates","firewall","defender","privacy"];
+/* --------------------------
+   INCIDENT BANK (sample)
+   Replace with chapter-based incidents.
+   Each incident includes:
+   - severity: "high" | "med" | "low"
+   - area: tile key
+   - toolKey: best tool to start with
+   - prereq: tile keys that should be green before this is "stable"
+   - mcq: question + options with correctIndex
+--------------------------- */
+const INCIDENT_BANK = [
+  {
+    id:"I-DEF-01",
+    title:"Pop-ups and sudden slowdown",
+    severity:"high",
+    area:"defender",
+    toolKey:"defender",
+    prereq:["updates"],
+    symptom:"Frequent pop-ups; system is unusually slow. Possible malware.",
+    mcq:{
+      q:"What is the best first action?",
+      options:[
+        {t:"Run a Windows security scan and update protection definitions", icon:"🦠"},
+        {t:"Disable real-time protection to improve speed", icon:"🚫"},
+        {t:"Ignore the symptoms and continue work", icon:"⏳"},
+        {t:"Install a random ‘PC booster’ from the web", icon:"⬇️"}
+      ],
+      correctIndex:0,
+      ok:"Scanning and updated definitions are the safest first response to suspected malware.",
+      bad:"That action increases risk. Start with Defender scan and up-to-date protection."
+    }
+  },
+  {
+    id:"I-UPD-01",
+    title:"Updates disabled for weeks",
+    severity:"med",
+    area:"updates",
+    toolKey:"updates",
+    prereq:[],
+    symptom:"Updates were turned off to avoid interruptions.",
+    mcq:{
+      q:"What is the best first action?",
+      options:[
+        {t:"Enable automatic updates and configure active hours", icon:"🔄"},
+        {t:"Update only once a year", icon:"📆"},
+        {t:"Disable update notifications permanently", icon:"🔕"},
+        {t:"Skip updates if antivirus is installed", icon:"🦠"}
+      ],
+      correctIndex:0,
+      ok:"Security patches reduce exposure. Active hours keep it practical without disabling protection.",
+      bad:"Delaying updates keeps known vulnerabilities open for longer than necessary."
+    }
+  },
+  {
+    id:"I-FW-01",
+    title:"Laptop used on public Wi-Fi",
+    severity:"high",
+    area:"firewall",
+    toolKey:"firewall",
+    prereq:[],
+    symptom:"User connected to public Wi-Fi during travel; sharing is enabled.",
+    mcq:{
+      q:"What should you verify first?",
+      options:[
+        {t:"Firewall is ON for both private and public network profiles", icon:"🛡️"},
+        {t:"Turn OFF firewall to improve speed", icon:"⚡"},
+        {t:"Enable open file sharing for convenience", icon:"📂"},
+        {t:"Only change the desktop theme", icon:"🎨"}
+      ],
+      correctIndex:0,
+      ok:"Firewall on public networks is a basic defense against unwanted inbound connections.",
+      bad:"On public networks, turning off protections or opening sharing increases exposure."
+    }
+  },
+  {
+    id:"I-ACC-01",
+    title:"Shared office login",
+    severity:"med",
+    area:"accounts",
+    toolKey:"accounts",
+    prereq:[],
+    symptom:"Multiple staff members use one shared login account.",
+    mcq:{
+      q:"What is the best first step?",
+      options:[
+        {t:"Create separate user accounts and enforce passwords", icon:"👤"},
+        {t:"Keep one account but change wallpaper daily", icon:"🖼️"},
+        {t:"Disable sign-in to make access faster", icon:"⚡"},
+        {t:"Write the password on a sticky note near the monitor", icon:"📝"}
+      ],
+      correctIndex:0,
+      ok:"Separate accounts enable meaningful access control and reduce unsafe sharing.",
+      bad:"Shared access removes accountability and makes misuse and leakage more likely."
+    }
+  },
+  {
+    id:"I-PRV-01",
+    title:"Camera/mic permissions too open",
+    severity:"low",
+    area:"privacy",
+    toolKey:"privacy",
+    prereq:["accounts"],
+    symptom:"Many apps have camera/microphone access without clear need.",
+    mcq:{
+      q:"What is the best first action?",
+      options:[
+        {t:"Review app permissions and disable unnecessary access", icon:"👁️"},
+        {t:"Allow all permissions to avoid errors", icon:"✅"},
+        {t:"Disable the screen lock instead", icon:"🔓"},
+        {t:"Share admin password with all users", icon:"🔑"}
+      ],
+      correctIndex:0,
+      ok:"Least-privilege permissions reduce privacy leakage and attack surface.",
+      bad:"Over-permissioned apps can access sensitive inputs without a strong reason."
+    }
+  },
+  {
+    id:"I-LOCK-01",
+    title:"Screen left unlocked",
+    severity:"low",
+    area:"lock",
+    toolKey:"accounts",
+    prereq:["accounts"],
+    symptom:"PC stays open after inactivity; staff forget to lock during breaks.",
+    mcq:{
+      q:"What change best supports safety?",
+      options:[
+        {t:"Set a short inactivity timeout and require sign-in on resume", icon:"⏲️"},
+        {t:"Increase timeout so it rarely locks", icon:"🕰️"},
+        {t:"Disable lock screen permanently", icon:"🚫"},
+        {t:"Lock only on Mondays", icon:"📅"}
+      ],
+      correctIndex:0,
+      ok:"Auto-lock reduces risk from forgetfulness in shared spaces.",
+      bad:"Long/no timeouts keep sessions open and increase the chance of misuse."
+    }
+  },
+  // Tool-mismatch example: "Programs" tool is correct even if area is Defender
+  {
+    id:"I-PROG-01",
+    title:"New PC with unknown bloatware",
+    severity:"med",
+    area:"defender",
+    toolKey:"programs",
+    prereq:[],
+    symptom:"New PC has many unknown preinstalled apps; user reports ads and popups.",
+    mcq:{
+      q:"What is the best first action?",
+      options:[
+        {t:"Uninstall unnecessary preinstalled programs from Apps/Programs", icon:"🧩"},
+        {t:"Disable updates to stop changes", icon:"🔕"},
+        {t:"Turn off firewall to reduce prompts", icon:"🛡️"},
+        {t:"Ignore because it is a new PC", icon:"😐"}
+      ],
+      correctIndex:0,
+      ok:"Removing bloatware reduces attack surface and nuisance behavior; then verify protection.",
+      bad:"Turning off protections does not solve the root cause and can worsen risk."
+    }
+  }
+];
 
-/* Game state */
-let game = {
-  started:false,
-  episodeIndex:0,
-  health:50,
-  risk:0,
-  fixed: new Set(),
-  tileState: {}, // key -> "red|amber|green"
-  queue: [],     // shuffled questions for each tile
-  current: null,
-  locked:false
+/* Tuning knobs */
+const SETTINGS = {
+  timeStart: 12,          // minutes
+  scoreTarget: 80,        // win target
+  spreadMax: 3,           // lose
+  scoreMax: 100,          // for bar
+  baseGood: 14,           // points for correct action
+  baseBad: -8,            // points for incorrect action (score can't go below 0)
+  timeGood: 1,            // minutes cost for correct tool+action
+  timeBadTool: 1,         // extra time if tool wrong
+  timeBadAction: 1,       // extra time if action wrong
+  spreadBadTool: 1,       // spread penalty if tool wrong (high/med), reduced for low
+  spreadBadAction: 1,     // spread penalty if action wrong (high/med), reduced for low
+  ignoreHighPenalty: 1,   // spread added when you resolve non-high while a high exists
+  prereqPenaltyScore: 6,  // if prerequisites not met, reduce earned score by this
+  prereqPenaltySpread: 1, // if prerequisites not met, add spread (for high/med)
+  streakQuickFix: 3       // unlock quick fix at this streak
 };
 
 /* DOM */
 const tilesEl = document.getElementById("tiles");
-const problemText = document.getElementById("problemText");
+const queueEl = document.getElementById("queue");
+const toolsEl = document.getElementById("tools");
+const ticketText = document.getElementById("ticketText");
 const questionText = document.getElementById("questionText");
 const actionsEl = document.getElementById("actions");
+const resolveBtn = document.getElementById("resolveBtn");
+const quickFixBtn = document.getElementById("quickFixBtn");
+
+const scoreText = document.getElementById("scoreText");
+const scoreBar = document.getElementById("scoreBar");
+const timeText = document.getElementById("timeText");
+const fixedText = document.getElementById("fixedText");
+const pressureText = document.getElementById("pressureText");
+const streakText = document.getElementById("streakText");
+
+const r1 = document.getElementById("r1");
+const r2 = document.getElementById("r2");
+const r3 = document.getElementById("r3");
+
 const feedbackEl = document.getElementById("feedback");
 const fbTitle = document.getElementById("fbTitle");
 const fbBody = document.getElementById("fbBody");
 
-const healthText = document.getElementById("healthText");
-const healthPct = document.getElementById("healthPct");
-const gaugeArc = document.getElementById("gaugeArc");
-const pill1 = document.getElementById("pill1");
-const pill2 = document.getElementById("pill2");
-const pill3 = document.getElementById("pill3");
-
-const episodeChip = document.getElementById("episodeChip");
-const progressChip = document.getElementById("progressChip");
-const statusTag = document.getElementById("statusTag");
-const glow = document.getElementById("glow");
-
+const landing = document.getElementById("landing");
+const beginBtn = document.getElementById("beginBtn");
+const closeBtn = document.getElementById("closeBtn");
 const startBtn = document.getElementById("startBtn");
 const resetBtn = document.getElementById("resetBtn");
-const beginBtn = document.getElementById("beginBtn");
-const skipBtn = document.getElementById("skipBtn");
 
-const landing = document.getElementById("landing");
 const endModal = document.getElementById("endModal");
 const endTitle = document.getElementById("endTitle");
 const endChip = document.getElementById("endChip");
 const endBody = document.getElementById("endBody");
 
-function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
 function shuffle(arr){
   const a = arr.slice();
   for(let i=a.length-1;i>0;i--){
@@ -736,37 +710,48 @@ function shuffle(arr){
   }
   return a;
 }
-
 function setClock(){
   const el = document.getElementById("clock");
   const now = new Date();
-  const hh = String(now.getHours()).padStart(2,"0");
-  const mm = String(now.getMinutes()).padStart(2,"0");
-  el.textContent = `${hh}:${mm}`;
+  el.textContent = String(now.getHours()).padStart(2,"0") + ":" + String(now.getMinutes()).padStart(2,"0");
 }
 setClock();
 setInterval(setClock, 15000);
 
-/* Build tiles */
-function renderTiles(){
-  tilesEl.innerHTML = "";
-  TILE_DEFS.forEach(td=>{
-    const div = document.createElement("div");
-    div.className = "tile";
-    div.dataset.key = td.key;
-    div.dataset.state = game.tileState[td.key] || "red";
-    div.innerHTML = `
-      <div class="shine" aria-hidden="true"></div>
-      <div class="row">
-        <div>
-          <div class="name">${td.icon} ${td.name}</div>
-          <div class="desc">${td.hint}</div>
-        </div>
-        <div class="badge"><span class="dot"></span><span class="st">${labelState(div.dataset.state)}</span></div>
-      </div>
-    `;
-    tilesEl.appendChild(div);
-  });
+function sevLabel(sev){
+  if(sev==="high") return "HIGH";
+  if(sev==="med") return "MED";
+  return "LOW";
+}
+
+/* Game state */
+let game = null;
+
+function initState(){
+  game = {
+    started:false,
+    time: SETTINGS.timeStart,
+    score: 0,
+    spread: 0,
+    fixed: 0,
+    streak: 0,
+    quickFixReady: false,
+
+    tileState: {},    // key -> red/amber/green
+    resolvedAreas: new Set(),
+    resolvedIncidents: new Set(),
+
+    queue: [],        // 3 active incidents
+    selectedId: null,
+    selectedTool: null,
+
+    // resolution step
+    step: "pickTicket", // pickTicket -> pickTool -> mcq -> feedback
+    currentQ: null,
+    locked:false
+  };
+
+  TILE_DEFS.forEach(t => game.tileState[t.key] = "red");
 }
 
 function labelState(s){
@@ -775,9 +760,24 @@ function labelState(s){
   return "Vulnerable";
 }
 
-function highlightTile(key){
-  document.querySelectorAll(".tile").forEach(t=>{
-    t.classList.toggle("active", t.dataset.key === key);
+/* Render tiles */
+function renderTiles(){
+  tilesEl.innerHTML = "";
+  TILE_DEFS.forEach(td=>{
+    const div = document.createElement("div");
+    div.className = "tile";
+    div.dataset.key = td.key;
+    div.dataset.state = game.tileState[td.key] || "red";
+    div.innerHTML = `
+      <div class="row">
+        <div>
+          <div class="name">${td.icon} ${td.name}</div>
+          <div class="desc">${td.hint}</div>
+        </div>
+        <div class="badge"><span class="stateDot"></span><span class="st">${labelState(div.dataset.state)}</span></div>
+      </div>
+    `;
+    tilesEl.appendChild(div);
   });
 }
 
@@ -791,55 +791,218 @@ function updateTileState(key, state){
   }
 }
 
-function updateMeters(){
-  game.health = clamp(game.health, 0, 100);
-  healthText.textContent = `${game.health} / 100`;
-  healthPct.textContent = `${game.health}%`;
+/* Render tools */
+function renderTools(){
+  toolsEl.innerHTML = "";
+  TOOL_DEFS.forEach(t=>{
+    const div = document.createElement("div");
+    div.className = "tool";
+    div.dataset.key = t.key;
+    div.innerHTML = `
+      <div class="ico" aria-hidden="true">${t.icon}</div>
+      <div>
+        <div class="nm">${t.name}</div>
+        <div class="sm">${t.sub}</div>
+      </div>
+    `;
+    div.addEventListener("click", ()=> selectTool(t.key));
+    toolsEl.appendChild(div);
+  });
+}
 
-  // arc math: circumference = 2πr; r=18 => ~113.097
-  const C = 113.1;
-  const progress = game.health / 100;
-  const offset = C * (1 - progress);
-  gaugeArc.style.strokeDasharray = `${C}`;
-  gaugeArc.style.strokeDashoffset = `${offset}`;
+/* Queue generation */
+function availableIncidents(){
+  // You can plug-in adaptive logic here.
+  return INCIDENT_BANK.filter(i => !game.resolvedIncidents.has(i.id));
+}
 
-  // color mapping
-  let col = "rgba(255,92,108,.90)";
-  if(game.health >= 75) col = "rgba(61,220,151,.90)";
-  else if(game.health >= 50) col = "rgba(255,204,102,.90)";
-  gaugeArc.setAttribute("stroke", col);
+function drawIncidentPool(){
+  // bias: ensure at least one high if available
+  const pool = availableIncidents();
+  if(pool.length === 0) return [];
+  const highs = pool.filter(i => i.severity==="high");
+  const meds  = pool.filter(i => i.severity==="med");
+  const lows  = pool.filter(i => i.severity==="low");
 
-  // risk pills
-  [pill1,pill2,pill3].forEach((p,i)=> p.classList.toggle("on", i < game.risk));
-
-  // glow/status
-  if(game.risk >= 2 || game.health < 35){
-    glow.classList.remove("safe");
-    glow.classList.add("danger");
-    statusTag.textContent = "High risk";
-  }else if(game.health >= 75){
-    glow.classList.remove("danger");
-    glow.classList.add("safe");
-    statusTag.textContent = "Stabilizing";
-  }else{
-    glow.classList.remove("safe","danger");
-    statusTag.textContent = "Needs attention";
+  let chosen = [];
+  if(highs.length) chosen.push(highs[Math.floor(Math.random()*highs.length)]);
+  const rest = shuffle([...meds, ...lows, ...highs.filter(h=>h.id!==chosen[0]?.id)]);
+  for(const it of rest){
+    if(chosen.length>=3) break;
+    if(!chosen.find(x=>x.id===it.id)) chosen.push(it);
   }
-
-  // chips
-  episodeChip.textContent = `Episode ${game.episodeIndex+1}/${EPISODE_ORDER.length}`;
-  progressChip.textContent = `${game.fixed.size} fixed`;
+  // if still <3, just fill whatever
+  while(chosen.length<3 && pool.length){
+    const it = pool[Math.floor(Math.random()*pool.length)];
+    if(!chosen.find(x=>x.id===it.id)) chosen.push(it);
+    if(chosen.length === pool.length) break;
+  }
+  return chosen.slice(0,3);
 }
 
-/* Pick next question for current tile */
-function nextQuestionFor(tileKey){
-  const pool = QUESTION_BANK.filter(q => q.tileKey === tileKey);
-  if(!pool.length) return null;
-  // keep order stable but randomize the pool per run
-  if(!game.queue[tileKey]) game.queue[tileKey] = shuffle(pool);
-  return game.queue[tileKey].shift() || null;
+function refillQueueIfNeeded(){
+  // Keep 3 incidents visible unless pool exhausted.
+  const pool = availableIncidents();
+  if(pool.length === 0) return;
+
+  const need = 3 - game.queue.length;
+  if(need <= 0) return;
+
+  const fresh = drawIncidentPool();
+  for(const it of fresh){
+    if(game.queue.length>=3) break;
+    if(!game.queue.find(x=>x.id===it.id)) game.queue.push(structuredClone(it));
+  }
 }
 
+/* Render queue */
+function renderQueue(){
+  queueEl.innerHTML = "";
+  // pressure info
+  const hasHigh = game.queue.some(q => q.severity==="high");
+  pressureText.textContent = hasHigh ? "High" : "Normal";
+
+  game.queue.forEach(it=>{
+    const card = document.createElement("div");
+    card.className = "ticket" + (game.selectedId===it.id ? " selected" : "");
+    card.innerHTML = `
+      <div>
+        <div class="t1">${it.title}
+          <span class="tag">${areaName(it.area)}</span>
+        </div>
+        <div class="t2">${it.symptom}</div>
+      </div>
+      <div class="sev ${it.severity}">${sevLabel(it.severity)}</div>
+    `;
+    card.addEventListener("click", ()=> selectTicket(it.id));
+    queueEl.appendChild(card);
+  });
+
+  if(game.queue.length === 0){
+    const d = document.createElement("div");
+    d.className = "ticket";
+    d.style.cursor="default";
+    d.innerHTML = `
+      <div>
+        <div class="t1">No pending incidents</div>
+        <div class="t2">You can end early or reset. Add more incidents for longer play.</div>
+      </div>
+      <div class="sev low">OK</div>
+    `;
+    queueEl.appendChild(d);
+  }
+}
+
+function areaName(key){
+  const t = TILE_DEFS.find(x=>x.key===key);
+  return t ? t.name : key;
+}
+
+/* Selecting ticket/tool */
+function selectTicket(id){
+  if(!game.started || game.locked) return;
+  game.selectedId = id;
+  game.selectedTool = null;
+  clearSelectionTools();
+
+  const it = game.queue.find(x=>x.id===id);
+  if(!it) return;
+
+  ticketText.textContent = `${sevLabel(it.severity)} — ${it.symptom}`;
+  questionText.textContent = "Pick the correct Windows tool first.";
+  actionsEl.innerHTML = "";
+  resolveBtn.disabled = false;
+
+  game.step = "pickTool";
+  clearFeedback();
+  updateActiveTile(it.area);
+}
+
+function updateActiveTile(areaKey){
+  document.querySelectorAll(".tile").forEach(t=>{
+    t.classList.toggle("active", t.dataset.key === areaKey);
+  });
+}
+
+function clearSelectionTools(){
+  document.querySelectorAll(".tool").forEach(t=> t.classList.remove("selected"));
+}
+
+function selectTool(toolKey){
+  if(!game.started || game.locked) return;
+  if(game.step !== "pickTool") return;
+  if(!game.selectedId) return;
+
+  game.selectedTool = toolKey;
+  document.querySelectorAll(".tool").forEach(t=>{
+    t.classList.toggle("selected", t.dataset.key === toolKey);
+  });
+
+  // Now enable MCQ step
+  buildAndShowMCQ();
+}
+
+/* MCQ with shuffling */
+function buildAndShowMCQ(){
+  const it = game.queue.find(x=>x.id===game.selectedId);
+  if(!it) return;
+
+  // Create shuffled options and compute correct index
+  const original = it.mcq.options.map((o, idx)=> ({...o, _orig: idx}));
+  const shuffled = shuffle(original);
+  const newCorrect = shuffled.findIndex(o => o._orig === it.mcq.correctIndex);
+
+  game.currentQ = {
+    incidentId: it.id,
+    area: it.area,
+    severity: it.severity,
+    toolExpected: it.toolKey,
+    prereq: it.prereq || [],
+    q: it.mcq.q,
+    options: shuffled.map(o => ({t:o.t, icon:o.icon})),
+    correctIndex: newCorrect,
+    ok: it.mcq.ok,
+    bad: it.mcq.bad
+  };
+
+  game.step = "mcq";
+  questionText.textContent = it.mcq.q;
+  renderActions(game.currentQ);
+}
+
+function renderActions(q){
+  actionsEl.innerHTML = "";
+  q.options.forEach((c, idx)=>{
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn";
+    btn.innerHTML = `
+      <div class="left">
+        <div class="icon" aria-hidden="true">${c.icon || "⚙️"}</div>
+        <div style="font-weight:850">${c.t}</div>
+      </div>
+      <div class="kbd">${idx+1}</div>
+    `;
+    btn.addEventListener("click", ()=> answer(idx));
+    actionsEl.appendChild(btn);
+  });
+}
+
+/* Resolve ticket button: forces MCQ step if tool selected */
+resolveBtn.addEventListener("click", ()=>{
+  if(!game.started || game.locked) return;
+  if(!game.selectedId) return;
+  if(game.step==="pickTool"){
+    // If they try to resolve without picking tool: nudge
+    setFeedback("bad", "Pick a tool first", "Choose the Windows tool that matches this incident. Tool mismatch costs time and spread.");
+    return;
+  }
+  if(game.step==="mcq"){
+    setFeedback("bad", "Answer required", "Choose the best first action (MCQ).");
+  }
+});
+
+/* Feedback */
 function setFeedback(kind, title, body){
   feedbackEl.className = "feedback show " + (kind==="good" ? "good" : "bad");
   fbTitle.textContent = title;
@@ -851,122 +1014,253 @@ function clearFeedback(){
   fbBody.textContent = "";
 }
 
-function renderActions(q){
-  actionsEl.innerHTML = "";
-  q.choices.forEach((c, idx)=>{
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = `btn ${c.style || "neutral"}`;
-    btn.innerHTML = `
-      <div class="left">
-        <div class="icon" aria-hidden="true">${c.icon || "⚙️"}</div>
-        <div>
-          <div style="font-weight:850">${c.t}</div>
-          <div class="hint">Action</div>
-        </div>
-      </div>
-      <div class="kbd">${c.kbd || (idx+1)}</div>
-    `;
-    btn.addEventListener("click", ()=> answer(idx));
-    actionsEl.appendChild(btn);
-  });
+/* Consequence engine */
+function prereqMet(prereqKeys){
+  // Prereq met if those tiles are green
+  return (prereqKeys || []).every(k => game.tileState[k] === "green");
 }
 
-function showQuestion(q){
-  game.current = q;
-  highlightTile(q.tileKey);
-  problemText.textContent = q.problem;
-  questionText.textContent = q.question;
-  clearFeedback();
-  renderActions(q);
+function severityFactor(sev){
+  if(sev==="high") return 1;
+  if(sev==="med") return 1;
+  return 0; // low: no spread penalty by default
 }
 
-/* Answer handler */
+function hasHighInQueueExcluding(selectedId){
+  return game.queue.some(x => x.severity==="high" && x.id !== selectedId);
+}
+
+function spendTime(n){
+  game.time = clamp(game.time - n, 0, 999);
+}
+function addSpread(n){
+  game.spread = clamp(game.spread + n, 0, SETTINGS.spreadMax);
+}
+function addScore(n){
+  game.score = clamp(game.score + n, 0, SETTINGS.scoreMax);
+}
+
 function answer(choiceIndex){
-  if(game.locked || !game.current) return;
+  if(game.locked || game.step!=="mcq" || !game.currentQ) return;
   game.locked = true;
-
-  const q = game.current;
-  const correct = (choiceIndex === q.correct);
 
   // lock buttons
   [...actionsEl.querySelectorAll("button")].forEach(b=> b.disabled = true);
 
-  if(correct){
-    // improve
-    game.health += 8;
-    game.fixed.add(q.tileKey);
+  const q = game.currentQ;
+  const isCorrect = (choiceIndex === q.correctIndex);
+  const toolOk = (game.selectedTool === q.toolExpected);
+  const preOk = prereqMet(q.prereq);
 
-    // tile transitions: red/amber -> green
-    updateTileState(q.tileKey, "green");
-
-    setFeedback("good", q.feedback.okTitle, q.feedback.okBody);
-  }else{
-    // penalize
-    game.health -= 10;
-    game.risk += 1;
-    setFeedback("bad", q.feedback.badTitle, q.feedback.badBody);
-
-    // tile stays red (or amber), but pulse state by setting amber if not green
-    if(game.tileState[q.tileKey] !== "green"){
-      updateTileState(q.tileKey, "amber");
-    }
+  // penalty for ignoring high (triage realism)
+  if(hasHighInQueueExcluding(q.incidentId) && q.severity !== "high"){
+    addSpread(SETTINGS.ignoreHighPenalty);
   }
 
-  updateMeters();
+  // time costs
+  let timeCost = SETTINGS.timeGood;
+  if(!toolOk) timeCost += SETTINGS.timeBadTool;
+  if(!isCorrect) timeCost += SETTINGS.timeBadAction;
+  spendTime(timeCost);
 
-  // end conditions
-  if(game.risk >= 3){
-    setTimeout(()=> endGame(false), 900);
+  // scoring
+  let deltaScore = isCorrect ? SETTINGS.baseGood : SETTINGS.baseBad;
+  if(isCorrect && !preOk){
+    deltaScore = Math.max(0, deltaScore - SETTINGS.prereqPenaltyScore);
+  }
+  addScore(deltaScore);
+
+  // spread costs
+  const sf = severityFactor(q.severity);
+  if(!toolOk && sf){
+    addSpread(SETTINGS.spreadBadTool);
+  }
+  if(!isCorrect && sf){
+    addSpread(SETTINGS.spreadBadAction);
+  }
+  if(isCorrect && !preOk && sf){
+    addSpread(SETTINGS.prereqPenaltySpread);
+  }
+
+  // streak + quick fix
+  if(isCorrect && toolOk && preOk){
+    game.streak += 1;
+  }else{
+    game.streak = 0;
+  }
+  if(game.streak >= SETTINGS.streakQuickFix){
+    game.quickFixReady = true;
+  }
+
+  // state updates
+  if(isCorrect){
+    // incident resolved
+    game.resolvedIncidents.add(q.incidentId);
+    game.fixed += 1;
+
+    // area health: correct action makes tile greener
+    updateTileState(q.area, "green");
+    game.resolvedAreas.add(q.area);
+
+    setFeedback("good",
+      toolOk ? "Resolved" : "Resolved (but inefficient)",
+      toolOk
+        ? q.ok
+        : (q.ok + " Tool mismatch wasted time and increased risk.")
+    );
+  }else{
+    // wrong action: area becomes amber if not already green
+    if(game.tileState[q.area] !== "green"){
+      updateTileState(q.area, "amber");
+    }
+    setFeedback("bad",
+      "Risk increased",
+      (!toolOk ? "Wrong tool chosen. " : "") + q.bad
+    );
+  }
+
+  updateHUD();
+
+  // lose conditions
+  if(game.spread >= SETTINGS.spreadMax){
+    setTimeout(()=> endGame(false, "Spread reached critical level"), 900);
+    return;
+  }
+  if(game.time <= 0){
+    setTimeout(()=> endGame(false, "Time is over"), 900);
     return;
   }
 
-  // proceed after a short pause
+  // advance after pause
   setTimeout(()=>{
     game.locked = false;
-    advance();
-  }, 1200);
+    advanceAfterAnswer(isCorrect);
+  }, 1100);
 }
 
-/* Advance flow */
-function advance(){
-  // If current tile is fixed, move to next episode.
-  // If not fixed, keep asking another question from same tile (if available).
-  const tileKey = EPISODE_ORDER[game.episodeIndex];
-
-  // If current tile not fixed and there exists another question, keep on same
-  if(!game.fixed.has(tileKey)){
-    const nq = nextQuestionFor(tileKey);
-    if(nq){
-      showQuestion(nq);
-      return;
-    }
-    // fallback: if no more questions, allow moving on
-    game.fixed.add(tileKey);
-    updateTileState(tileKey, "amber");
-    updateMeters();
+function advanceAfterAnswer(resolved){
+  // remove resolved incident from queue if resolved, then refill
+  const idx = game.queue.findIndex(x => x.id === game.selectedId);
+  if(idx >= 0 && resolved){
+    game.queue.splice(idx, 1);
   }
 
-  // move to next episode
-  game.episodeIndex += 1;
+  // refill to 3
+  refillQueueIfNeeded();
+  renderQueue();
 
-  if(game.episodeIndex >= EPISODE_ORDER.length){
-    endGame(true);
+  // clear selection
+  game.selectedId = null;
+  game.selectedTool = null;
+  game.currentQ = null;
+  clearSelectionTools();
+  questionText.textContent = "Pick a ticket from the queue.";
+  actionsEl.innerHTML = "";
+  ticketText.textContent = "Select an incident to begin.";
+  game.step = "pickTicket";
+  resolveBtn.disabled = true;
+
+  // win condition
+  const poolLeft = availableIncidents().length;
+  const scoreWin = game.score >= SETTINGS.scoreTarget;
+  const stableWin = game.spread < SETTINGS.spreadMax;
+
+  // If score target hit and no high incidents remain, allow win even if pool left
+  const stillHigh = game.queue.some(x => x.severity==="high") || availableIncidents().some(x=>x.severity==="high");
+  if(scoreWin && stableWin && !stillHigh){
+    endGame(true, "System stabilized");
     return;
   }
 
-  const nextKey = EPISODE_ORDER[game.episodeIndex];
-  const q = nextQuestionFor(nextKey);
-  if(!q){
-    // If missing questions for the tile, mark as amber and continue
-    game.fixed.add(nextKey);
-    updateTileState(nextKey, "amber");
-    updateMeters();
-    advance();
+  // If no more incidents and score target hit, win; else end with summary
+  if(poolLeft === 0 && game.queue.length === 0){
+    endGame(scoreWin && stableWin, "No incidents left");
     return;
   }
+}
 
-  showQuestion(q);
+/* Quick fix: free small boost, once per unlock */
+quickFixBtn.addEventListener("click", ()=>{
+  if(!game.started || !game.quickFixReady || game.locked) return;
+  game.quickFixReady = false;
+  game.streak = 0;
+
+  // Choose a non-green tile to improve (amber->green or red->amber)
+  const candidates = TILE_DEFS.map(t=>t.key).filter(k => game.tileState[k] !== "green");
+  if(candidates.length){
+    const pick = candidates[Math.floor(Math.random()*candidates.length)];
+    if(game.tileState[pick] === "red") updateTileState(pick, "amber");
+    else updateTileState(pick, "green");
+    addScore(8);
+    setFeedback("good", "Quick Fix applied", `A quick preventive improvement was applied to ${areaName(pick)}.`);
+  }else{
+    addScore(5);
+    setFeedback("good", "Quick Fix", "All areas look stable. Bonus score added.");
+  }
+  updateHUD();
+  refreshQuickFixUI();
+});
+
+function refreshQuickFixUI(){
+  quickFixBtn.style.display = game.quickFixReady ? "inline-flex" : "none";
+}
+
+/* HUD */
+function updateHUD(){
+  scoreText.textContent = String(game.score);
+  const pct = clamp((game.score / SETTINGS.scoreMax)*100, 0, 100);
+  scoreBar.style.width = pct + "%";
+  // score bar color
+  let col = "rgba(255,92,108,.85)";
+  if(game.score >= SETTINGS.scoreTarget) col = "rgba(61,220,151,.85)";
+  else if(game.score >= 45) col = "rgba(255,204,102,.85)";
+  scoreBar.style.background = col;
+
+  timeText.textContent = String(game.time);
+  fixedText.textContent = String(game.fixed);
+  streakText.textContent = String(game.streak);
+
+  [r1,r2,r3].forEach((d,i)=> d.classList.toggle("on", i < game.spread));
+
+  refreshQuickFixUI();
+}
+
+function renderAll(){
+  renderTiles();
+  renderTools();
+  renderQueue();
+  updateHUD();
+}
+
+function endGame(success, reason){
+  endModal.classList.add("show");
+  endTitle.textContent = success ? "PC Secured" : "PC Compromised";
+  endChip.textContent = `Score ${game.score}/${SETTINGS.scoreMax} · Time ${game.time} · Spread ${game.spread}/${SETTINGS.spreadMax}`;
+  const tileSummary = TILE_DEFS.map(t=>{
+    const st = game.tileState[t.key] || "red";
+    const icon = st==="green" ? "✔" : (st==="amber" ? "⚠" : "✖");
+    const color = st==="green" ? "rgba(61,220,151,.95)" : (st==="amber" ? "rgba(255,204,102,.95)" : "rgba(255,92,108,.95)");
+    return `
+      <div style="border:1px solid var(--line);background:rgba(0,0,0,.20);border-radius:16px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between">
+        <div><b>${t.icon} ${t.name}</b><div style="color:var(--muted);font-size:12px;margin-top:2px">${t.hint}</div></div>
+        <div style="font-weight:950;color:${color}">${icon}</div>
+      </div>
+    `;
+  }).join("");
+
+  endBody.innerHTML = `
+    <div style="font-weight:950;font-size:14px">Outcome</div>
+    <div style="margin-top:6px;color:var(--muted);line-height:1.45;font-size:13px">
+      ${reason}. ${success ? "The system is stabilized to a safe baseline." : "Risk spread or time pressure caused failure."}
+    </div>
+    <div style="margin-top:12px;display:grid;gap:10px">
+      ${tileSummary}
+    </div>
+    <div class="btnRow">
+      <button class="primary" type="button" onclick="location.reload()">Play Again</button>
+      <button class="ghost" type="button" onclick="document.getElementById('endModal').classList.remove('show')">Close</button>
+    </div>
+  `;
 }
 
 function startGame(){
@@ -975,99 +1269,45 @@ function startGame(){
   startBtn.textContent = "Running";
   startBtn.disabled = true;
 
-  // initialize tile states
-  game.tileState = {};
-  TILE_DEFS.forEach(t => game.tileState[t.key] = "red");
-  renderTiles();
-  updateMeters();
+  // build initial queue
+  game.queue = drawIncidentPool();
+  game.selectedId = null;
+  game.selectedTool = null;
+  game.currentQ = null;
+  game.step = "pickTicket";
+  resolveBtn.disabled = true;
 
-  // first question
-  game.episodeIndex = 0;
-  const firstKey = EPISODE_ORDER[0];
-  const q = nextQuestionFor(firstKey);
-  if(q) showQuestion(q);
-  else{
-    problemText.textContent = "No questions found. Please update QUESTION_BANK.";
-    questionText.textContent = "—";
-    actionsEl.innerHTML = "";
-  }
+  ticketText.textContent = "Select an incident to begin.";
+  questionText.textContent = "Pick a ticket from the queue.";
+  actionsEl.innerHTML = "";
+  clearFeedback();
+
+  // initial state: mark un-touched areas as red, but if queue includes some areas, keep them red
+  // Nothing else required.
+
+  refillQueueIfNeeded();
+  renderAll();
 }
 
 function resetGame(){
-  game = {
-    started:false,
-    episodeIndex:0,
-    health:50,
-    risk:0,
-    fixed: new Set(),
-    tileState:{},
-    queue: [],
-    current:null,
-    locked:false
-  };
+  initState();
   startBtn.textContent = "Start";
   startBtn.disabled = false;
-  clearFeedback();
-  problemText.textContent = "Click “Start” to begin.";
-  questionText.textContent = "Ready?";
+
+  ticketText.textContent = "Start the rescue to generate the queue.";
+  questionText.textContent = "—";
   actionsEl.innerHTML = "";
-  glow.classList.remove("safe","danger");
-  statusTag.textContent = "Needs attention";
-  TILE_DEFS.forEach(t => game.tileState[t.key] = "red");
-  renderTiles();
-  updateMeters();
+  resolveBtn.disabled = true;
+  clearFeedback();
+
+  renderAll();
 }
 
-function endGame(success){
-  // build summary
-  endModal.classList.add("show");
-  const fixedCount = game.fixed.size;
-
-  if(success){
-    endTitle.textContent = "PC Secured";
-    endChip.textContent = `Health ${game.health}% · Risk ${game.risk}/3`;
-    endBody.innerHTML = `
-      <div style="font-weight:950;font-size:14px">Summary</div>
-      <div style="margin-top:6px;color:var(--muted);line-height:1.45;font-size:13px">
-        You stabilized the office PC. The tiles show what is secured (green) and what may need review (amber).
-      </div>
-      <div style="margin-top:12px;display:grid;gap:10px">
-        ${TILE_DEFS.map(t=>{
-          const st = game.tileState[t.key] || "red";
-          const icon = st==="green" ? "✔" : (st==="amber" ? "⚠" : "✖");
-          const color = st==="green" ? "rgba(61,220,151,.95)" : (st==="amber" ? "rgba(255,204,102,.95)" : "rgba(255,92,108,.95)");
-          return `<div style="border:1px solid var(--line);background:rgba(0,0,0,.20);border-radius:16px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between">
-            <div><b>${t.icon} ${t.name}</b><div style="color:var(--muted);font-size:12px;margin-top:2px">${t.hint}</div></div>
-            <div style="font-weight:950;color:${color}">${icon}</div>
-          </div>`;
-        }).join("")}
-      </div>
-      <div class="btnRow" style="margin-top:14px">
-        <button class="primary" type="button" onclick="location.reload()">Play Again</button>
-        <button class="ghost" type="button" onclick="document.getElementById('endModal').classList.remove('show')">Close</button>
-      </div>
-    `;
-  }else{
-    endTitle.textContent = "PC Compromised";
-    endChip.textContent = `Health ${game.health}% · Risk 3/3`;
-    endBody.innerHTML = `
-      <div style="font-weight:950;font-size:14px">What happened</div>
-      <div style="margin-top:6px;color:var(--muted);line-height:1.45;font-size:13px">
-        Too many risky choices increased exposure. Review the feedback and retry.
-      </div>
-      <div style="margin-top:12px;border:1px solid rgba(255,92,108,.25);background:rgba(255,92,108,.08);border-radius:16px;padding:12px">
-        <b>Tip</b>
-        <div style="margin-top:6px;color:var(--muted);font-size:13px;line-height:1.45">
-          In real Windows environments, begin with authentication and baseline protections (updates, firewall, Defender),
-          then tighten privacy and app permissions.
-        </div>
-      </div>
-      <div class="btnRow" style="margin-top:14px">
-        <button class="primary" type="button" onclick="location.reload()">Retry</button>
-        <button class="ghost" type="button" onclick="document.getElementById('endModal').classList.remove('show')">Close</button>
-      </div>
-    `;
-  }
+/* Feedback clear */
+function clearFeedback(){
+  feedbackEl.className = "feedback";
+  fbTitle.textContent = "";
+  fbBody.textContent = "";
 }
 
 /* Events */
@@ -1075,15 +1315,15 @@ beginBtn.addEventListener("click", ()=>{
   landing.classList.remove("show");
   startGame();
 });
-skipBtn.addEventListener("click", ()=>{
+closeBtn.addEventListener("click", ()=>{
   landing.classList.remove("show");
 });
 startBtn.addEventListener("click", startGame);
 resetBtn.addEventListener("click", resetGame);
 
-/* Keyboard shortcuts (1–4 for options) */
+/* Keyboard: 1–4 answer options */
 document.addEventListener("keydown", (e)=>{
-  if(!game.started || game.locked) return;
+  if(!game?.started || game.locked) return;
   const n = parseInt(e.key, 10);
   if(n>=1 && n<=4){
     const btn = actionsEl.querySelectorAll("button")[n-1];
@@ -1092,11 +1332,8 @@ document.addEventListener("keydown", (e)=>{
 });
 
 /* Init */
-(function init(){
-  TILE_DEFS.forEach(t => game.tileState[t.key] = "red");
-  renderTiles();
-  updateMeters();
-})();
+initState();
+renderAll();
 </script>
 </body>
 </html>
